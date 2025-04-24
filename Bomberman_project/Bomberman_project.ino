@@ -1,10 +1,60 @@
+#include <Arduino_MKRIoTCarrier.h>
+#include <WiFiNINA.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+#include "config.h"
+
+const char ssid[] = WIFI_SSID;
+const char password[] = WIFI_PASSWORD;
+const char mqtt_server[] = MQTT_SERVER;
+const int mqtt_port = 8883;
+const char mqtt_username[] = MQTT_USERNAME;
+const char mqtt_password[] = MQTT_PASSWORD;
+const char mqttTopic[] = "game/status";
+
+WiFiSSLClient wifiClient;
+PubSubClient client(wifiClient);
+
+MKRIoTCarrier carrier;
+
+void reconnect() {
+  while (!client.connected()) {
+    Serial.println("Attempting MQTT connection...");
+    if (client.connect("ArduinoMKR", mqtt_username, mqtt_password)) {
+      Serial.println("Connected to MQTT broker");
+      client.subscribe(mqttTopic);  // Subscribe to the topic
+    } else {
+      Serial.print("Failed, status code: ");
+      Serial.println(client.state());
+      delay(5000);
+    }
+  }
+}
+
+
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
+
+  Serial.println("Connecting to WiFi...");
+  WiFi.begin(ssid, password);  // Use your Wi-Fi credentials
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("Connected to WiFi");
+
+  client.setServer(mqtt_server, mqtt_port);  // Set the MQTT server and port
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  if (!client.connected()) {
+  reconnect();
+  }
+  client.loop();
 
+  String Message = "Hello World!";
+  client.publish("game/status", Message.c_str());
+  delay(30000);
 }
