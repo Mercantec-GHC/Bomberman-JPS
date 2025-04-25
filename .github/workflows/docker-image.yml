@@ -19,4 +19,4 @@ jobs:
       steps:
         - uses: actions/checkout@v4
         - name: Run the Docker image
-          run: docker run . --file bomberman-backend/Dockerfile --tag my-image-name:$(date +%s)
+          run: docker run . --file bomberman-backend/Dockerfile
