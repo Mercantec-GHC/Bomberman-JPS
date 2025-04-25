@@ -19,4 +19,4 @@ jobs:
       steps:
         - uses: actions/checkout@v4
         - name: Run the Docker image
-          run: docker run my-image-name:latest
+          run: docker run my-image-name:latest --expose 8080:8080
