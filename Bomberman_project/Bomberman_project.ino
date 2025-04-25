@@ -1,4 +1,5 @@
 #include <Arduino_MKRIoTCarrier.h>
+#include <Arduino_LSM6DS3.h>
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
@@ -17,6 +18,7 @@ PubSubClient client(wifiClient);
 
 MKRIoTCarrier carrier;
 
+
 void reconnect() {
   while (!client.connected()) {
     Serial.println("Attempting MQTT connection...");
@@ -32,9 +34,18 @@ void reconnect() {
 }
 
 
-
+float x, y, z;
+float tiltThreshold = 0.3;
 void setup() {
   Serial.begin(9600);
+  IMU.begin();
+  if (!IMU.begin()) {
+    Serial.println("Failed to initialize IMU!");
+    while (1);
+}
+  
+}
+
 
   Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);  // Use your Wi-Fi credentials
@@ -46,9 +57,30 @@ void setup() {
 
   client.setServer(mqtt_server, mqtt_port);  // Set the MQTT server and port
 
-}
+
+    
+    
+
 
 void loop() {
+ if (IMU.accelerationAvailable()) {
+    IMU.readAcceleration(x,y,z);   
+
+     if (y > tiltThreshold) {
+      Serial.println("MOVE LEFT");
+    } else if (y < -tiltThreshold) {
+      Serial.println("MOVE RIGHT");
+    } else if (x > tiltThreshold) {
+      Serial.println("MOVE UP");
+    } else if (x < -tiltThreshold) {
+      Serial.println("MOVE DOWN");
+    }else {
+      Serial.println("IDLE");
+    }    
+  }
+  delay(200);
+  
+
   if (!client.connected()) {
   reconnect();
   }
@@ -57,4 +89,6 @@ void loop() {
   String Message = "Hello World!";
   client.publish("game/status", Message.c_str());
   delay(30000);
+  
+
 }
