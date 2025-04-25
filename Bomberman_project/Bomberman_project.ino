@@ -3,6 +3,7 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include "config.h"
+#include "CommonClasses.h"
 
 const char ssid[] = WIFI_SSID;
 const char password[] = WIFI_PASSWORD;
@@ -14,6 +15,8 @@ const char mqttTopic[] = "game/status";
 
 WiFiSSLClient wifiClient;
 PubSubClient client(wifiClient);
+
+
 
 MKRIoTCarrier carrier;
 
