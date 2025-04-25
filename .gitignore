@@ -487,3 +487,17 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 Bomberman_project/config.h
+bomberman-backend/obj/Debug/net8.0/bomberman-backend.AssemblyInfo.cs
+bomberman-backend/obj/Debug/net8.0/bomberman-backend.AssemblyInfoInputs.cache
+*.editorconfig
+*.cache
+*.editorconfig
+Bomberman-frontend/Bomberman-frontend/obj/Release/net8.0/Bomberman-frontend.AssemblyInfo.cs
+bomberman-backend/obj/Debug/net8.0/bomberman-backend.AssemblyInfo.cs
+Bomberman-frontend/Bomberman-frontend.Client/obj/Debug/net8.0/Bomberman-frontend.Client.AssemblyInfo.cs
+bomberman-backend/obj/Release/net8.0/bomberman-backend.AssemblyInfo.cs
+Bomberman-frontend/Bomberman-frontend.Client/obj/Release/net8.0/Bomberman-frontend.Client.AssemblyInfo.cs
+Bomberman-frontend/Bomberman-frontend/obj/Debug/net8.0/Bomberman-frontend.AssemblyInfo.cs
+Bomberman-frontend/Bomberman-frontend/obj/Release/net8.0/Bomberman-frontend.AssemblyInfo.cs
+DomainModels/obj/Debug/net8.0/DomainModels.AssemblyInfo.cs
+DomainModels/obj/Release/net8.0/DomainModels.AssemblyInfo.cs
