@@ -19,4 +19,4 @@ jobs:
       steps:
         - uses: actions/checkout@v4
         - name: Run the Docker image
-          run: docker run h3-backend-project:latest --expose 8080:8080
+          run: docker run h3-backend-project:latest -p 8080:8080
