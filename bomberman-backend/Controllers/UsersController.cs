@@ -1,10 +1,12 @@
 ﻿using bomberman_backend.Services.Interfaces;
 using DomainModels;
 using DomainModels.DTO;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bomberman_backend.Controllers
 {
+    [EnableCors]
     [ApiController]
     [Route("/api/[controller]")]
     public class UsersController : ControllerBase
