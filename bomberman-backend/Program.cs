@@ -10,14 +10,18 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+// GetAllHeadsets from the Postgres DB
+IConfiguration Configuration = builder.Configuration;
+var connectionString = Configuration.GetConnectionString("dbcontext") ??
+                       Environment.GetEnvironmentVariable("dbcontext");
+Console.WriteLine(connectionString);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContextcs>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("dbcontext"));
+    options.UseNpgsql(connectionString);
 });
 
 
