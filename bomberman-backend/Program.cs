@@ -20,18 +20,6 @@ builder.Services.AddDbContext<DatabaseContextcs>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("dbcontext"));
 });
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("https://bomberman-jps.onrender.com",
-                                              "https://ep-old-field-a90f0ba8-pooler.gwc.azure.neon.tech")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                      });
-});
 
 // Repos
 builder.Services.AddScoped<IUserRepo, UserRepo>();
@@ -57,7 +45,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(policy =>
+    policy.AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader());
 
 
 app.Run();
