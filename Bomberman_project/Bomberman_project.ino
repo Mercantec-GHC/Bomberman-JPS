@@ -26,13 +26,14 @@ unsigned long lastBombUpdate = 0;
 const unsigned long BombCooldown = 3000;
 float x, y, z;
 float tiltThreshold = 0.3;
+int playerLives = 3;
 UUID uuid;  
 
 void setup() {
   Serial.begin(9600);
   carrier.noCase();
  carrier.begin();
-  
+  displayLives();
   // Initialize IMU
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");
@@ -48,14 +49,26 @@ Serial.println("Connecting to WiFi...");
    Serial.println("Connected to WiFi");
  
    client.setServer(mqtt_server, mqtt_port);  // Set the MQTT server and port
+
    
+  /* 
  // Generate
   uuid.seed(random(0, 65535));  
   uuid.generate();
-  
+  */
 }
 
+  void sendMQTTMessage(const String& type, const String& value) {
+    StaticJsonDocument<128> doc;
+    doc["type"] = type;
+    doc["value"] = value;
 
+    char buffer[128];
+    serializeJson(doc, buffer);
+    client.publish(mqttTopic, buffer);
+  }
+
+    
     void reconnect() {
    while (!client.connected()) {
      Serial.println("Attempting MQTT connection...");
@@ -77,10 +90,59 @@ Serial.println("Connecting to WiFi...");
       lastBombUpdate = currentMillis;
       Serial.println("Bomb");
       String Message = "Bomb";
-       client.publish("game/status", Message.c_str());
+       sendMQTTMessage("bomb_press", "true");
     }
    }
   }
+
+  void UsePowerUp(){
+      
+    if(carrier.Buttons.onTouchDown(TOUCH0)){     
+      Serial.println("Powerup Activated");
+
+      int powerUp = random(1, 5);
+
+      String powerUpMsg;
+
+      if (powerUp == 1) {
+        powerUpMsg = "Speed";
+      }else if (powerUp == 2) {
+        powerUpMsg = "GhostWalk";
+      }else if (powerUp == 3) {
+        powerUpMsg = "Invinsible";
+      }else if (powerUp == 4) {
+        powerUpMsg = "Health Up";
+      }
+        sendMQTTMessage("powerup_used", powerUpMsg);
+    }
+   }
+
+   void displayLives(){
+    carrier.display.fillScreen(ST77XX_BLACK);
+    carrier.display.setTextColor(ST77XX_WHITE);
+    carrier.display.setTextSize(2);
+    carrier.display.setCursor(20, 100);
+    carrier.display.print("Lives: ");
+    carrier.display.print(playerLives);
+   }
+
+   void loseLife(){
+    if (playerLives > 0) {
+    playerLives--;
+    Serial.println("Lost a life");
+    sendMQTTMessage("life", "Lost a life");
+    displayLives();
+    if (playerLives == 0) {
+      Serial.println("All lives lost");
+      sendMQTTMessage("life", "All lives lost");
+      carrier.display.fillScreen(ST77XX_RED);
+      carrier.display.setCursor(30, 100);
+      carrier.display.setTextColor(ST77XX_WHITE);
+      carrier.display.setTextSize(3);
+      carrier.display.print("GAME OVER");
+    }
+   }
+   } 
 
   void Gyro(){
     unsigned long currentMillis = millis();
@@ -90,29 +152,14 @@ Serial.println("Connecting to WiFi...");
 if (IMU.accelerationAvailable()) {
     IMU.readAcceleration(x,y,z);  
 
-    String Message; 
+    String direction = "Idle";
+      if (y > tiltThreshold) direction = "Left";
+      else if (y < -tiltThreshold) direction = "Right";
+      else if (x > tiltThreshold) direction = "Up";
+      else if (x < -tiltThreshold) direction = "Down";
 
-     if (y > tiltThreshold) {
-      Serial.println("MOVE LEFT");
-      String Message = "Move Left";
-       client.publish("game/status", Message.c_str());
-    } else if (y < -tiltThreshold) {
-      Serial.println("MOVE RIGHT");
-      String Message = "Move Right";
-       client.publish("game/status", Message.c_str());
-    } else if (x > tiltThreshold) {
-      Serial.println("MOVE UP");
-      String Message = "Move Up";
-       client.publish("game/status", Message.c_str());
-    } else if (x < -tiltThreshold) {
-      Serial.println("MOVE DOWN");
-      String Message = "Move Down";
-       client.publish("game/status", Message.c_str());
-    }else {
-      Serial.println("IDLE");
-      String Message = "Idle";
-       client.publish("game/status", Message.c_str());
-    }    
+      Serial.println("MOVE: " + direction);
+      sendMQTTMessage("tilt_move", direction);
     
      
   }
@@ -131,6 +178,8 @@ if (!client.connected()) {
   
   Gyro();
   PlaceBomb();   
-  
-
+  UsePowerUp();
+  if (carrier.Buttons.onTouchDown(TOUCH1)) {
+  loseLife();
+}
 }
