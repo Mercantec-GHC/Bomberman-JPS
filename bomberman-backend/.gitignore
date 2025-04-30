@@ -65,7 +65,9 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 appsettings.json
-obj
+appsettings.Development.json
+obj/
+**/obj/
 bin
 
 # Tye

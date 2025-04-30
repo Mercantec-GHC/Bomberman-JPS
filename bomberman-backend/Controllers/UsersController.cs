@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace bomberman_backend.Controllers
 {
-    [EnableCors]
+
+    [EnableCors("_myAllowSpecificOrigins")]
+
     [ApiController]
     [Route("/api/[controller]")]
     public class UsersController : ControllerBase
