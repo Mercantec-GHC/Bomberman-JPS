@@ -1,105 +1,131 @@
+
 #ifndef COMMONCLASSES.h
 #define COMMONCLASSES.h
 
-enum Effect{
+#include <UUID.h>
+
+enum Effect {
   Speed,
   FastFuse,
-  Ghost,
-}
-enum InputType{
+  Ghost
+};
+
+enum InputType {
   ButtonPress,
-  Tilt,
-}
+  Tilt
+};
 
-class User{
-  uuid userid;
-  char UserName;
-  char email
-}
+// Forward declarations
+class Lobby;
+class Bomb;
+class PowerUp;
+class State;
+class MenuState;
+class PlayingState;
 
-class Player{
-  char userName;
+class User {
+public:
+  UUID userid;
+  char UserName[32]; 
+  char email[64];
+};
+
+class Player {
+public:
+  char userName[32];
   int lives;
-  PowerUp powerUp;
+  PowerUp* powerUp;
   bool inLobby;
   int wins;
   int sessionId;
-  char charactorColor;
-  lobby Lobby;
-  bomb Bomb;  
-}
+  char characterColor;
+  Lobby* lobby;
+  Bomb* bomb;
+};
 
-class StateManager{
-  state State;
-}
+class StateManager {
+public:
+  State* state;
+};
 
-class State{
-  type field;
-}
+class State {
+public:
+  int field;
+};
 
-class MenuState{
-  type field;
-}
+class MenuState : public State {
+public:
+  int field;
+};
 
-class PlayingState{
-  Lobby lobby;
-}
+class PlayingState : public State {
+public:
+  Lobby* lobby;
+};
 
-class Lobby{
-  int Id;
-  char name;
-  uuid HostUserId;
-  players list<player>
-}
-
-class PowerUp{
+class Lobby {
+public:
   int id;
-  char Name;
+  char name[32];
+  UUID hostUserId;
+  Player players[4]; //max 4 players
+};
+
+class PowerUp {
+public:
+  int id;
+  char name[32];
   Effect effect;
   int duration;
-}
+};
 
-class Bomb{
-  int Id;
-  uuid playersId;
+class Bomb {
+public:
+  int id;
+  UUID playerId;
   int sessionId;
-  char yCordinate;
-  char xCordinate;
+  char yCoordinate;
+  char xCoordinate;
   int explosionRadius;
   int fuseTime;
-}
+};
 
-class Gyroscope{
-  int Id;
-  float xCordinate;
-  float yCordinate;
-  float zCordiante;
-}
-
-class Controller{
+class Gyroscope {
+public:
   int id;
-  uuid playerId;
+  float xCoordinate;
+  float yCoordinate;
+  float zCoordinate;
+};
+
+class Buttons {
+public:
+  int id;
+  char buttonName;
+};
+
+class Controller {
+public:
+  int id;
+  UUID playerId;
   char playerColor;
   float ledBrightness;
   Gyroscope gyroscope;
   Buttons buttons;
-}
+};
 
-class Buttons{
-  int Id;
-  char buttonName;
-}
-
-class InputTime{
-  int Id;
+class InputTime {
+public:
+  int id;
   int inputId;
-}
+};
 
-class ControllerLog{
-  int Id;
-  uuid playerId;
-  datetime timeStamp;
+class ControllerLog {
+public:
+  int id;
+  UUID playerId;
+  unsigned long timeStamp; 
   InputType inputType;
-}
+};
 
 #endif

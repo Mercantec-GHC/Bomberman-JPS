@@ -20,20 +20,24 @@ PubSubClient client(wifiClient);
 
 
 MKRIoTCarrier carrier;
-
-
-
-
+unsigned long lastGyroUpdate = 0;
+const unsigned long gyroInterval = 700;
+unsigned long lastBombUpdate = 0;
+const unsigned long BombCooldown = 3000;
 float x, y, z;
 float tiltThreshold = 0.3;
+UUID uuid;  
 
 void setup() {
   Serial.begin(9600);
-  IMU.begin();
+  carrier.noCase();
+ carrier.begin();
+  
+  // Initialize IMU
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");
-    while (1);
-}
+    while (1); 
+  }
 
 Serial.println("Connecting to WiFi...");
    WiFi.begin(ssid, password);  // Use your Wi-Fi credentials
@@ -44,6 +48,10 @@ Serial.println("Connecting to WiFi...");
    Serial.println("Connected to WiFi");
  
    client.setServer(mqtt_server, mqtt_port);  // Set the MQTT server and port
+   
+ // Generate
+  uuid.seed(random(0, 65535));  
+  uuid.generate();
   
 }
 
@@ -61,48 +69,68 @@ Serial.println("Connecting to WiFi...");
      }
    }
  }
-    
+    void PlaceBomb(){
+      unsigned long currentMillis = millis();
 
-
-void loop() {
-  
-if (!client.connected()) {
-  reconnect();
+    if(carrier.Buttons.onTouchDown(TOUCH2)){
+      if (currentMillis - lastBombUpdate >= BombCooldown) {
+      lastBombUpdate = currentMillis;
+      Serial.println("Bomb");
+      String Message = "Bomb";
+       client.publish("game/status", Message.c_str());
+    }
+   }
   }
-  client.loop();
 
-  
-  delay(700);
+  void Gyro(){
+    unsigned long currentMillis = millis();
+  if (currentMillis - lastGyroUpdate >= gyroInterval) {
+    lastGyroUpdate = currentMillis;
 
- if (IMU.accelerationAvailable()) {
-    IMU.readAcceleration(x,y,z);   
+if (IMU.accelerationAvailable()) {
+    IMU.readAcceleration(x,y,z);  
+
+    String Message; 
 
      if (y > tiltThreshold) {
       Serial.println("MOVE LEFT");
       String Message = "Move Left";
-      client.publish("game/status", Message.c_str());
+       client.publish("game/status", Message.c_str());
     } else if (y < -tiltThreshold) {
       Serial.println("MOVE RIGHT");
       String Message = "Move Right";
-      client.publish("game/status", Message.c_str());
+       client.publish("game/status", Message.c_str());
     } else if (x > tiltThreshold) {
       Serial.println("MOVE UP");
       String Message = "Move Up";
-      client.publish("game/status", Message.c_str());
+       client.publish("game/status", Message.c_str());
     } else if (x < -tiltThreshold) {
       Serial.println("MOVE DOWN");
       String Message = "Move Down";
-      client.publish("game/status", Message.c_str());
+       client.publish("game/status", Message.c_str());
     }else {
       Serial.println("IDLE");
       String Message = "Idle";
-      client.publish("game/status", Message.c_str());
+       client.publish("game/status", Message.c_str());
     }    
+    
+     
   }
-  
-  
+  }
+  }
 
+
+void loop() {
+    
+if (!client.connected()) {
+  reconnect();
+  }
+  client.loop();
+  carrier.Buttons.update();
   
+  
+  Gyro();
+  PlaceBomb();   
   
 
 }
