@@ -1,7 +1,11 @@
 using Bomberman_frontend.Client.Pages;
 using Bomberman_frontend.Components;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<MqttClientService>();
+builder.Services.AddMudServices();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
