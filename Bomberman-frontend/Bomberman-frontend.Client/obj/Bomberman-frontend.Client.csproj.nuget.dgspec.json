@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj": {}
+    "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj": {
+    "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj",
+        "projectUniqueName": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj",
         "projectName": "Bomberman-frontend.Client",
-        "projectPath": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj",
-        "packagesPath": "C:\\Users\\ptli.skp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\obj\\",
+        "projectPath": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj",
+        "packagesPath": "C:\\Users\\JMikk\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ptli.skp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\JMikk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -58,13 +57,13 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.11, )",
+              "version": "[8.0.14, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.0, )",
+              "version": "[9.0.3, )",
               "autoReferenced": true
             }
           },
@@ -82,7 +81,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[8.0.11, 8.0.11]"
+              "version": "[8.0.14, 8.0.14]"
             }
           ],
           "frameworkReferences": {
@@ -90,7 +89,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

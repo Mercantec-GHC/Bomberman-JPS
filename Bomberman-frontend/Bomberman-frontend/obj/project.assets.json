@@ -329,38 +329,6 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Localization/8.0.12": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2",
-          "Microsoft.Extensions.Localization.Abstractions": "8.0.12",
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.2",
-          "Microsoft.Extensions.Options": "8.0.2"
-        },
-        "compile": {
-          "lib/net8.0/Microsoft.Extensions.Localization.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Microsoft.Extensions.Localization.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Microsoft.Extensions.Localization.Abstractions/8.0.12": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/Microsoft.Extensions.Localization.Abstractions.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Microsoft.Extensions.Localization.Abstractions.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "Microsoft.Extensions.Logging/8.0.1": {
         "type": "package",
         "dependencies": {
@@ -464,44 +432,6 @@
           "lib/net8.0/Microsoft.JSInterop.WebAssembly.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "MQTTnet/5.0.1.1416": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/MQTTnet.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/MQTTnet.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "MudBlazor/8.6.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Components": "8.0.12",
-          "Microsoft.AspNetCore.Components.Web": "8.0.12",
-          "Microsoft.Extensions.Localization": "8.0.12"
-        },
-        "compile": {
-          "lib/net8.0/MudBlazor.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/MudBlazor.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "build/MudBlazor.targets": {},
-          "buildTransitive/MudBlazor.props": {}
-        },
-        "buildMultiTargeting": {
-          "buildMultiTargeting/MudBlazor.props": {}
         }
       },
       "System.IO.Pipelines/8.0.0": {
@@ -995,44 +925,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Localization/8.0.12": {
-      "sha512": "Ef7P8kpJzX/khXB8oYxt3vFHXw48uWY+NirCrh8u8gokCHxr/Noc3OxME+Ji1ugqoMvUVSPu73mYctmUMDlOCA==",
-      "type": "package",
-      "path": "microsoft.extensions.localization/8.0.12",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net462/Microsoft.Extensions.Localization.dll",
-        "lib/net462/Microsoft.Extensions.Localization.xml",
-        "lib/net8.0/Microsoft.Extensions.Localization.dll",
-        "lib/net8.0/Microsoft.Extensions.Localization.xml",
-        "lib/netstandard2.0/Microsoft.Extensions.Localization.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.Localization.xml",
-        "microsoft.extensions.localization.8.0.12.nupkg.sha512",
-        "microsoft.extensions.localization.nuspec"
-      ]
-    },
-    "Microsoft.Extensions.Localization.Abstractions/8.0.12": {
-      "sha512": "bgwe0gy9v12hr6gLAXIeEWaTYm295Nfmp7B/DLmS75GBJXvs4JHn7pi8gn3jXMNNkNIkx9iWG+pXKmLAmjdGZg==",
-      "type": "package",
-      "path": "microsoft.extensions.localization.abstractions/8.0.12",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net462/Microsoft.Extensions.Localization.Abstractions.dll",
-        "lib/net462/Microsoft.Extensions.Localization.Abstractions.xml",
-        "lib/net8.0/Microsoft.Extensions.Localization.Abstractions.dll",
-        "lib/net8.0/Microsoft.Extensions.Localization.Abstractions.xml",
-        "lib/netstandard2.0/Microsoft.Extensions.Localization.Abstractions.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.Localization.Abstractions.xml",
-        "microsoft.extensions.localization.abstractions.8.0.12.nupkg.sha512",
-        "microsoft.extensions.localization.abstractions.nuspec"
-      ]
-    },
     "Microsoft.Extensions.Logging/8.0.1": {
       "sha512": "4x+pzsQEbqxhNf1QYRr5TDkLP9UsLT3A6MdRKDDEgrW7h1ljiEPgTNhKYUhNCCAaVpQECVQ+onA91PTPnIp6Lw==",
       "type": "package",
@@ -1245,47 +1137,6 @@
         "microsoft.jsinterop.webassembly.nuspec"
       ]
     },
-    "MQTTnet/5.0.1.1416": {
-      "sha512": "ONYieEMaHiIei5dAtHXywnfJGhmrd5Av5sNJSQERp6AtZdPk3xxjCR6Cv0C5RUr/XbLeHO4/HQ0Rc2bQ5NF5Mw==",
-      "type": "package",
-      "path": "mqttnet/5.0.1.1416",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net8.0/MQTTnet.dll",
-        "lib/net8.0/MQTTnet.xml",
-        "mqttnet.5.0.1.1416.nupkg.sha512",
-        "mqttnet.nuspec",
-        "nuget.png"
-      ]
-    },
-    "MudBlazor/8.6.0": {
-      "sha512": "vJROmWdTjiBmyiZBSbD8RcYVFfLbNMEQpKoCOMfY2628KbOLGVcnH1RBziHGyJH9pqc99UoCQS81XLm8X+49ug==",
-      "type": "package",
-      "path": "mudblazor/8.6.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "Nuget.png",
-        "README.md",
-        "analyzers/dotnet/cs/MudBlazor.Analyzers.dll",
-        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
-        "build/Microsoft.AspNetCore.StaticWebAssets.props",
-        "build/MudBlazor.props",
-        "build/MudBlazor.targets",
-        "buildMultiTargeting/MudBlazor.props",
-        "buildTransitive/MudBlazor.props",
-        "lib/net8.0/MudBlazor.dll",
-        "lib/net8.0/MudBlazor.xml",
-        "lib/net9.0/MudBlazor.dll",
-        "lib/net9.0/MudBlazor.xml",
-        "mudblazor.8.6.0.nupkg.sha512",
-        "mudblazor.nuspec",
-        "staticwebassets/MudBlazor.min.css",
-        "staticwebassets/MudBlazor.min.js"
-      ]
-    },
     "System.IO.Pipelines/8.0.0": {
       "sha512": "FHNOatmUq0sqJOkTx+UF/9YK1f180cnW5FVqnQMvYUN0elp6wFzbtPSiqbo1/ru8ICp43JM1i7kKkk6GsNGHlA==",
       "type": "package",
@@ -1324,29 +1175,27 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Bomberman-frontend.Client >= 1.0.0",
-      "MQTTnet >= 5.0.1.1416",
-      "Microsoft.AspNetCore.Components.WebAssembly.Server >= 8.0.14",
-      "MudBlazor >= 8.6.0"
+      "Microsoft.AspNetCore.Components.WebAssembly.Server >= 8.0.14"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ptli.skp\\.nuget\\packages\\": {},
+    "C:\\Users\\JMikk\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend\\Bomberman-frontend.csproj",
+      "projectUniqueName": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend\\Bomberman-frontend.csproj",
       "projectName": "Bomberman-frontend",
-      "projectPath": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend\\Bomberman-frontend.csproj",
-      "packagesPath": "C:\\Users\\ptli.skp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend\\obj\\",
+      "projectPath": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend\\Bomberman-frontend.csproj",
+      "packagesPath": "C:\\Users\\JMikk\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ptli.skp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\JMikk\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1355,15 +1204,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj": {
-              "projectPath": "C:\\Users\\ptli.skp\\Documents\\Local Work\\Bomberman-JPS\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj"
+            "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj": {
+              "projectPath": "C:\\Users\\JMikk\\Desktop\\Git\\Bomberman-frontend\\Bomberman-frontend.Client\\Bomberman-frontend.Client.csproj"
             }
           }
         }
@@ -1378,23 +1226,15 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
-          "MQTTnet": {
-            "target": "Package",
-            "version": "[5.0.1.1416, )"
-          },
           "Microsoft.AspNetCore.Components.WebAssembly.Server": {
             "target": "Package",
             "version": "[8.0.14, )"
-          },
-          "MudBlazor": {
-            "target": "Package",
-            "version": "[8.6.0, )"
           }
         },
         "imports": [
@@ -1416,7 +1256,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
