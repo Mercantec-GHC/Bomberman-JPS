@@ -29,9 +29,9 @@ namespace bomberman_backend.Controllers
         public ActionResult<List<PowerUp>> GetAll()
         {
             var powerUps = _powerUpService.GetPowerUps();
-            if (Object.ReferenceEquals(powerUps, null))
+            if (powerUps.Count == 0)
             {
-                return NotFound("No PowerUps found");
+                return NotFound("No PowerUps available");
             }
             return powerUps;
         }
