@@ -27,9 +27,11 @@ builder.Services.AddDbContext<DatabaseContextcs>(options =>
 
 // Repos
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ILeaderboardRepo, LeaderboardRepo>();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 
 
 builder.Services.AddHealthChecks();
