@@ -2,6 +2,7 @@
 using bomberman_backend.Repository.Interfaces;
 using bomberman_backend.Services.Interfaces;
 using DomainModels;
+using DomainModels.DTO;
 
 namespace bomberman_backend.Services
 {
@@ -12,14 +13,14 @@ namespace bomberman_backend.Services
         {
             _leaderboardRepo = leaderboardRepo;
         }
-        public Leaderboard CreateLeaderboard(Leaderboard leaderboard)
+        public Leaderboard CreateLeaderboard(CreateLeaderboardDTO leaderboard)
         {
             return _leaderboardRepo.CreateLeaderboard(leaderboard);
         }
 
-        public Leaderboard GetLeaderboard(Guid id)
+        public Leaderboard GetLeaderboard(string username)
         {
-            return _leaderboardRepo.GetLeaderboard(id);
+            return _leaderboardRepo.GetLeaderboard(username);
         }
 
         public List<Leaderboard> GetLeaderboards()
@@ -27,9 +28,9 @@ namespace bomberman_backend.Services
             return _leaderboardRepo.GetLeaderboards();
         }
 
-        public Leaderboard UpdateLeaderboard(Guid id, Leaderboard leaderboard)
+        public Leaderboard UpdateLeaderboard(CreateLeaderboardDTO leaderboard)
         {
-            return _leaderboardRepo.UpdateLeaderboard(id, leaderboard);
+            return _leaderboardRepo.UpdateLeaderboard(leaderboard);
         }
     }
 }

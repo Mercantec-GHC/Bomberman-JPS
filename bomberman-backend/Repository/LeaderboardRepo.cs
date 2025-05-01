@@ -1,6 +1,7 @@
 ﻿using bomberman_backend.Data;
 using bomberman_backend.Repository.Interfaces;
 using DomainModels;
+using DomainModels.DTO;
 
 namespace bomberman_backend.Repository
 {
@@ -11,11 +12,15 @@ namespace bomberman_backend.Repository
         {
             _databaseContext = databaseContext;
         }
-        public Leaderboard CreateLeaderboard(Leaderboard leaderboard)
+        public Leaderboard CreateLeaderboard(CreateLeaderboardDTO leaderboard)
         {
+            if(string.IsNullOrEmpty(leaderboard.userName))
+            {
+                return null;
+            }
             var leaderboardEntity = new Leaderboard
             {
-                User = leaderboard.User,
+                userName = leaderboard.userName,
                 totalGames = leaderboard.totalGames,
                 totalWins = leaderboard.totalWins,
                 hightScore = leaderboard.hightScore
@@ -25,13 +30,18 @@ namespace bomberman_backend.Repository
             return leaderboardEntity;
         }
 
-        public Leaderboard GetLeaderboard(Guid id)
+        public Leaderboard GetLeaderboard(string username)
         {
-            var leaderboard = _databaseContext.leaderboards.SingleOrDefault(o => o.User.UserId == id);
+            if(string.IsNullOrEmpty(username))
+            {
+                return null;
+            }
+            var leaderboard = _databaseContext.leaderboards.SingleOrDefault(o => o.userName == username);
             if (leaderboard == null)
             {
                 return null;
             }
+
             return leaderboard;
         }
 
@@ -43,7 +53,8 @@ namespace bomberman_backend.Repository
             {
                 var leaderboardEntity = new Leaderboard
                 {
-                    User = leaderboard.User,
+                    id = leaderboard.id,
+                    userName = leaderboard.userName,
                     totalGames = leaderboard.totalGames,
                     totalWins = leaderboard.totalWins,
                     hightScore = leaderboard.hightScore
@@ -53,19 +64,24 @@ namespace bomberman_backend.Repository
             return leaderboardList;
         }
 
-        public Leaderboard UpdateLeaderboard(Guid id, Leaderboard leaderboard)
+        public Leaderboard UpdateLeaderboard(CreateLeaderboardDTO leaderboard)
         {
-            var leaderboardEntity = _databaseContext.leaderboards.SingleOrDefault(o => o.User.UserId == id);
+            if (string.IsNullOrEmpty(leaderboard.userName))
+            {
+                return null;
+            }
+            var leaderboardEntity = _databaseContext.leaderboards.SingleOrDefault(o => o.userName == leaderboard.userName);
             if (leaderboardEntity == null)
             {
                 return null;
             }
-            leaderboardEntity.User = leaderboard.User;
+            leaderboardEntity.userName = leaderboard.userName;
             leaderboardEntity.totalGames = leaderboard.totalGames;
             leaderboardEntity.totalWins = leaderboard.totalWins;
             leaderboardEntity.hightScore = leaderboard.hightScore;
             _databaseContext.leaderboards.Update(leaderboardEntity);
             _databaseContext.SaveChanges();
+
             return leaderboardEntity;
         }
     }

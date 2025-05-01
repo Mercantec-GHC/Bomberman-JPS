@@ -1,12 +1,13 @@
 ﻿using DomainModels;
+using DomainModels.DTO;
 
 namespace bomberman_backend.Repository.Interfaces
 {
     public interface ILeaderboardRepo
     {
         public List<Leaderboard> GetLeaderboards();
-        public Leaderboard GetLeaderboard(Guid id);
-        public Leaderboard CreateLeaderboard(Leaderboard leaderboard);
-        public Leaderboard UpdateLeaderboard(Guid id, Leaderboard leaderboard);
+        public Leaderboard GetLeaderboard(string username);
+        public Leaderboard CreateLeaderboard(CreateLeaderboardDTO leaderboard);
+        public Leaderboard UpdateLeaderboard(CreateLeaderboardDTO leaderboard);
     }
 }
