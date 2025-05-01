@@ -501,3 +501,6 @@ Bomberman-frontend/Bomberman-frontend/obj/Debug/net8.0/Bomberman-frontend.Assemb
 Bomberman-frontend/Bomberman-frontend/obj/Release/net8.0/Bomberman-frontend.AssemblyInfo.cs
 DomainModels/obj/Debug/net8.0/DomainModels.AssemblyInfo.cs
 DomainModels/obj/Release/net8.0/DomainModels.AssemblyInfo.cs
+bomberman-backend/obj/Debug/net8.0/bomberman-backend.AssemblyInfo.cs
+*.cache
+*.editorconfig

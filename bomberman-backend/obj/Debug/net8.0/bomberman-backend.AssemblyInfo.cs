@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("bomberman-backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c87c8af8542c88ef5888d48ee2d9f2d1282dd5cf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1189e5450dd69df215824408d23a9cf3b664c846")]
 [assembly: System.Reflection.AssemblyProductAttribute("bomberman-backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("bomberman-backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Bomberman-frontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed6c370e5154b6960159ec3c4d881740b67aad4d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1189e5450dd69df215824408d23a9cf3b664c846")]
 [assembly: System.Reflection.AssemblyProductAttribute("Bomberman-frontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Bomberman-frontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

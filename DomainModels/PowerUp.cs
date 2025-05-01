@@ -11,8 +11,9 @@
 
     public enum Effect
     {
-        placeholder,
-        placeholder2,
-        placeholder3
+        Speed,
+        GhostWalk,
+        Invinsible,
+        HealthUp
     }
 }
