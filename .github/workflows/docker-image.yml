@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create the docker container
-        run: docker create --name backend -p 8080:8080 -e ${{ vars.dbcontext }} h3-backend-project:latest
+        run: docker create --name backend -p 8080:8080 -e "${{ vars.dbcontext }}" h3-backend-project:latest
   logs:
     needs: create
     runs-on: "self-hosted"
