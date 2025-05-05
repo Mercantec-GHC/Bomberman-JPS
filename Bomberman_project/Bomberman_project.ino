@@ -27,6 +27,7 @@ const unsigned long BombCooldown = 3000;
 float x, y, z;
 float tiltThreshold = 0.3;
 int playerLives = 3;
+bool gameOver = false;
 UUID uuid;  
 
 void setup() {
@@ -37,7 +38,7 @@ void setup() {
   // Initialize IMU
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");
-    while (1); 
+    delay(1000); 
   }
 
 Serial.println("Connecting to WiFi...");
@@ -135,6 +136,7 @@ Serial.println("Connecting to WiFi...");
     if (playerLives == 0) {
       Serial.println("All lives lost");
       sendMQTTMessage("life", "All lives lost");
+    gameOver = true;
       carrier.display.fillScreen(ST77XX_RED);
       carrier.display.setCursor(30, 100);
       carrier.display.setTextColor(ST77XX_WHITE);
@@ -143,6 +145,17 @@ Serial.println("Connecting to WiFi...");
     }
    }
    } 
+
+  void restartGame() {
+  playerLives = 3;
+  gameOver = false;
+  Serial.println("Game restarted");
+  sendMQTTMessage("game");
+
+  
+  carrier.display.fillScreen(ST77XX_BLACK);
+  displayLives();
+}
 
   void Gyro(){
     unsigned long currentMillis = millis();
@@ -175,6 +188,13 @@ if (!client.connected()) {
   client.loop();
   carrier.Buttons.update();
   
+  if (carrier.Buttons.onTouchDown(TOUCH4)) {
+    restartGame();
+  }
+
+  if (gameOver) {
+    return; 
+  }
   
   Gyro();
   PlaceBomb();   
