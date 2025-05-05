@@ -14,28 +14,30 @@ jobs:
       - name: Clean up Docker image
         run: | 
             container=$(docker ps --format "{{.ID}} {{.Names}}" | grep "backend" | cut -d " " -f1)
-            if[ -n "$container]; then
-              docker stop "$container"
-              docker remove "$container"
-            else 
-              echo "no containers"
-            fi    
+            if [ -n "$container" ]; then
+               docker stop "$container"
+               docker remove "$container"
+             else
+               echo "no containers"
+            fi  
   build:
+    needs: cleanup
     runs-on: "self-hosted"
     steps:
       - uses: actions/checkout@v4
       - name: Build the Docker image
         run: docker build . --file bomberman-backend/Dockerfile --tag h3-backend-project:latest
   create:
+    needs: build
     runs-on: "self-hosted"
     steps:
       - uses: actions/checkout@v4
       - name: Create the docker container
         run: docker create h3-backed-project:latest -p 8080:8080 --name backend
   publish:
-      needs: build
+      needs: create
       runs-on: "self-hosted"
       steps:
         - uses: actions/checkout@v4
-        - name: Run the Docker image
+        - name: Start the Docker image
           run: docker start backend
