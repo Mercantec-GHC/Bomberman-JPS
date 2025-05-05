@@ -15,7 +15,7 @@ namespace bomberman_backend.Repository
         }
         public User CreateUser(CreateUserDTO user)
         {
-            var User = new User { Email = user.Email, Password = user.Password, UserName = user.UserName };
+            var User = new User {UserId = Guid.NewGuid(), Email = user.Email, Password = user.Password, UserName = user.UserName };
             _databaseContext.users.Add(User);
             _databaseContext.SaveChanges();
             return User;

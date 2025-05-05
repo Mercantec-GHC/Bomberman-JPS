@@ -29,11 +29,13 @@ builder.Services.AddDbContext<DatabaseContextcs>(options =>
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ILeaderboardRepo, LeaderboardRepo>();
 builder.Services.AddScoped<IPowerUpRepo, PowerUpRepo>();
+builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IPowerUpService, PowerUpService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 
 builder.Services.AddHealthChecks();
