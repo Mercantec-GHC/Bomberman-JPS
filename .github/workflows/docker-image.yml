@@ -13,8 +13,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Clean up Docker image
         run: | 
-            docker stop Backend
-            docker remove Backend
+            container=$(docker ps --format "{{.ID}} {{.Names}}" | grep "backend" | cut -d " " -f1)
+            if[ -n "$container]; then
+              docker stop "$container"
+              docker remove "$container"
+            else 
+              echo "no containers"
+            fi
         
   build:
     runs-on: "self-hosted"
