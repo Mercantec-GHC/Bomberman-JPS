@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create the docker container
-        run: docker create h3-backed-project:latest -p 8080:8080 --name backend
+        run: docker create h3-backend-project:latest -p 8080:8080 --name backend
   publish:
       needs: create
       runs-on: "self-hosted"
