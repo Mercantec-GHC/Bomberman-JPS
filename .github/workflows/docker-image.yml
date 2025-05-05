@@ -7,6 +7,15 @@ on:
     branches: [ "main" ]
 
 jobs:
+  cleanup:
+    runs-on: "self-hosted"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clean up Docker image
+        run: | 
+            docker stop Backend
+            docker remove Backend
+        
   build:
     runs-on: "self-hosted"
     steps:
@@ -19,4 +28,4 @@ jobs:
       steps:
         - uses: actions/checkout@v4
         - name: Run the Docker image
-          run: docker run h3-backend-project:latest -p 8080:8080
+          run: docker start h3-backend-project:latest -p 8080:8080 --name Backend
