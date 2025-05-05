@@ -489,4 +489,5 @@ $RECYCLE.BIN/
 obj/
 **/obj/
 appsettings.json
-**/appsettings.json
+**/appsettings.json'
+Bomberman-frontend/Bomberman-frontend/appsettings.json
