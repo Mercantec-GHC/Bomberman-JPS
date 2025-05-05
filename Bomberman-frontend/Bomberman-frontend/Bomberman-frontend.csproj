@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet" Version="5.0.1.1416" />
+    <PackageReference Include="MQTTnet" Version="3.4.3" />
     <PackageReference Include="MudBlazor" Version="8.6.0" />
     <ProjectReference Include="..\Bomberman-frontend.Client\Bomberman-frontend.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.14" />

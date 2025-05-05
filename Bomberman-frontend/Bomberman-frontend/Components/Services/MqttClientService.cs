@@ -1,4 +1,5 @@
 ﻿using MQTTnet;
+using MQTTnet.Client;
 using MQTTnet.Protocol;
 using System;
 using System.Text;
@@ -7,23 +8,31 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-public class MqttClientService
+public class MqttClientService : BackgroundService
 {
+
+    private IConfiguration _configuration;
     private IMqttClient _mqttClient;
-
-    public async Task ConnectAsync(CancellationToken stoppingToken)
+    public MqttClientService(IConfiguration configuration)
     {
-        var factory = new MqttClientFactory();
-        _mqttClient = factory.CreateMqttClient();
+        _configuration = configuration;
+    }
 
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
         var options = new MqttClientOptionsBuilder()
-            .WithTcpServer("c51faff71929461aa2c0afa84bb16875.s1.eu.hivemq.cloud", 8883)
-            .WithCredentials("Silasbillum", "Silasbillum1")
+            .WithTcpServer(_configuration["HiveMQ:Host"], 8883)
+            .WithCredentials(_configuration["HiveMQ:Username"], _configuration["HiveMQ:Password"])
+            .WithTls()
             .Build();
+
+        _mqttClient = new MqttFactory().CreateMqttClient();
 
         _mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
             var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+            //Console.WriteLine($"Received MQTT message: {payload}");
 
             try
             {
@@ -44,6 +53,9 @@ public class MqttClientService
                         case "life":
                             Console.WriteLine($"Life update: {status.Value}");
                             break;
+                        case "game":
+                            Console.WriteLine($"Game Restarted");
+                            break;
                         default:
                             Console.WriteLine($"Unknown type: {status.Type}");
                             break;
@@ -56,18 +68,20 @@ public class MqttClientService
             }
 
             await Task.CompletedTask;
+
+
+
         };
 
         _mqttClient.ConnectedAsync += async e =>
         {
-            Console.WriteLine("✅ Connected to MQTT broker.");
+            Console.WriteLine("Connected to MQTT broker.");
             await _mqttClient.SubscribeAsync("game/status");
-            Console.WriteLine("📡 Subscribed to topic: game/status");
         };
 
         _mqttClient.DisconnectedAsync += async e =>
         {
-            Console.WriteLine("⚠️ Disconnected. Trying to reconnect...");
+            Console.WriteLine("Disconnected. Trying to reconnect...");
             await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             await _mqttClient.ConnectAsync(options, stoppingToken);
         };
@@ -78,12 +92,10 @@ public class MqttClientService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ MQTT Connection failed: {ex.Message}");
+            Console.WriteLine($"MQTT Connection failed: {ex.Message}");
         }
     }
 }
-
-
 
 public class GameStatus
 {
