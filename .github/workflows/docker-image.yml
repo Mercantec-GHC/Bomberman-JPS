@@ -34,8 +34,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Create the docker container
         run: docker create h3-backend-project:latest -p 8080:8080 --name backend
+  logs:
+    needs: create
+    runs-on: "self-hosted"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Logs the containers
+        run: docker ps -a
   publish:
-      needs: create
+      needs: [create, logs]
       runs-on: "self-hosted"
       steps:
         - uses: actions/checkout@v4
