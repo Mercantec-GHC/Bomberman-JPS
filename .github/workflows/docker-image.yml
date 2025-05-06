@@ -29,10 +29,12 @@ jobs:
     runs-on: "self-hosted"
     steps:
       - uses: actions/checkout@v4
-      - name: Build the Docker image
+      - name: Build the backend Docker image
         run: | 
           docker build . --file bomberman-backend/Dockerfile --tag h3-backend-project:latest
-          docker build ./Bomberman-frontend --file /Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
+      - name: Build the frontend Docker image
+        working-directory: ./Bomberman-frontend
+        run: docker build . --file /Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
   create:
     needs: build
     runs-on: "self-hosted"
