@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using bomberman_backend.Data;
@@ -11,9 +12,11 @@ using bomberman_backend.Data;
 namespace bomberman_backend.Migrations
 {
     [DbContext(typeof(DatabaseContextcs))]
-    partial class DatabaseContextcsModelSnapshot : ModelSnapshot
+    [Migration("20250505113926_migration_0009")]
+    partial class migration_0009
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,11 +146,9 @@ namespace bomberman_backend.Migrations
 
             modelBuilder.Entity("DomainModels.Session", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -216,8 +217,8 @@ namespace bomberman_backend.Migrations
                     b.Property<long>("score")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("sessionIdId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("sessionIdId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("wins")
                         .HasColumnType("integer");

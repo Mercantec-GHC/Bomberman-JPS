@@ -1,4 +1,6 @@
-﻿namespace DomainModels
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DomainModels
 {
     public class Session
     {
