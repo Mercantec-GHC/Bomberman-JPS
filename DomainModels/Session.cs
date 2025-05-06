@@ -1,7 +1,9 @@
-﻿namespace DomainModels
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DomainModels
 {
     public class Session
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

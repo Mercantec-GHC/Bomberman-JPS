@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using bomberman_backend.Data;
@@ -11,9 +12,11 @@ using bomberman_backend.Data;
 namespace bomberman_backend.Migrations
 {
     [DbContext(typeof(DatabaseContextcs))]
-    partial class DatabaseContextcsModelSnapshot : ModelSnapshot
+    [Migration("20250506052239_migration_0015")]
+    partial class migration_0015
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,7 +219,7 @@ namespace bomberman_backend.Migrations
                     b.Property<long>("score")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("sessionIdId")
+                    b.Property<int?>("sessionIdId")
                         .HasColumnType("integer");
 
                     b.Property<int>("wins")
@@ -273,9 +276,7 @@ namespace bomberman_backend.Migrations
 
                     b.HasOne("DomainModels.Session", "sessionId")
                         .WithMany()
-                        .HasForeignKey("sessionIdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("sessionIdId");
 
                     b.Navigation("bomb");
 

@@ -6,7 +6,7 @@ namespace bomberman_backend.Services.Interfaces
     public interface IPlayerService
     {
         public List<Player> GetPlayers();
-        public Player GetPlayer(string username);
+        public Player GetPlayer(Guid id);
         public Player CreatePlayer(CreatePlayerDTO player);
         public Player UpdatePlayer(UpdatePlayerDTO player);
         public Player AddPowerUp(string username, PowerUp powerup);

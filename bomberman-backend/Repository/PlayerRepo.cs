@@ -31,10 +31,11 @@ namespace bomberman_backend.Repository
                     explosionRadius = bomb.explosionRadius,
                     fuseTime = bomb.fuseTime
                 };
+                _databaseContext.bomb.Add(bombToAdd);
             }
 
             player.bomb = bombToAdd;
-
+            _databaseContext.players.Update(player);
             _databaseContext.SaveChanges();
             return player;
 
@@ -57,8 +58,10 @@ namespace bomberman_backend.Repository
                     Effect = powerup.Effect,
                     duration = powerup.duration
                 };
+                _databaseContext.powerup.Add(powerUpToAdd);
             }
             player.powerUp = powerUpToAdd;
+            _databaseContext.players.Update(player);
             _databaseContext.SaveChanges();
             return player;
         }
@@ -78,11 +81,8 @@ namespace bomberman_backend.Repository
                 score = player.Score,
                 lives = player.Lives,
                 characterColor = player.CharacterColor,
-                sessionId = new Session
-                {
-                    Id = Guid.NewGuid(),
-                },
                 wins = player.Wins,
+                sessionId = player.sessionId,
                 bomb = new Bomb
                 {
                     xCordinate = "0",
@@ -96,13 +96,13 @@ namespace bomberman_backend.Repository
             return newPlayer;
         }
 
-        public Player GetPlayer(string username)
+        public Player GetPlayer(Guid id)
         {
-            if(string.IsNullOrEmpty(username))
+            if(id == Guid.Empty)
             {
                 return null;
             }
-            var player = _databaseContext.players.SingleOrDefault(o => o.UserName == username);
+            var player = _databaseContext.players.SingleOrDefault(o => o.UserId == id);
 
             if (player == null)
             {

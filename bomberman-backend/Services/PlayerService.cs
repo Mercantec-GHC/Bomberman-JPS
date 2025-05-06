@@ -27,9 +27,9 @@ namespace bomberman_backend.Services
             return _playerRepo.CreatePlayer(player);
         }
 
-        public Player GetPlayer(string username)
+        public Player GetPlayer(Guid id)
         {
-            return _playerRepo.GetPlayer(username);
+            return _playerRepo.GetPlayer(id);
         }
 
         public List<Player> GetPlayers()

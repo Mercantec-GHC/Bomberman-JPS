@@ -16,9 +16,9 @@ namespace bomberman_backend.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetPlayer([FromQuery] string username)
+        public ActionResult GetPlayer([FromQuery] Guid id)
         {
-            var player = _playerService.GetPlayer(username);
+            var player = _playerService.GetPlayer(id);
             if (Object.ReferenceEquals(player, null))
             {
                 return NotFound("Player not found");
