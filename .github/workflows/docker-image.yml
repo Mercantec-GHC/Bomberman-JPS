@@ -15,14 +15,18 @@ jobs:
         run: | 
             container=$(docker ps --format "{{.ID}} {{.Names}}" | grep "backend" | cut -d " " -f1)
             container2=$(docker ps --format "{{.ID}} {{.Names}}" | grep "frontend" | cut -d " " -f1)
-            if [ -n "$container" ] || [ -n "$container2" ]; then
+            if [ -n "$container" ]; then
                docker stop "$container"
-               docker stop "$container2"
                docker remove "$container"
-               docker remove "$container2"
              else
-               echo "no containers"
+               echo "no backend container"
             fi  
+            if [ -n "$container2" ]; then
+              docker stop "$container2"
+              docker remove "$container2"
+              else
+               echo "no fontend container"
+            fi
             
   build:
     needs: cleanup
