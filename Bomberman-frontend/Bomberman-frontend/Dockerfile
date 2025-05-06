@@ -13,7 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Bomberman-frontend/Bomberman-frontend.csproj", "Bomberman-frontend/"]
-COPY ["../Bomberman-frontend.Client/Bomberman-frontend.Client.csproj", "Bomberman-frontend.Client/"]
+COPY ["Bomberman-frontend.Client/Bomberman-frontend.Client.csproj", "Bomberman-frontend.Client/"]
 RUN dotnet restore "./Bomberman-frontend/Bomberman-frontend.csproj"
 COPY . .
 WORKDIR "/src/Bomberman-frontend"
