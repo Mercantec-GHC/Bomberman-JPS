@@ -35,7 +35,7 @@ jobs:
       - name: Build the frontend Docker image
         run: |
           cd Bomberman-frontend
-          docker build . --file /Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
+          docker build . --file Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
   create:
     needs: build
     runs-on: "self-hosted"
