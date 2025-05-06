@@ -32,7 +32,7 @@ jobs:
       - name: Build the Docker image
         run: | 
           docker build . --file bomberman-backend/Dockerfile --tag h3-backend-project:latest
-          docker build /Bomberman-frontend --file Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
+          docker build Bomberman-frontend/ --file Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
   create:
     needs: build
     runs-on: "self-hosted"
