@@ -15,7 +15,7 @@ jobs:
         run: | 
             container=$(docker ps --format "{{.ID}} {{.Names}}" | grep "backend" | cut -d " " -f1)
             container2=$(docker ps --format "{{.ID}} {{.Names}}" | grep "frontend" | cut -d " " -f1)
-            if [ -n "$container" ] && [ -n "$container2" ]; then
+            if [ -n "$container" ] || [ -n "$container2" ]; then
                docker stop "$container"
                docker stop "$container2"
                docker remove "$container"
