@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   cleanup:
@@ -14,26 +12,41 @@ jobs:
       - name: Clean up Docker image
         run: | 
             container=$(docker ps --format "{{.ID}} {{.Names}}" | grep "backend" | cut -d " " -f1)
+            container2=$(docker ps --format "{{.ID}} {{.Names}}" | grep "frontend" | cut -d " " -f1)
             if [ -n "$container" ]; then
                docker stop "$container"
                docker remove "$container"
              else
-               echo "no containers"
+               echo "no backend container"
             fi  
+            if [ -n "$container2" ]; then
+              docker stop "$container2"
+              docker remove "$container2"
+              else
+               echo "no fontend container"
+            fi
+            
   build:
     needs: cleanup
     runs-on: "self-hosted"
     steps:
       - uses: actions/checkout@v4
-      - name: Build the Docker image
-        run: docker build . --file bomberman-backend/Dockerfile --tag h3-backend-project:latest
+      - name: Build the backend Docker image
+        run: | 
+          docker build . --file bomberman-backend/Dockerfile --tag h3-backend-project:latest
+      - name: Build the frontend Docker image
+        run: |
+          cd Bomberman-frontend
+          docker build . --file Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
   create:
     needs: build
     runs-on: "self-hosted"
     steps:
       - uses: actions/checkout@v4
       - name: Create the docker container
-        run: docker create --name backend -p 8080:8080 -e dbcontext="${{ vars.dbcontext }}" h3-backend-project:latest
+        run: | 
+          docker create --name backend -p 8080:8080 -e dbcontext="${{ vars.dbcontext }}" h3-backend-project:latest
+          docker create --name frontend -p 8081:8080 h3-frontend-project:latest
   logs:
     needs: create
     runs-on: "self-hosted"
@@ -47,4 +60,6 @@ jobs:
       steps:
         - uses: actions/checkout@v4
         - name: Start the Docker image
-          run: docker start backend
+          run: | 
+            docker start backend
+            docker start frontend

@@ -12,10 +12,6 @@ namespace bomberman_backend.Services
         {
             _userRepo = userRepo;
         }
-        public User CreateUser(CreateUserDTO user)
-        {
-           return _userRepo.CreateUser(user);
-        }
 
         public void DeleteUser(Guid id)
         {

@@ -15,5 +15,10 @@ namespace bomberman_backend.Data
         public DbSet<Leaderboard> leaderboards { get; set; }
         public DbSet<Lobby> lobby { get; set; }
         public DbSet<PowerUp> powerup { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().UseTptMappingStrategy();
+        }
     }
 }

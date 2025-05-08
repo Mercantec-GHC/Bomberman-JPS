@@ -12,8 +12,8 @@ using bomberman_backend.Data;
 namespace bomberman_backend.Migrations
 {
     [DbContext(typeof(DatabaseContextcs))]
-    [Migration("20250425123135_migration_0002")]
-    partial class migration_0002
+    [Migration("20250507172632_migration_005")]
+    partial class migration_005
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,9 +39,6 @@ namespace bomberman_backend.Migrations
                     b.Property<int>("fuseTime")
                         .HasColumnType("integer");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("xCordinate")
                         .IsRequired()
                         .HasColumnType("text");
@@ -51,8 +48,6 @@ namespace bomberman_backend.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("userId");
 
                     b.ToTable("bomb");
                 });
@@ -86,9 +81,6 @@ namespace bomberman_backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("hightScore")
                         .HasColumnType("integer");
 
@@ -98,9 +90,11 @@ namespace bomberman_backend.Migrations
                     b.Property<int>("totalWins")
                         .HasColumnType("integer");
 
-                    b.HasKey("id");
+                    b.Property<string>("userName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("id");
 
                     b.ToTable("leaderboards");
                 });
@@ -113,16 +107,14 @@ namespace bomberman_backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("HostUserIDId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("HostUserID")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HostUserIDId");
 
                     b.ToTable("lobby");
                 });
@@ -171,33 +163,23 @@ namespace bomberman_backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("users");
 
-                    b.HasDiscriminator().HasValue("User");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("DomainModels.Player", b =>
@@ -217,10 +199,10 @@ namespace bomberman_backend.Migrations
                     b.Property<long>("lives")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("lobbyId")
+                    b.Property<int?>("lobbyId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("powerUpId")
+                    b.Property<int?>("powerUpId")
                         .HasColumnType("integer");
 
                     b.Property<long>("score")
@@ -240,18 +222,7 @@ namespace bomberman_backend.Migrations
 
                     b.HasIndex("sessionIdId");
 
-                    b.HasDiscriminator().HasValue("Player");
-                });
-
-            modelBuilder.Entity("DomainModels.Bomb", b =>
-                {
-                    b.HasOne("DomainModels.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
+                    b.ToTable("players");
                 });
 
             modelBuilder.Entity("DomainModels.ControllerLogs", b =>
@@ -265,30 +236,14 @@ namespace bomberman_backend.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("DomainModels.Leaderboard", b =>
-                {
-                    b.HasOne("DomainModels.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DomainModels.Lobby", b =>
-                {
-                    b.HasOne("DomainModels.User", "HostUserID")
-                        .WithMany()
-                        .HasForeignKey("HostUserIDId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("HostUserID");
-                });
-
             modelBuilder.Entity("DomainModels.Player", b =>
                 {
+                    b.HasOne("DomainModels.User", null)
+                        .WithOne()
+                        .HasForeignKey("DomainModels.Player", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DomainModels.Bomb", "bomb")
                         .WithMany()
                         .HasForeignKey("bombId")
@@ -297,15 +252,11 @@ namespace bomberman_backend.Migrations
 
                     b.HasOne("DomainModels.Lobby", "lobby")
                         .WithMany("Players")
-                        .HasForeignKey("lobbyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("lobbyId");
 
                     b.HasOne("DomainModels.PowerUp", "powerUp")
                         .WithMany()
-                        .HasForeignKey("powerUpId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("powerUpId");
 
                     b.HasOne("DomainModels.Session", "sessionId")
                         .WithMany()
