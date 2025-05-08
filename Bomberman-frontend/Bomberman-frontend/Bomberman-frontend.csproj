@@ -13,9 +13,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="MQTTnet" Version="3.4.3" />
-    <PackageReference Include="MudBlazor" Version="8.6.0" />
-    <ProjectReference Include="..\Bomberman-frontend.Client\Bomberman-frontend.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.14" />
   </ItemGroup>
 
 </Project>

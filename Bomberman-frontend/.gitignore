@@ -488,3 +488,6 @@ $RECYCLE.BIN/
 *.swp
 obj/
 **/obj/
+appsettings.json
+**/appsettings.json'
+Bomberman-frontend/Bomberman-frontend/appsettings.json
