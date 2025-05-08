@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bomberman-frontend.Client",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bomberman-frontend", "Bomberman-frontend\Bomberman-frontend.csproj", "{CF5D3F2F-E6D3-47AB-8F5C-3A2DF4590332}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombermanGame", "Bomberman-game\BombermanGame.csproj", "{888A98A1-791C-49D0-B3BA-9AA2538F08C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombermanShared", "BombermanShared\BombermanShared.csproj", "{B8DDFC29-5DB1-4915-B720-99540F0299F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,19 @@ Global
 		{CF5D3F2F-E6D3-47AB-8F5C-3A2DF4590332}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF5D3F2F-E6D3-47AB-8F5C-3A2DF4590332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF5D3F2F-E6D3-47AB-8F5C-3A2DF4590332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{888A98A1-791C-49D0-B3BA-9AA2538F08C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{888A98A1-791C-49D0-B3BA-9AA2538F08C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{888A98A1-791C-49D0-B3BA-9AA2538F08C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{888A98A1-791C-49D0-B3BA-9AA2538F08C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8DDFC29-5DB1-4915-B720-99540F0299F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8DDFC29-5DB1-4915-B720-99540F0299F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8DDFC29-5DB1-4915-B720-99540F0299F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8DDFC29-5DB1-4915-B720-99540F0299F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F626F5C-484E-4173-B942-C64CCCF81412}
 	EndGlobalSection
 EndGlobal

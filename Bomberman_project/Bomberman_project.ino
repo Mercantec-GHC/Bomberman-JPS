@@ -150,7 +150,7 @@ Serial.println("Connecting to WiFi...");
   playerLives = 3;
   gameOver = false;
   Serial.println("Game restarted");
-  sendMQTTMessage("game");
+  sendMQTTMessage("game", "restart");
 
   
   carrier.display.fillScreen(ST77XX_BLACK);
