@@ -72,16 +72,27 @@ namespace bomberman_backend.Repository
             {
                 return null;
             }
-   
+            List<string> colors = new List<string>()
+            {
+                "Red",
+                "Blue",
+                "Green",
+                "Orange",
+            };
+
+            Random rnd = new Random();
+            var rndColor = rnd.Next(0, 4);
+
             var newPlayer = new Player
             {
-                UserId = player.UserId,
-                Email = player.Email,
-                UserName = player.Username,
-                score = player.Score,
-                lives = player.Lives,
-                characterColor = player.CharacterColor,
-                wins = player.Wins,
+                UserId = Guid.NewGuid(),
+                UserName = player.userName,
+                Email = player.email,
+                Password = player.password,
+                score = 0,
+                lives = 3,
+                characterColor = colors[rndColor],
+                wins = 0,
                 sessionId = player.sessionId,
                 bomb = new Bomb
                 {

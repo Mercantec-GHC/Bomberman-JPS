@@ -8,19 +8,12 @@ namespace DomainModels.DTO
 {
     public class CreatePlayerDTO
     {
-        public Guid UserId { get; set; }
+        public string userName { get; set; }
+        public string password { get; set; }
 
-        public string Email { get; set; }
-        public string Username { get; set; }
-        public uint Score { get; set; } = 0;
-        public uint Lives { get; set; } = 3;
+        public string email { get; set; }
 
         public Session sessionId { get; set; }
-
-        public string CharacterColor { get; set; }
-
-        public int Wins { get; set; }
-
 
     }
 }

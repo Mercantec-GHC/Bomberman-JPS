@@ -38,18 +38,6 @@ namespace bomberman_backend.Controllers
             return users;
         }
 
-        [HttpPost]
-        public ActionResult Post([FromBody] CreateUserDTO user)
-        {
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            var _User = _users.CreateUser(user);
-
-            return Ok(_User);
-        }
 
         [HttpPut]
         public ActionResult<GetUserDTO> Put([FromQuery] Guid id, [FromBody] CreateUserDTO user)

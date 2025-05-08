@@ -7,11 +7,43 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace bomberman_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class initial_0001 : Migration
+    public partial class migration_001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "bomb",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    yCordinate = table.Column<string>(type: "text", nullable: false),
+                    xCordinate = table.Column<string>(type: "text", nullable: false),
+                    explosionRadius = table.Column<int>(type: "integer", nullable: false),
+                    fuseTime = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_bomb", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "leaderboards",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    userName = table.Column<string>(type: "text", nullable: false),
+                    totalGames = table.Column<int>(type: "integer", nullable: false),
+                    totalWins = table.Column<int>(type: "integer", nullable: false),
+                    hightScore = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_leaderboards", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "powerup",
                 columns: table => new
@@ -40,23 +72,6 @@ namespace bomberman_backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "bomb",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    userId = table.Column<int>(type: "integer", nullable: false),
-                    yCordinate = table.Column<string>(type: "text", nullable: false),
-                    xCordinate = table.Column<string>(type: "text", nullable: false),
-                    explosionRadius = table.Column<int>(type: "integer", nullable: false),
-                    fuseTime = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_bomb", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "controllerLogs",
                 columns: table => new
                 {
@@ -68,22 +83,6 @@ namespace bomberman_backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_controllerLogs", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "leaderboards",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    totalGames = table.Column<int>(type: "integer", nullable: false),
-                    totalWins = table.Column<int>(type: "integer", nullable: false),
-                    hightScore = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_leaderboards", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,8 +106,8 @@ namespace bomberman_backend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Password = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "text", nullable: false),
                     Discriminator = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
                     score = table.Column<long>(type: "bigint", nullable: true),
@@ -140,30 +139,18 @@ namespace bomberman_backend.Migrations
                         name: "FK_users_lobby_lobbyId",
                         column: x => x.lobbyId,
                         principalTable: "lobby",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_users_powerup_powerUpId",
                         column: x => x.powerUpId,
                         principalTable: "powerup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_bomb_userId",
-                table: "bomb",
-                column: "userId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_controllerLogs_PlayerId",
                 table: "controllerLogs",
                 column: "PlayerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_leaderboards_UserId",
-                table: "leaderboards",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_lobby_HostUserIDId",
@@ -191,25 +178,9 @@ namespace bomberman_backend.Migrations
                 column: "sessionIdId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_bomb_users_userId",
-                table: "bomb",
-                column: "userId",
-                principalTable: "users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_controllerLogs_users_PlayerId",
                 table: "controllerLogs",
                 column: "PlayerId",
-                principalTable: "users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_leaderboards_users_UserId",
-                table: "leaderboards",
-                column: "UserId",
                 principalTable: "users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
@@ -226,10 +197,6 @@ namespace bomberman_backend.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_bomb_users_userId",
-                table: "bomb");
-
             migrationBuilder.DropForeignKey(
                 name: "FK_lobby_users_HostUserIDId",
                 table: "lobby");

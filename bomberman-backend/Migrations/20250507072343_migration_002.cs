@@ -5,13 +5,13 @@
 namespace bomberman_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class migration_0006 : Migration
+    public partial class migration_002 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Password",
+                name: "UserName",
                 table: "users",
                 type: "text",
                 nullable: true,
@@ -23,7 +23,7 @@ namespace bomberman_backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Password",
+                name: "UserName",
                 table: "users",
                 type: "text",
                 nullable: false,

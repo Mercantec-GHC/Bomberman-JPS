@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public User HostUserID { get; set; }
-        public List<Player> Players { get; set; }
+        public Guid HostUserID { get; set; }
+        public List<Player> Players { get; set; } 
     }
 }
