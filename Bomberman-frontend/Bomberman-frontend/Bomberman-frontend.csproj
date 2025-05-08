@@ -13,6 +13,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="MQTTnet" Version="3.4.3" />
+    <PackageReference Include="MudBlazor" Version="8.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BombermanShared\BombermanShared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DomainModels">
+      <HintPath>..\..\DomainModels\obj\Debug\net8.0\DomainModels.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
