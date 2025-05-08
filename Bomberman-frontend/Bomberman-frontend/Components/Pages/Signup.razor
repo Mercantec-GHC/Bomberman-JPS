@@ -1,0 +1,74 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using DomainModels.DTO
+@inject HttpClient httpClient
+@page "/Signup"
+
+
+<h3>Signup</h3>
+
+<EditForm Model="@player" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Username" HelperText="Max. 8 characters"
+                    @bind-Value="player.userName" For="@(() => player.userName)" />
+                    <MudTextField Label="Email" Class="mt-3"
+                    @bind-Value="player.email" For="@(() => player.email)" />
+                    <MudTextField Label="SessionID" Class="mt-3"
+                    @bind-Value="sessionId" For="@(() => sessionId)" />
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                    @bind-Value="player.password" For="@(() => player.password)" InputType="InputType.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full">
+                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+                @if (success)
+                {
+                    <MudText Color="Color.Success">Success</MudText>
+                }
+                else
+                {
+                    <MudText Color="@Color.Error">
+                        <ValidationSummary />
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out the form correctly to see the success message.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code
+{
+    CreatePlayerDTO player = new CreatePlayerDTO();
+    int sessionId { get; set; }
+    bool success;
+
+
+    private async void OnValidSubmit(EditContext context)
+    {
+        player.sessionId = new DomainModels.Session()
+        {
+           Id = sessionId
+        };
+        var response = await httpClient.PostAsJsonAsync("https://localhost:7169/api/Player", player!);
+        success = response.IsSuccessStatusCode;
+        StateHasChanged();
+
+        if (!success)
+        {
+            return;
+        }
+    }
+}
