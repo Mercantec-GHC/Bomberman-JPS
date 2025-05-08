@@ -5,7 +5,7 @@
 namespace bomberman_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class migration_0009 : Migration
+    public partial class migration_005 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

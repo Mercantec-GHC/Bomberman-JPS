@@ -12,8 +12,8 @@ using bomberman_backend.Data;
 namespace bomberman_backend.Migrations
 {
     [DbContext(typeof(DatabaseContextcs))]
-    [Migration("20250506052239_migration_0015")]
-    partial class migration_0015
+    [Migration("20250507071651_migration_001")]
+    partial class migration_001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,6 @@ namespace bomberman_backend.Migrations
                         .HasColumnType("character varying(8)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
@@ -219,7 +218,7 @@ namespace bomberman_backend.Migrations
                     b.Property<long>("score")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("sessionIdId")
+                    b.Property<int>("sessionIdId")
                         .HasColumnType("integer");
 
                     b.Property<int>("wins")
@@ -276,7 +275,9 @@ namespace bomberman_backend.Migrations
 
                     b.HasOne("DomainModels.Session", "sessionId")
                         .WithMany()
-                        .HasForeignKey("sessionIdId");
+                        .HasForeignKey("sessionIdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("bomb");
 

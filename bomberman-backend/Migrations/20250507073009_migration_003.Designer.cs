@@ -12,8 +12,8 @@ using bomberman_backend.Data;
 namespace bomberman_backend.Migrations
 {
     [DbContext(typeof(DatabaseContextcs))]
-    [Migration("20250505115952_migration_0010")]
-    partial class migration_0010
+    [Migration("20250507073009_migration_003")]
+    partial class migration_003
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,16 +107,14 @@ namespace bomberman_backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("HostUserIDId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("HostUserID")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HostUserIDId");
 
                     b.ToTable("lobby");
                 });
@@ -152,9 +150,6 @@ namespace bomberman_backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("sessionId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.ToTable("Session");
@@ -174,7 +169,6 @@ namespace bomberman_backend.Migrations
                         .HasColumnType("character varying(8)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
@@ -184,7 +178,6 @@ namespace bomberman_backend.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -248,17 +241,6 @@ namespace bomberman_backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("DomainModels.Lobby", b =>
-                {
-                    b.HasOne("DomainModels.User", "HostUserID")
-                        .WithMany()
-                        .HasForeignKey("HostUserIDId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("HostUserID");
                 });
 
             modelBuilder.Entity("DomainModels.Player", b =>

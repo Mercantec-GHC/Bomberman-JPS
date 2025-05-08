@@ -7,8 +7,6 @@ namespace bomberman_backend.Repository.Interfaces
     {
         public GetUserDTO GetUser(Guid id);
         public List<GetUserDTO> GetUsers();
-
-        public User CreateUser(CreateUserDTO user);
         public GetUserDTO UpdateUser(Guid id, CreateUserDTO user);
         public void DeleteUser(Guid id);
     }

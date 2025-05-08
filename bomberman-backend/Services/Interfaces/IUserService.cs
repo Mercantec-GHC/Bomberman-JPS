@@ -7,7 +7,6 @@ namespace bomberman_backend.Services.Interfaces
     {
         public GetUserDTO GetUser(Guid id);
         public List<GetUserDTO> GetUsers();
-        public User CreateUser(CreateUserDTO user);
         public GetUserDTO UpdateUser(Guid id, CreateUserDTO user);
         public void DeleteUser(Guid id);
     }

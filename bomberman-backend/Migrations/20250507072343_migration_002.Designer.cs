@@ -12,8 +12,8 @@ using bomberman_backend.Data;
 namespace bomberman_backend.Migrations
 {
     [DbContext(typeof(DatabaseContextcs))]
-    [Migration("20250505120842_migration_0012")]
-    partial class migration_0012
+    [Migration("20250507072343_migration_002")]
+    partial class migration_002
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,6 @@ namespace bomberman_backend.Migrations
                         .HasColumnType("character varying(8)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
@@ -181,7 +180,6 @@ namespace bomberman_backend.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
