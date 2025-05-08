@@ -1,124 +1,27 @@
-﻿@page "/"
-@using Blazorex
+﻿@using System.Net.Http.Json
+@using DomainModels
+@inject HttpClient httpClient
+@page "/"
 
-<h3>Blazorex Test </h3>
+
+<h3>Daskboard</h3>
 
 <!-- Make sure the div is focusable and listens for key events -->
-<div tabindex="0" style="border:1px solid black; width:1200px; height:700px;" @onkeydown="OnKeyDown" @onkeyup="OnKeyUp">
-    <Canvas Width="1200" Height="700" OnCanvasReady="OnCanvasReady" />
-</div>
 
+
+<MudDataGrid Items="@Elements.Take(4)">
+    <Columns>
+        <PropertyColumn Property="x => x.userName" />
+        <PropertyColumn Property="x => x.totalGames" />
+        <PropertyColumn Property="x => x.totalWins" />
+        <PropertyColumn Property="x => x.hightScore" />
+    </Columns>
+</MudDataGrid>
 @code {
-    private CanvasBase _canvas;
-    private IRenderContext _context;
+    private IEnumerable<Leaderboard> Elements = new List<Leaderboard>();
 
-    private float _x = 10;
-    private float _y = 10;
-    private float _speed = 10;
-
-    // Flags to track the key state
-    private bool _isMovingUp = false;
-    private bool _isMovingDown = false;
-    private bool _isMovingLeft = false;
-    private bool _isMovingRight = false;
-
-    // This method is triggered when the canvas is ready
-    private void OnCanvasReady(CanvasBase canvas)
+    protected override async Task OnInitializedAsync()
     {
-        _canvas = canvas;
-        _context = canvas.RenderContext;
-
-        // Debugging: Log when the canvas is ready
-        Console.WriteLine("Canvas is ready.");
-
-        // Initial drawing of the blue rectangle
-        RenderFrame();
-    }
-
-    // This method is responsible for rendering the rectangle on the canvas
-    private void RenderFrame()
-    {
-        if (_context == null)
-        {
-            Console.WriteLine("RenderContext is null.");
-            return;
-        }
-
-        // Debugging: Log rendering details
-        Console.WriteLine($"Rendering frame at (_x: {_x}, _y: {_y})");
-
-        // Clear the canvas
-        _context.ClearRect(0, 0, 120, 70);
-
-        // Draw the blue rectangle at the updated position
-        _context.FillStyle = "blue";
-        _context.FillRect(_x, _y, 100, 100);
-    }
-
-    // Continuously updates the rectangle's movement based on key presses
-    private void UpdateMovement()
-    {
-        // Debugging: Log movement flags
-        Console.WriteLine($"Updating movement. Up: {_isMovingUp}, Down: {_isMovingDown}, Left: {_isMovingLeft}, Right: {_isMovingRight}");
-
-        // Update position based on the movement flags
-        if (_isMovingUp) _y -= _speed;
-        if (_isMovingDown) _y += _speed;
-        if (_isMovingLeft) _x -= _speed;
-        if (_isMovingRight) _x += _speed;
-
-        // Re-render immediately
-        RenderFrame();
-
-        // Request the next animation frame for continuous updates
-        if (_isMovingUp || _isMovingDown || _isMovingLeft || _isMovingRight)
-        {
-            // Continuously update the position
-            requestAnimationFrame(UpdateMovement);
-        }
-    }
-
-    // Handles the key down event (key press)
-    private void OnKeyDown(KeyboardEventArgs e)
-    {
-        // Debugging: Log which key is being pressed
-        Console.WriteLine($"Key down: {e.Key}");
-
-        // Set flags to true when the keys are pressed
-        if (e.Key == "ArrowUp")
-            _isMovingUp = true;
-        else if (e.Key == "ArrowDown")
-            _isMovingDown = true;
-        else if (e.Key == "ArrowLeft")
-            _isMovingLeft = true;
-        else if (e.Key == "ArrowRight")
-            _isMovingRight = true;
-
-        // Start the continuous update if any key is pressed
-        UpdateMovement();
-    }
-
-    // Handles the key up event (key release)
-    private void OnKeyUp(KeyboardEventArgs e)
-    {
-        // Debugging: Log which key is being released
-        Console.WriteLine($"Key up: {e.Key}");
-
-        // Reset the flags when keys are released
-        if (e.Key == "ArrowUp")
-            _isMovingUp = false;
-        else if (e.Key == "ArrowDown")
-            _isMovingDown = false;
-        else if (e.Key == "ArrowLeft")
-            _isMovingLeft = false;
-        else if (e.Key == "ArrowRight")
-            _isMovingRight = false;
-    }
-
-    // This method ensures we continuously update the movement on keydown
-    private void requestAnimationFrame(Action action)
-    {
-        // Browser's requestAnimationFrame equivalent in Blazor
-        Task.Delay(16).ContinueWith(_ => action()); // ~60fps
+        Elements = await httpClient.GetFromJsonAsync<List<Leaderboard>>("https://localhost:7169/api/Leaderboard/all");
     }
 }
