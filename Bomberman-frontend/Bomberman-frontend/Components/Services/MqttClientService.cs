@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BombermanGame.Source.Engine.Input;
+using Microsoft.Extensions.Configuration;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
@@ -14,9 +15,11 @@ public class MqttClientService : BackgroundService
 
     private IConfiguration _configuration;
     private IMqttClient _mqttClient;
-    public MqttClientService(IConfiguration configuration)
+    private readonly PlayerInput _playerInput;
+    public MqttClientService(IConfiguration configuration, PlayerInput input)
     {
         _configuration = configuration;
+        _playerInput = input;
 
     }
 
@@ -41,28 +44,33 @@ public class MqttClientService : BackgroundService
                 var status = JsonSerializer.Deserialize<GameStatus>(payload);
                 if (status != null)
                 {
-
-                    switch (status.Type)
-                    {
-                        case "tilt_move":
-                            Console.WriteLine($"Player moved: {status.Value}");
-                            break;
-                        case "bomb_press":
-                            Console.WriteLine("Player placed a bomb.");
-                            break;
-                        case "powerup_used":
-                            Console.WriteLine($"Power-up used: {status.Value}");
-                            break;
-                        case "life":
-                            Console.WriteLine($"Life update: {status.Value}");
-                            break;
-                        case "game":
-                            Console.WriteLine($"Game Restarted");
-                            break;
-                        default:
-                            Console.WriteLine($"Unknown type: {status.Type}");
-                            break;
-                    }
+                    if (status.Type == "tilt_move")
+                        _playerInput.MoveDirection = status.Value;
+                    else if (status.Type == "bomb_press")
+                        _playerInput.BombPlaced = true;
+                    else if (status.Type == "powerup_used")
+                        _playerInput.PowerUpUsed = true;
+                    //switch (status.Type)
+                    //{
+                    //    case "tilt_move":
+                    //        Console.WriteLine($"Player moved: {status.Value}");
+                    //        break;
+                    //    case "bomb_press":
+                    //        Console.WriteLine("Player placed a bomb.");
+                    //        break;
+                    //    case "powerup_used":
+                    //        Console.WriteLine($"Power-up used: {status.Value}");
+                    //        break;
+                    //    case "life":
+                    //        Console.WriteLine($"Life update: {status.Value}");
+                    //        break;
+                    //    case "game":
+                    //        Console.WriteLine($"Game Restarted");
+                    //        break;
+                    //    default:
+                    //        Console.WriteLine($"Unknown type: {status.Type}");
+                    //        break;
+                    //}
                 }
             }
             catch (Exception ex)
