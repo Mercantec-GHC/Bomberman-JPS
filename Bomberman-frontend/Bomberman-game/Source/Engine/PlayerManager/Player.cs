@@ -4,6 +4,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using BombermanGame.Source.Engine.Map;
 
 namespace BombermanGame.Source.Engine.PlayerManager
 {
@@ -11,35 +12,72 @@ namespace BombermanGame.Source.Engine.PlayerManager
     {
         public Vector2 Position;
         private Texture2D _texture;
+        private float speed = 4;
+        private Rectangle _boundingBox;
 
-        public Player (Vector2 position, Texture2D texture)
+        public Player (Texture2D texture, Vector2 position)
         {
+           _texture = texture;
             Position = position;
-            _texture = texture;
+            UpdateBoundingBox();
         }
 
-        public void Update(string direction)
+        public void Update(string direction, Tilemap tilemap)
         {
-            float speed = 2f;
+            Vector2 newPosition = Position;
+
+            // Store the current position before any movement
+            Rectangle previousBoundingBox = _boundingBox;
 
             switch (direction)
             {
                 case "Left":
-                    Position.X -= speed;
+                    newPosition.X -= speed;
                     break;
                 case "Right":
-                    Position.X += speed;
+                    newPosition.X += speed;
                     break;
                 case "Up":
-                    Position.Y -= speed;
+                    newPosition.Y -= speed;
                     break;
                 case "Down":
-                    Position.Y += speed;
+                    newPosition.Y += speed;
                     break;
+            }
+
+            Rectangle newBoundingBox = new Rectangle((int)newPosition.X, (int)newPosition.Y, _texture.Width, _texture.Height);
+
+            Rectangle collisionBounds = new Rectangle(
+        newBoundingBox.X + 20, //left
+        newBoundingBox.Y + 40, //top 
+        newBoundingBox.Width - 40, //right
+        newBoundingBox.Height - 40 //bottom
+    );
+
+           
+            if (!tilemap.IsTileCollidable(collisionBounds))
+            {
+               
+                Position = newPosition;
+                _boundingBox = newBoundingBox;  
             }
         }
 
-        public void draw (SpriteBatch spriteBatch)
+        public void SetTexture(Texture2D texture)
+        {
+            _texture = texture;
+            UpdateBoundingBox();
+        }
+
+        private void UpdateBoundingBox()
+        {
+            if (_texture != null)
+            {
+                _boundingBox = new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, Position, Color.White);
         }
