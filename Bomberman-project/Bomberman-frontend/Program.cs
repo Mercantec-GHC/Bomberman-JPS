@@ -1,4 +1,6 @@
 using Bomberman_frontend.Components;
+using DomainModels;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+builder.Services.AddSingleton<PlayerInput>();
+builder.Services.AddHttpClient();
+builder.Services.AddMudServices();
+builder.Services.AddHostedService<MqttClientService>();
+builder.Services.AddSingleton<MqttClientService>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

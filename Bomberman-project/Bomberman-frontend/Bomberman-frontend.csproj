@@ -15,4 +15,13 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MQTTnet" Version="4.3.3.952" />
+      <PackageReference Include="MudBlazor" Version="8.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+    </ItemGroup>
+
 </Project>
