@@ -1,13 +1,55 @@
+using Bomberman_Backend.Data;
+using Bomberman_Backend.Repository.Interfaces;
+using Bomberman_Backend.Repository;
+using Microsoft.EntityFrameworkCore;
+using Bomberman_Backend.Services.Interfaces;
+using Bomberman_Backend.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+// GetAllHeadsets from the Postgres DB
+IConfiguration Configuration = builder.Configuration;
+var connectionString = Configuration.GetConnectionString("dbcontext") ??
+                      Environment.GetEnvironmentVariable("dbcontext");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseNpgsql(connectionString);
+});
+
+
+// Repos
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ILeaderboardRepo, LeaderboardRepo>();
+builder.Services.AddScoped<IPowerUpRepo, PowerUpRepo>();
+builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
+builder.Services.AddScoped<ILobbyRepo, LobbyRepo>();
+
+
+//Services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
+builder.Services.AddScoped<IPowerUpService, PowerUpService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<ILobbyService, LobbyService>();
+
+
+builder.Services.AddHealthChecks();
+
 
 var app = builder.Build();
+
+
+app.MapHealthChecks("/healthz");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,5 +63,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+app.UseCors(policy =>
+    policy.AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader());
 
 app.Run();
