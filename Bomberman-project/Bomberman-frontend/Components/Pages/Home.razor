@@ -22,6 +22,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await httpClient.GetFromJsonAsync<List<Leaderboard>>("https://localhost:7169/api/Leaderboard/all");
+        Elements = await httpClient.GetFromJsonAsync<List<Leaderboard>>("https://localhost:7152/api/Leaderboard/all");
     }
 }
