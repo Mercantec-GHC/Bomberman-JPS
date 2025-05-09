@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BombermanGame.Source.Engine.Map;
+using BombermanGame.Source.Engine.PlayerManager;
 
 namespace BombermanGame.Source.Engine
 {
@@ -14,6 +16,7 @@ namespace BombermanGame.Source.Engine
 {
         public static ContentManager content;
         public static SpriteBatch spriteBatch;
+       
 
-}
+    }
 }
