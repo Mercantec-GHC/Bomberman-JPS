@@ -2,6 +2,7 @@
 using Bomberman_Backend.Repository.Interfaces;
 using DomainModels;
 using DomainModels.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bomberman_Backend.Repository
 {
@@ -13,26 +14,24 @@ namespace Bomberman_Backend.Repository
             _databaseContext = databaseContext;
         }
 
-        public ControllerLogs CreateControllerLog(CreateControllerLogsDTO createDTO)
+        public async Task CreateControllerLog(CreateControllerLogsDTO createDTO, InputType inputType)
         {
-            return null;
+            var log = new ControllerLogs
+            {
+                Player = createDTO.Player,
+                TimeStamp = createDTO.TimeStamp,
+                InputType = inputType
+            };
+
+            await _databaseContext.controllerLogs.AddAsync(log);
+            await _databaseContext.SaveChangesAsync();
         }
 
         public List<ControllerLogs> GetControllerLogs()
         {
-            var controllerlogs = _databaseContext.controllerLogs.ToList();
-            List<ControllerLogs> controllerLogsList = new List<ControllerLogs>();
-            foreach (var controllerlog in controllerlogs)
-            {
-                var controllerLog = new ControllerLogs
-                {
-                    Id = controllerlog.Id,
-                    Player = controllerlog.Player,
-                    TimeStamp = controllerlog.TimeStamp
-                };
-                controllerLogsList.Add(controllerlog);
-            }
-            return controllerLogsList;
+            return _databaseContext.controllerLogs
+            .Include(cl => cl.InputType)
+            .ToList(); 
         }
 
         public void DeleteControllerLog(int id)
@@ -43,6 +42,7 @@ namespace Bomberman_Backend.Repository
             {
                 throw new Exception("Controller log not found");
             }
+
             _databaseContext.controllerLogs.Remove(controllerLog);
             _databaseContext.SaveChanges();
         }
