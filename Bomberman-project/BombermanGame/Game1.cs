@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Input;
 using BombermanGame.Source;
 using BombermanGame.Source.Engine;
 using BombermanGame.Source.Engine.Input;
+using SharpDX.Direct2D1;
+using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 
 
 
@@ -19,9 +21,14 @@ namespace BombermanGame
 
         Texture2D[] runningTextures;
 
+        Texture2D[] Bomb;
+
         int counter;
         int activateFrame;
 
+        int bombFrame = 0;
+        int bombCounter = 0;
+        int bombFrameSpeed = 10;
         public Main(PlayerInput input)
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -64,6 +71,17 @@ namespace BombermanGame
             runningTextures[0] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human");
             runningTextures[1] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human2nd");
 
+            Bomb = new Texture2D[8];
+
+            Bomb[0] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb1");
+            Bomb[1] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb2");
+            Bomb[2] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb3");
+            Bomb[3] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb4");
+            Bomb[4] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb5");
+            Bomb[5] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb6");
+            Bomb[6] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb7");
+            Bomb[7] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb8");
+
             world = new World();
             world.Load(Content);
             world.SetPlayerTextures(runningTextures);
@@ -98,6 +116,15 @@ namespace BombermanGame
                 world.SetPlayerTextures(new Texture2D[] { runningTextures[activateFrame] });
             }
 
+            bombCounter++;
+            if (bombCounter > bombFrameSpeed)
+            {
+                bombCounter = 0;
+                bombFrame++;
+                if (bombFrame >= Bomb.Length)
+                    bombFrame = 0;
+            }
+
 
             base.Update(gameTime);
         }
@@ -110,7 +137,11 @@ namespace BombermanGame
 
             Globals.spriteBatch.Begin();
             world.Draw();
+
+            Globals.spriteBatch.Draw(Bomb[bombFrame], new Rectangle(300, 300, 300, 200), Color.White);
             Globals.spriteBatch.End();
+            
+            
 
             base.Draw(gameTime);
         }

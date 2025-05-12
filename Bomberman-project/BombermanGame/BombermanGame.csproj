@@ -12,6 +12,42 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Content\2d\Animation\Bomb\Bomb1.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb2.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb3.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb4.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb5.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb6.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb7.png" />
+      <None Remove="Content\2d\Animation\Bomb\Bomb8.png" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Content\2d\Animation\Bomb\Bomb1.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb2.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb3.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb4.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb5.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb6.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb7.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Content\2d\Animation\Bomb\Bomb8.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.*" />
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
     </ItemGroup>
