@@ -10,6 +10,6 @@ namespace DomainModels.DTO
     {
         public Player Player { get; set; }
         public DateTime TimeStamp { get; set; }
-        InputType InputType { get; set; }
+        public InputType InputType { get; set; }
     }
 }
