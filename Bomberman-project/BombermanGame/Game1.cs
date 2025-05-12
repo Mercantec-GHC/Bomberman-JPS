@@ -2,51 +2,117 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace BombermanGame;
+using BombermanGame.Source;
+using BombermanGame.Source.Engine;
+using BombermanGame.Source.Engine.Input;
 
-public class Game1 : Game
+
+
+namespace BombermanGame
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-
-    public Game1()
+    public class Main : Game
     {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
-    }
+        private GraphicsDeviceManager _graphics;
+        private PlayerInput _input;
 
-    protected override void Initialize()
-    {
-        // TODO: Add your initialization logic here
+        World world;
 
-        base.Initialize();
-    }
+        Texture2D[] runningTextures;
 
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        int counter;
+        int activateFrame;
 
-        // TODO: use this.Content to load your game content here
-    }
+        public Main(PlayerInput input)
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            _graphics.ApplyChanges();
 
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+            _input = input;
 
-        // TODO: Add your update logic here
+        }
 
-        base.Update(gameTime);
-    }
+        protected override void Initialize()
+        {
+            // TODO: Add your initialization logic here
 
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+            var screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            var screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-        // TODO: Add your drawing code here
+            _graphics.PreferredBackBufferWidth = screenWidth;
+            _graphics.PreferredBackBufferHeight = screenHeight;
 
-        base.Draw(gameTime);
+            _graphics.IsFullScreen = false;
+
+            _graphics.ApplyChanges();
+
+            Window.IsBorderless = true;
+
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            Globals.content = this.Content;
+            Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // TODO: use this.Content to load your game content here
+
+            runningTextures = new Texture2D[2];
+
+            runningTextures[0] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human");
+            runningTextures[1] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human2nd");
+
+            world = new World();
+            world.Load(Content);
+            world.SetPlayerTextures(runningTextures);
+
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            // TODO: Add your update logic here
+
+            //world.Update();
+
+            _input.HandleKeyboardInput();
+            world.Update(_input);
+            _input.ResetActions();
+
+            counter++;
+            if (counter > 25)
+            {
+                counter = 0;
+                activateFrame++;
+
+                if (activateFrame > runningTextures.Length - 1)
+                {
+                    activateFrame = 0;
+                }
+
+
+                world.SetPlayerTextures(new Texture2D[] { runningTextures[activateFrame] });
+            }
+
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
+
+            Globals.spriteBatch.Begin();
+            world.Draw();
+            Globals.spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
     }
 }
