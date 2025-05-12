@@ -6,7 +6,7 @@ using BombermanGame.Source;
 using BombermanGame.Source.Engine;
 using BombermanGame.Source.Engine.Input;
 using SharpDX.Direct2D1;
-using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using System.Collections.Generic;
 
 
 
@@ -16,19 +16,17 @@ namespace BombermanGame
     {
         private GraphicsDeviceManager _graphics;
         private PlayerInput _input;
+        List<Bomb> activeBombs = new List<Bomb>();
+        Texture2D[] bombTextures;
 
         World world;
 
         Texture2D[] runningTextures;
 
-        Texture2D[] Bomb;
 
         int counter;
         int activateFrame;
 
-        int bombFrame = 0;
-        int bombCounter = 0;
-        int bombFrameSpeed = 10;
         public Main(PlayerInput input)
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -62,7 +60,7 @@ namespace BombermanGame
         protected override void LoadContent()
         {
             Globals.content = this.Content;
-            Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.spriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
 
@@ -71,16 +69,12 @@ namespace BombermanGame
             runningTextures[0] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human");
             runningTextures[1] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human2nd");
 
-            Bomb = new Texture2D[8];
+            bombTextures = new Texture2D[10];
 
-            Bomb[0] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb1");
-            Bomb[1] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb2");
-            Bomb[2] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb3");
-            Bomb[3] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb4");
-            Bomb[4] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb5");
-            Bomb[5] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb6");
-            Bomb[6] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb7");
-            Bomb[7] = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb8");
+            for (int i = 0; i < 10; i++) 
+            {
+                bombTextures[i] = Content.Load<Texture2D>($"2d/Animation/Bomb/Bomb{i + 1}");
+            }            
 
             world = new World();
             world.Load(Content);
@@ -93,13 +87,9 @@ namespace BombermanGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
-            //world.Update();
-
             _input.HandleKeyboardInput();
             world.Update(_input);
-            _input.ResetActions();
+          
 
             counter++;
             if (counter > 25)
@@ -116,15 +106,21 @@ namespace BombermanGame
                 world.SetPlayerTextures(new Texture2D[] { runningTextures[activateFrame] });
             }
 
-            bombCounter++;
-            if (bombCounter > bombFrameSpeed)
+            if (_input.BombPlaced)
             {
-                bombCounter = 0;
-                bombFrame++;
-                if (bombFrame >= Bomb.Length)
-                    bombFrame = 0;
+                Vector2 playerPos = world._player.Position;
+                activeBombs.Add(new Bomb(playerPos));
             }
 
+            for(int i = activeBombs.Count - 1; i >= 0; i--)
+            {
+                activeBombs[i].Update(bombTextures);
+                if(activeBombs[i].IsFinsihed)
+                {
+                    activeBombs.RemoveAt(i);
+                }
+            }
+            _input.ResetActions();
 
             base.Update(gameTime);
         }
@@ -138,7 +134,11 @@ namespace BombermanGame
             Globals.spriteBatch.Begin();
             world.Draw();
 
-            Globals.spriteBatch.Draw(Bomb[bombFrame], new Rectangle(300, 300, 300, 200), Color.White);
+            foreach(var bomb in activeBombs)
+            {
+                bomb.Draw(Globals.spriteBatch, bombTextures);
+            }
+            
             Globals.spriteBatch.End();
             
             

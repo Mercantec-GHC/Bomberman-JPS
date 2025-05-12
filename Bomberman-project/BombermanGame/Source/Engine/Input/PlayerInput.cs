@@ -25,7 +25,7 @@ namespace BombermanGame.Source.Engine.Input
             else if (state.IsKeyDown(Keys.W))
                 MoveDirection = "Up";
             else if (state.IsKeyDown(Keys.S))
-                MoveDirection = "Down";
+                MoveDirection = "Down";           
 
             BombPlaced = state.IsKeyDown(Keys.Space);
             PowerUpUsed = state.IsKeyDown(Keys.F);
