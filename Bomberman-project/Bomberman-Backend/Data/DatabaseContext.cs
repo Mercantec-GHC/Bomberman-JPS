@@ -10,7 +10,7 @@ namespace Bomberman_Backend.Data
 
         public DbSet<Player> players { get; set; }
         public DbSet<User> users { get; set; }
-
+        public DbSet<RefreshToken> refreshTokens { get; set; }
         public DbSet<Bomb> bomb { get; set; }
         public DbSet<ControllerLogs> controllerLogs { get; set; }
         public DbSet<Leaderboard> leaderboards { get; set; }
@@ -19,6 +19,7 @@ namespace Bomberman_Backend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
             modelBuilder.Entity<User>().UseTptMappingStrategy();
         }
     }

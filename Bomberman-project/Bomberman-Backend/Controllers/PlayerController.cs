@@ -1,6 +1,7 @@
 ﻿using Bomberman_Backend.Services.Interfaces;
 using DomainModels.DTO;
 using DomainModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bomberman_Backend.Controllers
@@ -101,6 +102,28 @@ namespace Bomberman_Backend.Controllers
                 return NotFound("Player not found");
             }
             return Ok(_player);
+        }
+
+        [HttpPost("/api/[controller]/login")]
+        public ActionResult Login(LoginDTO login)
+        {
+            var _player = _playerService.Login(login);
+            return Ok(_player);
+        }
+
+        [HttpPost("/api/[controller]/refreshToken")]
+        public ActionResult RefreshToken(TokenRequest tokenRequest)
+        {
+            var _player = _playerService.LoginWithRefreshToken(tokenRequest);
+            return Ok(_player);
+        }
+        
+        [Authorize]
+        [HttpDelete("/api/[controller]/{id:guid}/refreshToken")]
+        public ActionResult RefreshToken([FromRoute] Guid id)
+        {
+            bool success = _playerService.RevokeRefreshToken(id);
+            return success ? Ok() : NotFound("Player not found");
         }
     }
 }
