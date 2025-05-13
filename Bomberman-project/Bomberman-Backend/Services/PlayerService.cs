@@ -51,5 +51,20 @@ namespace Bomberman_Backend.Services
         {
             return _playerRepo.UpdatePlayer(player);
         }
+
+        public TokenResponse Login(LoginDTO login)
+        {
+            return _playerRepo.Login(login);
+        }
+
+        public TokenResponse LoginWithRefreshToken(TokenRequest tokenRequest)
+        {
+            return _playerRepo.LoginWithRefreshToken(tokenRequest);
+        }
+
+        public bool RevokeRefreshToken(Guid userId)
+        {
+            return _playerRepo.RevokeRefreshToken(userId);
+        }
     }
 }

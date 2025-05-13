@@ -13,5 +13,9 @@ namespace Bomberman_Backend.Repository.Interfaces
         public Player RemovePowerUp(string username, PowerUp powerup);
         public Player AddBomb(string username, Bomb bomb);
         public Player RemoveBomb(string username, Bomb bomb);
+        public TokenResponse Login(LoginDTO login);
+        public TokenResponse LoginWithRefreshToken(TokenRequest tokenRequest);
+
+        public bool RevokeRefreshToken(Guid userId);
     }
 }
