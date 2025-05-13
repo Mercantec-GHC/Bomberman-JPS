@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Create the docker container
         run: | 
-          docker create --name backend -p 8080:8080 -e dbcontext="${{ vars.dbcontext }}" h3-backend-project:latest
+          docker create --name backend -p 8080:8080 -e dbcontext="${{ vars.dbcontext }}" issuer="${{ vars.issuer }}" audience="${{ vars.audience }}" secret="${{ vars.secret }}" h3-backend-project:latest
           docker create --name frontend -p 8081:8080 h3-frontend-project:latest
   logs:
     needs: create
