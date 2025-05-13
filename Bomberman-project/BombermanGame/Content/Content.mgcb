@@ -133,6 +133,18 @@
 /processorParam:TextureFormat=Color
 /build:2d/Animation/Bomb/Bomb9.png
 
+#begin 2d/Animation/Bomb/BombCenter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:2d/Animation/Bomb/BombCenter.png
+
 #begin 2d/Animation/PlayerAnimation/Human.png
 /importer:TextureImporter
 /processor:TextureProcessor

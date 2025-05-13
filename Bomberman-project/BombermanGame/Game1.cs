@@ -87,7 +87,7 @@ namespace BombermanGame
                 bombTextures[i] = Content.Load<Texture2D>($"2d/Animation/Bomb/Bomb{i + 1}");
             }
 
-            explosionCenter = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb8");
+            explosionCenter = Content.Load<Texture2D>("2d/Animation/Bomb/BombCenter");
             explosionHorizontal = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb9");
             explosionVertical = Content.Load<Texture2D>("2d/Animation/Bomb/Bomb10");
 

@@ -12,6 +12,7 @@ namespace BombermanGame.Source
     {
         public Player _player;
         private Tilemap _tilemap;
+        public Tilemap Tilemap => _tilemap;
 
         private Texture2D _tileTexture;
         private Texture2D _wallTexture;
