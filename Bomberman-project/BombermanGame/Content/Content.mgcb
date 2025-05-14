@@ -169,6 +169,18 @@
 /processorParam:TextureFormat=Color
 /build:2d/Animation/PlayerAnimation/Human2nd.png
 
+#begin 2d/BreakableBarrel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:2d/BreakableBarrel.png
+
 #begin 2d/Human.png
 /importer:TextureImporter
 /processor:TextureProcessor

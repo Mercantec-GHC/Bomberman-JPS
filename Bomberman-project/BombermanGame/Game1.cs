@@ -1,15 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using BombermanGame.Source;
 using BombermanGame.Source.Engine;
 using BombermanGame.Source.Engine.Input;
-using SharpDX.Direct2D1;
 using System.Collections.Generic;
 using System;
-
-
+using BombermanGame.Source.Engine.Map;
 
 namespace BombermanGame
 {
@@ -19,7 +16,7 @@ namespace BombermanGame
         private PlayerInput _input;
         List<Bomb> activeBombs = new List<Bomb>();
         Texture2D[] bombTextures;
-        
+
         List<Vector2> activeExplosions = new List<Vector2>();
 
         Texture2D explosionCenter;
@@ -33,7 +30,7 @@ namespace BombermanGame
 
         Texture2D[] runningTextures;
 
-        double bombCooldown = 2000; 
+        double bombCooldown = 2000;
         double timeSinceLastBomb = 0;
         int counter;
         int activateFrame;
@@ -46,13 +43,10 @@ namespace BombermanGame
             _graphics.ApplyChanges();
 
             _input = input;
-
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             var screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             var screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
@@ -60,9 +54,7 @@ namespace BombermanGame
             _graphics.PreferredBackBufferHeight = screenHeight;
 
             _graphics.IsFullScreen = false;
-
             _graphics.ApplyChanges();
-
             Window.IsBorderless = true;
 
             base.Initialize();
@@ -73,16 +65,12 @@ namespace BombermanGame
             Globals.content = this.Content;
             Globals.spriteBatch = new Microsoft.Xna.Framework.Graphics.SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-
             runningTextures = new Texture2D[2];
-
             runningTextures[0] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human");
             runningTextures[1] = Content.Load<Texture2D>("2d/Animation/PlayerAnimation/Human2nd");
 
             bombTextures = new Texture2D[8];
-
-            for (int i = 0; i < 8; i++) 
+            for (int i = 0; i < 8; i++)
             {
                 bombTextures[i] = Content.Load<Texture2D>($"2d/Animation/Bomb/Bomb{i + 1}");
             }
@@ -94,7 +82,6 @@ namespace BombermanGame
             world = new World();
             world.Load(Content);
             world.SetPlayerTextures(runningTextures);
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -117,17 +104,24 @@ namespace BombermanGame
                     activateFrame = 0;
                 }
 
-
                 world.SetPlayerTextures(new Texture2D[] { runningTextures[activateFrame] });
             }
 
-            if (_input.BombPlaced && timeSinceLastBomb >= bombCooldown)
+            Vector2 playerPos = world._player.Position;
+
+            int tileX = (int)((playerPos.X + tileSize / 2) / tileSize);
+            int tileY = (int)((playerPos.Y + tileSize / 2) / tileSize);
+            Vector2 bombPos = new Vector2(tileX * tileSize, tileY * tileSize);
+
+            // Check if the tile is not a wall
+            if (_input.BombPlaced && timeSinceLastBomb >= bombCooldown && !world.Tilemap.IsWallAtTile(tileX, tileY))
             {
-                Vector2 playerPos = world._player.Position;
-                activeBombs.Add(new Bomb(playerPos));
+                Vector2 newBombPos = bombPos;
+                activeBombs.Add(new Bomb(newBombPos));
                 timeSinceLastBomb = 0;
             }
 
+            // Update and check for finished bombs
             for (int i = activeBombs.Count - 1; i >= 0; i--)
             {
                 activeBombs[i].Update(bombTextures);
@@ -137,6 +131,8 @@ namespace BombermanGame
                     activeBombs.RemoveAt(i);
                 }
             }
+
+            // Update and remove explosions
             for (int i = activeExplosions.Count - 1; i >= 0; i--)
             {
                 Vector2 pos = activeExplosions[i];
@@ -156,10 +152,14 @@ namespace BombermanGame
                     activeExplosions.RemoveAt(i); // extra safety fallback
                 }
             }
+
             _input.ResetActions();
 
             base.Update(gameTime);
         }
+
+
+
 
         private void CreateExplosion(Vector2 centerPos)
         {
@@ -169,30 +169,61 @@ namespace BombermanGame
                 {
                     activeExplosions.Add(pos);
                     explosionTimers[pos] = 0;
+
+                    int tileX = (int)(pos.X / tileSize);
+                    int tileY = (int)(pos.Y / tileSize);
+
+                    if (world.Tilemap.IsBreakableBlockAtTile(tileX, tileY))
+                    {
+                        // Break the block (replace it with a ground tile)
+                        world.Tilemap.BreakBlockAtTile(tileX, tileY);
+                        return;
+                    }
                 }
             }
 
-            AddExplosionTile(centerPos); // Center
+            AddExplosionTile(centerPos); // Center of the explosion
 
-            for (int i = 1; i <= 3; i++)
+            Vector2[] directions = new[]
             {
-                AddExplosionTile(centerPos + new Vector2(tileSize * i, 0));  // Right
-                AddExplosionTile(centerPos + new Vector2(-tileSize * i, 0)); // Left
-                AddExplosionTile(centerPos + new Vector2(0, tileSize * i));  // Down
-                AddExplosionTile(centerPos + new Vector2(0, -tileSize * i)); // Up
+                new Vector2(tileSize, 0), // Right
+                new Vector2(-tileSize, 0), // Left
+                new Vector2(0, tileSize), // Down
+                new Vector2(0, -tileSize) // Up
+            };
+
+            foreach (var dir in directions)
+            {
+                for (int i = 1; i <= 3; i++) // Explosion can go up to 3 tiles away
+                {
+                    Vector2 next = centerPos + dir * i;
+                    if (IsBlocked(next))
+                        break; // Stop explosion if blocked by wall
+                    AddExplosionTile(next);
+                }
             }
         }
+
+        private bool IsBlocked(Vector2 pos)
+        {
+            int tileX = (int)(pos.X / tileSize);
+            int tileY = (int)(pos.Y / tileSize);
+
+            if (tileX < 0 || tileY < 0 || tileX >= world.Tilemap.MapWidth || tileY >= world.Tilemap.MapHeight)
+                return true;
+
+            return world.Tilemap.IsWallAtTile(tileX, tileY);
+        }
+
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
             Globals.spriteBatch.Begin();
             world.Draw();
 
-            foreach(var bomb in activeBombs)
+            foreach (var bomb in activeBombs)
             {
                 bomb.Draw(Globals.spriteBatch, bombTextures);
             }
@@ -216,9 +247,6 @@ namespace BombermanGame
             }
 
             Globals.spriteBatch.End();
-            
-            
-
             base.Draw(gameTime);
         }
     }
