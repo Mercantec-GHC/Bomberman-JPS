@@ -8,6 +8,6 @@ namespace Bomberman_Backend.Repository.Interfaces
     {
         Task CreateControllerLog(CreateControllerLogsDTO createDTO, InputType inputType);
         List<ControllerLogs> GetControllerLogs();
-        void DeleteControllerLog(int id);
+        public void DeleteControllerLog(int id);
     }
 }
