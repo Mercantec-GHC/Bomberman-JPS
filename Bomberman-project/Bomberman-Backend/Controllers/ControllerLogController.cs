@@ -30,7 +30,7 @@ namespace Bomberman_Backend.Controllers
         public ActionResult<List<ControllerLogs>> GetAllLogs()
         {
             _controllerLogSerivce.GetControllerLogs();
-            return Ok();
+            return Ok(_controllerLogSerivce.GetControllerLogs);
         }
 
         [HttpDelete]

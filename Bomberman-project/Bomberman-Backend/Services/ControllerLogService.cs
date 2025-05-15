@@ -9,9 +9,9 @@ namespace Bomberman_Backend.Services
     {
         private readonly IControllerLogRepo _controllerLogRepo;
 
-        public Task CreateControllerLog(CreateControllerLogsDTO createDTO)
+        public void CreateControllerLogs(CreateControllerLogsDTO createDTO)
         {
-            throw new NotImplementedException();
+            _controllerLogRepo.CreateControllerLogs(createDTO);
         }
 
         public void DeleteControllerLog(int id)
