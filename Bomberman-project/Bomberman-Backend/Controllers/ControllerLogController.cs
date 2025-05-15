@@ -29,7 +29,6 @@ namespace Bomberman_Backend.Controllers
         [HttpGet]
         public ActionResult<List<ControllerLogs>> GetAllLogs()
         {
-            _controllerLogSerivce.GetControllerLogs();
             return Ok(_controllerLogSerivce.GetControllerLogs);
         }
 
