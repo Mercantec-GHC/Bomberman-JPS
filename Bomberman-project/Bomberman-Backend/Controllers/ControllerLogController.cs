@@ -1,4 +1,6 @@
 ﻿using Bomberman_Backend.Services.Interfaces;
+using DomainModels;
+using DomainModels.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bomberman_Backend.Controllers
@@ -14,11 +16,27 @@ namespace Bomberman_Backend.Controllers
         }
 
         [HttpPost]
-
+        public ActionResult Post([FromBody] CreateControllerLogsDTO controllerLog)
+        {
+            if(controllerLog == null)
+            {
+                return BadRequest();
+            }
+            var _controllerLog = _controllerLogSerivce.CreateControllerLog(controllerLog);
+            return Ok(_controllerLog);
+        }
 
         [HttpGet]
-        public IActionResult Index()
+        public ActionResult<List<ControllerLogs>> GetAllLogs()
         {
+            _controllerLogSerivce.GetControllerLogs();
+            return Ok();
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteControllerLog([FromBody] int id)
+        {
+            _controllerLogSerivce.DeleteControllerLog(id);
             return Ok();
         }
     }

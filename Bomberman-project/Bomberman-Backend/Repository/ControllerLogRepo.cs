@@ -30,7 +30,6 @@ namespace Bomberman_Backend.Repository
         public List<ControllerLogs> GetControllerLogs()
         {
             return _databaseContext.controllerLogs
-            .Include(cl => cl.InputType)
             .ToList(); 
         }
 
