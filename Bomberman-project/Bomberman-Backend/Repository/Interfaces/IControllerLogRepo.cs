@@ -6,8 +6,8 @@ namespace Bomberman_Backend.Repository.Interfaces
 {
     public interface IControllerLogRepo
     {
-        Task CreateControllerLog(CreateControllerLogsDTO createDTO, InputType inputType);
+        Task CreateControllerLogs(CreateControllerLogsDTO createDTO);
         List<ControllerLogs> GetControllerLogs();
-        void DeleteControllerLog(int id);
+        public void DeleteControllerLog(int id);
     }
 }
