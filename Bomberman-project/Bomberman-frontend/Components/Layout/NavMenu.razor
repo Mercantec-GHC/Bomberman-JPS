@@ -31,11 +31,29 @@
                 <span class="bi" aria-hidden="true"></span> Leaderboard
             </NavLink>
         </div>
+       <AuthorizeView>
+           <NotAuthorized>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Signup">
+            <NavLink class="nav-link" href="Login">
                 <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Person" />
-                <span class="bi" aria-hidden="true"></span> Signup
+                <span class="bi" aria-hidden="true"></span> Login
             </NavLink>
         </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Signup">
+                        <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Person" />
+                        <span class="bi" aria-hidden="true"></span> Signup
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        <Authorized>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Logout">
+                <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Person" />
+                <span class="bi" aria-hidden="true"></span> Logout
+            </NavLink>
+        </div>
+       </Authorized>
+        </AuthorizeView>
     </nav>
 </div>

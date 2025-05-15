@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainModels", "DomainModels\DomainModels.csproj", "{5BFF8D81-D787-4ED2-9EE6-11542058A8DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bomberman-Backend", "Bomberman-Backend\Bomberman-Backend.csproj", "{4004324B-6671-4928-8EF4-E86B2A6DE822}"
@@ -30,5 +33,11 @@ Global
 		{61771037-DB7D-4DFF-8A11-3C32597A4BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61771037-DB7D-4DFF-8A11-3C32597A4BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61771037-DB7D-4DFF-8A11-3C32597A4BF7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26954D3F-5D57-44CC-98E9-95257E08F0B7}
 	EndGlobalSection
 EndGlobal
