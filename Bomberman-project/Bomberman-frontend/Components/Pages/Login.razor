@@ -54,7 +54,7 @@
     bool success;
 
 
-    private async void OnValidSubmit(EditContext context)
+    private async Task OnValidSubmit(EditContext context)
     {
         var response = await authService.Login(player);
         if (response != null)
