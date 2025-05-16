@@ -16,6 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.16" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.9.0" />
       <PackageReference Include="MQTTnet" Version="4.3.3.952" />
       <PackageReference Include="MudBlazor" Version="8.6.0" />
     </ItemGroup>

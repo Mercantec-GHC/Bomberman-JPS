@@ -1,13 +1,12 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using DomainModels.DTO
+@using Microsoft.AspNetCore.Components.Authorization
 @inject HttpClient httpClient
+@page "/Login"
 @inject AuthService authService
 @inject AuthenticationStateProvider authState
 @inject NavigationManager NavigationManager
-@page "/Signup"
-
-
-<h3>Signup</h3>
+<h3>Login</h3>
 
 <EditForm Model="@player" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -16,11 +15,7 @@
             <MudCard>
                 <MudCardContent>
                     <MudTextField Label="Username" HelperText="Max. 8 characters"
-                    @bind-Value="player.userName" For="@(() => player.userName)" />
-                    <MudTextField Label="Email" Class="mt-3"
-                    @bind-Value="player.email" For="@(() => player.email)" />
-                    <MudTextField Label="SessionID" Class="mt-3"
-                    @bind-Value="sessionId" For="@(() => sessionId)" />
+                    @bind-Value="player.username" For="@(() => player.username)" />
                     <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
                     @bind-Value="player.password" For="@(() => player.password)" InputType="InputType.Password" />
                 </MudCardContent>
@@ -54,39 +49,23 @@
 
 @code
 {
-    CreatePlayerDTO player = new CreatePlayerDTO();
+    LoginDTO player = new LoginDTO();
     int sessionId { get; set; }
     bool success;
 
 
-    private async void OnValidSubmit(EditContext context)
+    private async Task OnValidSubmit(EditContext context)
     {
-        player.sessionId = new DomainModels.Session()
+        var response = await authService.Login(player);
+        if (response != null)
         {
-           Id = sessionId
-        };
-        // first we will make a post request registering the user and then return a true or false once the user is registered.
-        var response = await authService.Register(player);
-        success = response.IsSuccessStatusCode;
-       
-
-        //Here we instanciate a new LoginDTO object and set the Username and Password to the values from the model.
-        LoginDTO loginDTO = new LoginDTO { username = player.userName, password = player.password };
-
-        StateHasChanged();
-
-        //If the user is not registered we will return and not try to login the user.
-        if (!success)
-        {
-            return;
-        }
-
-        //If the user is registered we will try to login the user. By calling the login method from the authService.
-        var loginResponse = await authService.Login(loginDTO!);
-        if (loginResponse != null)
-        {
-            await ((AuthProvider)authState).AuthenticateUser(loginResponse.Token);
+            await ((AuthProvider)authState).AuthenticateUser(response.Token);
             NavigationManager.NavigateTo("/");
         }
+		else
+		{
+			success = false;
+		}
+
     }
 }

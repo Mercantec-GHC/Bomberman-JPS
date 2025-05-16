@@ -1,13 +1,18 @@
 ﻿﻿@using System.Net.Http.Json
 @using DomainModels
 @inject HttpClient httpClient
+@inject AuthService authService
 @page "/"
 
 
 <h3>Dashboard</h3>
 
 <!-- Make sure the div is focusable and listens for key events -->
-
+<AuthorizeView>
+    <p>
+        You can see this if you are authorized
+    </p>
+</AuthorizeView>
 
 <MudDataGrid Items="@Elements.Take(4)">
     <Columns>
@@ -22,6 +27,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await httpClient.GetFromJsonAsync<List<Leaderboard>>("https://localhost:7152/api/Leaderboard/all");
+        Elements = await authService.GetFrom<List<Leaderboard>>("/api/Leaderboard/all");
     }
 }
