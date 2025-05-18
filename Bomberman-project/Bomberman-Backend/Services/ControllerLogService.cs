@@ -5,13 +5,13 @@ using DomainModels;
 
 namespace Bomberman_Backend.Services
 {
-    public class ControllerLogService : IControllerLogSerivce
+    public class ControllerLogService : IControllerLogService
     {
         private readonly IControllerLogRepo _controllerLogRepo;
 
-        public void CreateControllerLogs(CreateControllerLogsDTO createDTO)
+        public Task CreateControllerLog(CreateControllerLogsDTO createDTO)
         {
-            _controllerLogRepo.CreateControllerLogs(createDTO);
+            return _controllerLogRepo.CreateControllerLogs(createDTO);
         }
 
         public void DeleteControllerLog(int id)
