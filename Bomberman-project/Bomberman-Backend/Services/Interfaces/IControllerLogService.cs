@@ -3,7 +3,7 @@ using DomainModels;
 
 namespace Bomberman_Backend.Services.Interfaces
 {
-    public interface IControllerLogSerivce
+    public interface IControllerLogService
     {
         public Task CreateControllerLog(CreateControllerLogsDTO createDTO);
         public List<ControllerLogs> GetControllerLogs();
