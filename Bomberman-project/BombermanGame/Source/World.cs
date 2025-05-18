@@ -27,9 +27,9 @@ namespace BombermanGame.Source
 
             _tilemap = new Tilemap(10, 10, _tileTexture, _wallTexture, _breakable);
         }
-        public void Update(PlayerInput input)
+        public void Update(PlayerInput input, GameTime gameTime)
         {
-            _player.Update(input.MoveDirection, _tilemap);
+            _player.Update(input.MoveDirection, _tilemap, gameTime);
         }
 
         public void SetPlayerTextures(Texture2D[] textures)

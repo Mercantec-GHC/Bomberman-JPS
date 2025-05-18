@@ -1,12 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BombermanGame.Source.Engine.PlayerManager;
 
-namespace BombermanGame.Source.Engine
+namespace BombermanGame.Source.Engine.BombManager
 {
     public class Bomb
     {
@@ -16,7 +15,7 @@ namespace BombermanGame.Source.Engine
         public bool IsFinsihed;
         private int FrameSpeed = 7;
 
-        public Bomb(Vector2 position) 
+        public Bomb(Vector2 position)
         {
             Position = position;
             Frame = 0;
@@ -39,7 +38,6 @@ namespace BombermanGame.Source.Engine
                     IsFinsihed = true;
                 }
             }
-
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D[] textures)
