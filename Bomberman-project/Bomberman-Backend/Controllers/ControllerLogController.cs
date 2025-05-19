@@ -16,13 +16,13 @@ namespace Bomberman_Backend.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] CreateControllerLogsDTO controllerLog)
+        public ActionResult Post([FromBody] CreateControllerLogsDTO controllerLog, InputType inputType)
         {
             if(controllerLog == null)
             {
                 return BadRequest();
             }
-            var _controllerLog = _controllerLogSerivce.CreateControllerLog(controllerLog);
+            var _controllerLog = _controllerLogSerivce.CreateControllerLog(controllerLog, inputType);
             return Ok(_controllerLog);
         }
 
