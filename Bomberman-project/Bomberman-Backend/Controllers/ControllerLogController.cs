@@ -9,8 +9,8 @@ namespace Bomberman_Backend.Controllers
     [Route("/api/[controller]")]
     public class CarrierController : ControllerBase
     {
-        private readonly IControllerLogSerivce _controllerLogSerivce;
-        public CarrierController(IControllerLogSerivce controllerLogService)
+        private readonly IControllerLogService _controllerLogSerivce;
+        public CarrierController(IControllerLogService controllerLogService)
         {
             _controllerLogSerivce = controllerLogService;
         }
@@ -29,7 +29,7 @@ namespace Bomberman_Backend.Controllers
         [HttpGet]
         public ActionResult<List<ControllerLogs>> GetAllLogs()
         {
-            return Ok(_controllerLogSerivce.GetControllerLogs());
+            return Ok(_controllerLogSerivce.GetControllerLogs);
         }
 
         [HttpDelete]
