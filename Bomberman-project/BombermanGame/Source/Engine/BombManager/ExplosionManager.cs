@@ -14,7 +14,7 @@ namespace BombermanGame.Source.Engine.BombManager
         private Texture2D explosionCenter;
         private Texture2D explosionHorizontal;
         private Texture2D explosionVertical;
-        private int explosionDuration = 30;
+        private int explosionDuration = 20;
         private int tileSize = 70;
         private List<Bomb> activeBombs = new List<Bomb>();
         private double bombCooldown = 2000;
