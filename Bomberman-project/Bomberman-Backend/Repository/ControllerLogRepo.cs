@@ -14,7 +14,7 @@ namespace Bomberman_Backend.Repository
             _databaseContext = databaseContext;
         }
 
-        public async Task CreateControllerLog(CreateControllerLogsDTO createDTO, InputType inputType)
+        public async Task CreateControllerLogs(CreateControllerLogsDTO createDTO, InputType inputType)
         {
             var log = new ControllerLogs
             {
