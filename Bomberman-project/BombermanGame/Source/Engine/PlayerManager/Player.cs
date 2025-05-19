@@ -14,6 +14,11 @@ namespace BombermanGame.Source.Engine.PlayerManager
         private Texture2D _texture;
         private float speed = 4;
         private Rectangle _boundingBox;
+        public int Health { get; private set; } = 3;
+        public Rectangle BoundingBox => _boundingBox;
+        public bool IsAlive { get; private set; } = true;
+        private double damageCooldown = 1000; 
+        private double timeSinceLastDamage = 0;
 
         public Player(Texture2D texture, Vector2 position)
         {
@@ -22,8 +27,29 @@ namespace BombermanGame.Source.Engine.PlayerManager
             UpdateBoundingBox();
         }
 
-        public void Update(string direction, Tilemap tilemap)
+        public void TakeDamage(int amount)
         {
+            if (timeSinceLastDamage < damageCooldown)
+                return;
+
+            Health -= amount;
+            timeSinceLastDamage = 0;
+            if (Health <= 0)
+            {
+                Die();
+            }
+        }
+
+        public void Die()
+        {
+            Console.WriteLine("Player died");
+            IsAlive = false;
+        }
+
+        public void Update(string direction, Tilemap tilemap, GameTime gameTime)
+        {
+            timeSinceLastDamage += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (!IsAlive) return;
             Vector2 newPosition = Position;
 
             // Store the current position before any movement
@@ -79,6 +105,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (!IsAlive) return;
             spriteBatch.Draw(_texture, Position, Color.White);
         }
     }
