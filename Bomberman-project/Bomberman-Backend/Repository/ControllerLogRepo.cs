@@ -14,13 +14,13 @@ namespace Bomberman_Backend.Repository
             _databaseContext = databaseContext;
         }
 
-        public async Task CreateControllerLogs(CreateControllerLogsDTO createDTO, InputType inputType)
+        public async Task CreateControllerLogs(CreateControllerLogsDTO createDTO)
         {
             var log = new ControllerLogs
             {
-                Player = createDTO.Player,
+                PlayerID = createDTO.PlayerID,
                 TimeStamp = createDTO.TimeStamp,
-                InputType = inputType
+                InputType = createDTO.InputType
             };
 
             await _databaseContext.controllerLogs.AddAsync(log);
