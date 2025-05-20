@@ -10,6 +10,8 @@ using BombermanGame.Source.Engine.BombManager;
 using System.Collections.Generic;
 using System;
 using BombermanGame.Source.Engine.Content;
+using BombermanGame.Source.Engine.PowerUps;
+using System.Reflection.Metadata;
 
 namespace BombermanGame
 {
@@ -29,6 +31,10 @@ namespace BombermanGame
         private BombManager bombManager;
 
         private FrameAnimator playerAnimator;
+
+        private PowerUpManager powerUpManager;
+
+        
 
         public Main(PlayerInput input)
         {
@@ -51,11 +57,15 @@ namespace BombermanGame
             _graphics.ApplyChanges();
             Window.IsBorderless = true;
 
+            var textures = TextureLoader.LoadPowerUpTextures(Content);
+            powerUpManager = new PowerUpManager(textures);
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -66,15 +76,22 @@ namespace BombermanGame
             Texture2D explosionHorizontal = TextureLoader.LoadExplosionHorizontal(Content);
             Texture2D explosionVertical = TextureLoader.LoadExplosionVertical(Content);
 
+            var textures = TextureLoader.LoadPowerUpTextures(Content);
+            powerUpManager = new PowerUpManager(textures);
+
             world = new World();
             world.Load(Content);
             world.SetPlayerTextures(new Texture2D[] { runningTextures[0] });
 
-            explosionManager = new ExplosionManager(world, explosionCenter, explosionHorizontal, explosionVertical);
+            explosionManager = new ExplosionManager(world, explosionCenter, explosionHorizontal, explosionVertical, powerUpManager);
             bombManager = new BombManager(world, bombTextures, explosionManager);
 
             playerAnimator = new FrameAnimator(runningTextures.Length);
+
+            
+            world.SetPowerUpTextures(textures);
         }
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -90,6 +107,8 @@ namespace BombermanGame
             bombManager.Update(gameTime, world._player.Position, _input.BombPlaced);
             explosionManager.Update(new List<Player> { world._player });
 
+            powerUpManager.Update(world._player);
+
             _input.ResetActions();
 
             base.Update(gameTime);
@@ -104,6 +123,8 @@ namespace BombermanGame
 
             bombManager.Draw(Globals.spriteBatch);
             explosionManager.Draw(Globals.spriteBatch);
+
+            powerUpManager.Draw(Globals.spriteBatch);
 
             Globals.spriteBatch.End();
             base.Draw(gameTime);

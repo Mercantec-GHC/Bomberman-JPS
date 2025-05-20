@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BombermanGame.Source.Engine.PlayerManager;
 using BombermanGame.Source.Engine.Map;
 using System;
+using BombermanGame.Source.Engine.PowerUps;
 
 namespace BombermanGame.Source.Engine.BombManager
 {
@@ -20,16 +21,21 @@ namespace BombermanGame.Source.Engine.BombManager
         private double bombCooldown = 2000;
         private double timeSinceLastBomb = 0;
         private World world;
+        private PowerUpManager powerUpManager;
 
-        public ExplosionManager(World world, Texture2D center, Texture2D horizontal, Texture2D vertical)
+
+
+        public ExplosionManager(World world, Texture2D center, Texture2D horizontal, Texture2D vertical, PowerUpManager powerUpManager)
         {
             this.world = world;
             explosionCenter = center;
             explosionHorizontal = horizontal;
             explosionVertical = vertical;
+            this.powerUpManager = powerUpManager;
         }
 
-        public void CreateExplosion(Vector2 centerPos)
+
+        public void CreateExplosion(Vector2 centerPos, int radius)
         {
             void AddExplosionTile(Vector2 pos)
             {
@@ -44,6 +50,7 @@ namespace BombermanGame.Source.Engine.BombManager
                     if (world.Tilemap.IsBreakableBlockAtTile(tileX, tileY))
                     {
                         world.Tilemap.BreakBlockAtTile(tileX, tileY);
+                        powerUpManager.SpawnPowerUp(pos);
                         return;
                     }
                 }
@@ -61,7 +68,7 @@ namespace BombermanGame.Source.Engine.BombManager
 
             foreach (var dir in directions)
             {
-                for (int i = 1; i <= 3; i++)
+                for (int i = 1; i <= radius; i++)
                 {
                     Vector2 next = centerPos + dir * i;
                     if (IsBlocked(next)) break;
