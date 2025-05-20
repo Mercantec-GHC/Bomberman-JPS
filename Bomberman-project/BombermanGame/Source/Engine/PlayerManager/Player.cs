@@ -12,7 +12,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
     {
         public Vector2 Position;
         private Texture2D _texture;
-        private float speed = 4;
+        public float speed = 4;
         private Rectangle _boundingBox;
         public int Health { get; private set; } = 3;
         public Rectangle BoundingBox => _boundingBox;
