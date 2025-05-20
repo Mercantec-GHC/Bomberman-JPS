@@ -34,8 +34,16 @@ jobs:
       - name: Build the backend Docker image
         run: | 
           cd Bomberman-project
-          docker build . --file Bomberman-Backend/Dockerfile --tag h3-backend-project:latest
+          docker build . --file Bomberman-Backend/Dockerfile --tag h3-backend-project:${GITHUB_SHA}
       - name: Build the frontend Docker image
+        run: |
+          cd Bomberman-project
+          docker build . --file Bomberman-frontend/Dockerfile --tag h3-frontend-project:${GITHUB_SHA}
+      - name: Update the backend Docker image latest
+        run: | 
+          cd Bomberman-project
+          docker build . --file Bomberman-Backend/Dockerfile --tag h3-backend-project:latest
+      - name: Update the frontend Docker image latest
         run: |
           cd Bomberman-project
           docker build . --file Bomberman-frontend/Dockerfile --tag h3-frontend-project:latest
