@@ -12,6 +12,9 @@ using System;
 using BombermanGame.Source.Engine.Content;
 using BombermanGame.Source.Engine.PowerUps;
 using System.Reflection.Metadata;
+using static BombermanGame.MqttService.MqttServiceGame;
+using System.Threading;
+
 
 namespace BombermanGame
 {
@@ -58,8 +61,10 @@ namespace BombermanGame
             Window.IsBorderless = true;
 
             var textures = TextureLoader.LoadPowerUpTextures(Content);
+
             powerUpManager = new PowerUpManager(textures);
 
+            
             base.Initialize();
         }
 

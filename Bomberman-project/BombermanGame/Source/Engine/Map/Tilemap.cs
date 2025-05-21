@@ -101,7 +101,7 @@ namespace BombermanGame.Source.Engine.Map
         {
             if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight)
                 return true;
-            return _map[y, x] == 2;
+            return _map[y, x] == 2 || _map[y, x] == 4;
         }
 
         public bool IsBreakableBlockAtTile(int x, int y)

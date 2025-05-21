@@ -60,14 +60,14 @@ Serial.println("Connecting to WiFi...");
 }
 
   void sendMQTTMessage(const String& type, const String& value) {
-    StaticJsonDocument<128> doc;
-    doc["type"] = type;
-    doc["value"] = value;
+  StaticJsonDocument<128> doc;
+  doc["type"] = type;
+  doc["value"] = value;
 
-    char buffer[128];
-    serializeJson(doc, buffer);
-    client.publish(mqttTopic, buffer);
-  }
+  char buffer[128];
+  serializeJson(doc, buffer);
+  client.publish(mqttTopic, buffer);
+}
 
     
     void reconnect() {
