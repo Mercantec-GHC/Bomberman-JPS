@@ -1,29 +1,28 @@
 ﻿@inherits LayoutComponentBase
+@using MudBlazor
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="page">
-    <div height="700px">
-        <NavMenu/>
-    </div>
 
-    <main>
-        <MudAppBar Color="Color.Primary" Fixed="false">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
-            <MudSpacer />
-            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
-        </MudAppBar>
+<MudLayout>
 
-        <article class="content px-4">
+    <!-- Top App Bar -->
+    <MudAppBar Elevation="1" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" />
+        <MudText Typo="Typo.h6">Bomberman Dashboard</MudText>
+    </MudAppBar>
+
+    <!-- Main layout below the AppBar -->
+    <MudContainer MaxWidth="MaxWidth.False" Class="d-flex">
+        <!-- Sidebar / NavMenu -->
+        <NavMenu />
+
+        <!-- Main Page Content -->
+        <MudMainContent Class="p-4">
             @Body
-        </article>
-    </main>
-</div>
+        </MudMainContent>
+    </MudContainer>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+</MudLayout>

@@ -49,3 +49,9 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.nav-menu {
+    width: 250px;
+    min-height: calc(100vh - 64px); /* 64px is default MudAppBar height */
+    background-color: #f8f9fa; /* Light background */
+}
