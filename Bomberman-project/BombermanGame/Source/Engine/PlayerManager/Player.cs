@@ -179,7 +179,6 @@ namespace BombermanGame.Source.Engine.PlayerManager
         public void EnableLifeSteal()
         {
             CanLifeSteal = true;
-            // You can disable it later after one successful hit
         }
 
         public void EnableGhostMode(double duration)
@@ -250,7 +249,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
             if (StoredPowerUp != PowerUpType.None && powerUpIcons != null && powerUpIcons.ContainsKey(StoredPowerUp))
             {
                 Texture2D icon = powerUpIcons[StoredPowerUp];
-                Vector2 iconPos = new Vector2(Position.X + _texture.Width - 16, Position.Y - 40); // Top-right of player
+                Vector2 iconPos = new Vector2(Position.X + _texture.Width - 16, Position.Y - 40); // Top right of player
                 spriteBatch.Draw(icon, iconPos, Color.White);
             }
         }

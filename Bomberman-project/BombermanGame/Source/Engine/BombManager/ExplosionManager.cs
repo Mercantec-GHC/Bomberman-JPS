@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using BombermanGame.Source.Engine.PlayerManager;
-using BombermanGame.Source.Engine.Map;
 using System;
 using BombermanGame.Source.Engine.PowerUps;
 
@@ -17,9 +16,6 @@ namespace BombermanGame.Source.Engine.BombManager
         private Texture2D explosionVertical;
         private int explosionDuration = 30;
         private int tileSize = 70;
-        private List<Bomb> activeBombs = new List<Bomb>();
-        private double bombCooldown = 2000;
-        private double timeSinceLastBomb = 0;
         private World world;
         private PowerUpManager powerUpManager;
 

@@ -11,10 +11,6 @@ using System.Collections.Generic;
 using System;
 using BombermanGame.Source.Engine.Content;
 using BombermanGame.Source.Engine.PowerUps;
-using System.Reflection.Metadata;
-using static BombermanGame.MqttService.MqttServiceGame;
-using System.Threading;
-
 
 namespace BombermanGame
 {
@@ -25,9 +21,6 @@ namespace BombermanGame
 
         private Texture2D[] bombTextures;
         private Texture2D[] runningTextures;
-
-        private int counter;
-        private int activateFrame;
 
         private World world;
         private ExplosionManager explosionManager;

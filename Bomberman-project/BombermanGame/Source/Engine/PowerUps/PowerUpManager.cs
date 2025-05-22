@@ -3,11 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BombermanGame.Source.Engine.PowerUps;
-
 
 namespace BombermanGame.Source.Engine.PowerUps
 {
@@ -24,7 +19,7 @@ namespace BombermanGame.Source.Engine.PowerUps
 
         public void SpawnPowerUp(Vector2 position)
         {
-            if (rng.NextDouble() < 1)
+            if (rng.NextDouble() < 0.3) //The chance for a powerUp to spawn
             {
                 int powerUpCount = Enum.GetValues(typeof(PowerUpType)).Length - 1; 
                 var type = (PowerUpType)rng.Next(1, powerUpCount + 1); // doesnt spawn "None"
@@ -48,36 +43,7 @@ namespace BombermanGame.Source.Engine.PowerUps
                     
                 }
             }
-        }
-
-        private void ApplyPowerUp(Player player, PowerUpType type)
-        {
-            switch (type)
-            {
-                case PowerUpType.Speed:
-                    player.speed = player.BaseSpeed + 4.5f;
-                    player.speedBoostTimer = 5000; // 5 seconds
-                    player.hasSpeedBoost = true;
-                    break;
-                case PowerUpType.HealthUp:
-                    player.Heal(1);
-                    break;
-                case PowerUpType.Invincible:
-                    player.SetInvincibility(3000); // 3 seconds
-                    break;
-                case PowerUpType.ExplosionRadius:
-                    player.BonusRadius = 3;
-                    player.HasBonusRadius = true;
-                    break;
-                case PowerUpType.LifeSteal:
-                    player.EnableLifeSteal();
-                    break;
-                case PowerUpType.Ghost:
-                    player.EnableGhostMode(5000); // 3 seconds
-                    break;
-            }
-        }
-
+        }        
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var powerUp in PowerUps)

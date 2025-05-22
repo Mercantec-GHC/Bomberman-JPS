@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -8,13 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Protocol;
-using System;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using BombermanGame.Source.Engine.Input;
 
@@ -51,7 +43,6 @@ public class MqttClientService : BackgroundService
             _mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
                 var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-                //Console.WriteLine($"Received MQTT message: {payload}");
 
                 try
                 {
@@ -65,28 +56,7 @@ public class MqttClientService : BackgroundService
                         else if (status.Type == "bomb_press")
                             _playerInput.BombPlaced = true;
                         else if (status.Type == "powerup_used")
-                            _playerInput.PowerUpUsed = true;
-                        switch (status.Type)
-                        {
-                            case "tilt_move":
-                                Console.WriteLine($"Player moved: {status.Value}");
-                                break;
-                            case "bomb_press":
-                                Console.WriteLine("Player placed a bomb.");
-                                break;
-                            case "powerup_used":
-                                Console.WriteLine($"Power-up used: {status.Value}");
-                                break;
-                            case "life":
-                                Console.WriteLine($"Life update: {status.Value}");
-                                break;
-                            case "game":
-                                Console.WriteLine($"Game Restarted");
-                                break;
-                            default:
-                                Console.WriteLine($"Unknown type: {status.Type}");
-                                break;
-                        }
+                            _playerInput.PowerUpUsed = true;                       
                     }
                 
                 catch (Exception ex)
