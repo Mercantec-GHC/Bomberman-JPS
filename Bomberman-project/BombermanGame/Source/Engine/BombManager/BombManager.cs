@@ -41,7 +41,18 @@ public class BombManager
             activeBombs[i].Update(bombTextures);
             if (activeBombs[i].IsFinsihed)
             {
-                explosionManager.CreateExplosion(activeBombs[i].Position);
+                int radius = world._player.ExplosionRadius;
+
+                if (world._player.HasBonusRadius)
+                {
+                    radius += world._player.BonusRadius;
+                    world._player.HasBonusRadius = false; // use the bonus once
+                    world._player.BonusRadius = 0;
+                }
+
+                explosionManager.CreateExplosion(activeBombs[i].Position, radius);
+
+
                 activeBombs.RemoveAt(i);
             }
         }

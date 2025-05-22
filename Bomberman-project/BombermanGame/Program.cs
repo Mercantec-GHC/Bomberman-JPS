@@ -1,5 +1,9 @@
 ﻿using BombermanGame.Source.Engine.Input;
+using Microsoft.Extensions.Configuration;
 using System;
+using Microsoft.Extensions.Configuration.Json;
+using static BombermanGame.MqttService.MqttServiceGame;
+using System.Threading;
 
 namespace BombermanGame
 {
@@ -8,8 +12,15 @@ namespace BombermanGame
         [STAThread]
         static void Main()
         {
-            var input = new PlayerInput();
-            using var game = new Main(input);
+            var config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+            var playerInput = new PlayerInput();
+
+            var mqttService = new MqttClientService(config, playerInput);
+            mqttService.StartAsync(CancellationToken.None);
+            using var game = new Main(playerInput);
             game.Run();
         }
     }
