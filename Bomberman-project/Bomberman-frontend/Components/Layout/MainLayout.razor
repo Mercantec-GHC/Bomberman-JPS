@@ -1,17 +1,50 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 @using MudBlazor
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+@*
+Logout logo: @Icons.Material.Filled.Logout
+User settings logo: @Icons.Material.Filled.ManageAccounts
+Password icon (in case of whatever) @Icons.Material.Filled.Password
+
+
+*@
 
 <MudLayout>
-
-    <!-- Top App Bar -->
-    <MudAppBar Elevation="1" Color="Color.Primary">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" />
-        <MudText Typo="Typo.h6">Bomberman Dashboard</MudText>
+    <MudAppBar Fixed="false" Color="Color.Primary">
+        <div style="display: flex; width: 100%; align-items: center;">
+            <MudSpacer />
+            <AuthorizeView>
+                <Authorized>
+                    <MudTooltip Text="Settings">
+                    <MudMenu Icon="@Icons.Material.Filled.MiscellaneousServices" Color="Color.Inherit">
+                        <MudMenuItem OnClick="@UserSettingsNavigate">
+                            <MudTooltip Text="User settings">
+                                <MudIconButton Icon="@Icons.Material.Filled.ManageAccounts" Color="Color.Inherit" />
+                            </MudTooltip>
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@LogoutNavigate">
+                            <MudTooltip Text="Logout">
+                                <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="@LogoutNavigate" />
+                            </MudTooltip>
+                        </MudMenuItem>
+                    </MudMenu>
+                    </MudTooltip>
+                </Authorized>
+                <NotAuthorized>
+                    <MudTooltip Text="Login">
+                        <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" onclick="@LoginNavigate" />
+                    </MudTooltip>
+                    <MudTooltip Text="Register">
+                        <MudIconButton Icon="@Icons.Material.Filled.PersonAddAlt1" Color="Color.Inherit" OnClick="@RegisterNavigate" />
+                    </MudTooltip>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
     </MudAppBar>
 
     <!-- Main layout below the AppBar -->
@@ -26,3 +59,22 @@
     </MudContainer>
 
 </MudLayout>
+
+@code {
+    private async Task UserSettingsNavigate()
+    {
+        NavigationManager.NavigateTo("/userSettings");
+    }
+    private async Task LogoutNavigate()
+    {
+        NavigationManager.NavigateTo("/Logout");
+    }
+    private async Task LoginNavigate()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+    private async Task RegisterNavigate()
+    {
+        NavigationManager.NavigateTo("/signup");
+    }
+}
