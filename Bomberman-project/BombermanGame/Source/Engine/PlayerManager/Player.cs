@@ -5,11 +5,14 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using BombermanGame.Source.Engine.Map;
+using Microsoft.AspNetCore.SignalR.Client;
+using DomainModels;
 
 namespace BombermanGame.Source.Engine.PlayerManager
 {
     public class Player
     {
+        private readonly HubConnection _connection;
         public Vector2 Position;
         private Texture2D _texture;
         private float speed = 4;
@@ -25,6 +28,11 @@ namespace BombermanGame.Source.Engine.PlayerManager
             _texture = texture;
             Position = position;
             UpdateBoundingBox();
+            _connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5293/chatHub")
+                .WithAutomaticReconnect()
+                .Build();
+            _connection.StartAsync();
         }
 
         public void TakeDamage(int amount)
@@ -54,20 +62,32 @@ namespace BombermanGame.Source.Engine.PlayerManager
 
             // Store the current position before any movement
             Rectangle previousBoundingBox = _boundingBox;
+            SignalRSendType user = new SignalRSendType();
+            user.Type = "Game";
+            user.User = "testUser";
+
 
             switch (direction)
             {
                 case "Left":
                     newPosition.X -= speed;
+                    user.Message = "Left";
+                    _connection.SendAsync("SendMessage", user);
                     break;
                 case "Right":
                     newPosition.X += speed;
+                    user.Message = "Right";
+                    _connection.SendAsync("SendMessage", user);
                     break;
                 case "Up":
                     newPosition.Y -= speed;
+                    user.Message = "Up";
+                    _connection.SendAsync("SendMessage", user);
                     break;
                 case "Down":
                     newPosition.Y += speed;
+                    user.Message = "Down";
+                    _connection.SendAsync("SendMessage", user);
                     break;
             }
 
@@ -87,6 +107,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
                 Position = newPosition;
                 _boundingBox = newBoundingBox;
             }
+
         }
 
         public void SetTexture(Texture2D texture)

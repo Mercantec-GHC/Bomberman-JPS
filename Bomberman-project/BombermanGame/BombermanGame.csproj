@@ -48,8 +48,12 @@
       </Content>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.16" />
         <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.*" />
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
     </ItemGroup>
     <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
         <Message Text="Restoring dotnet tools" Importance="High" />

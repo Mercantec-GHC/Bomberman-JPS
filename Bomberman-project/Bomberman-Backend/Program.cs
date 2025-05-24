@@ -9,11 +9,10 @@ using Bomberman_Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// GetAllHeadsets from the Postgres DB
 IConfiguration Configuration = builder.Configuration;
 var connectionString = Configuration.GetConnectionString("dbcontext") ??
                       Environment.GetEnvironmentVariable("dbcontext");
@@ -24,6 +23,23 @@ var audience = Configuration["Jwt:Audience"] ??
                Environment.GetEnvironmentVariable("audience");
 var secret = Configuration["Jwt:Secret"] ??
              Environment.GetEnvironmentVariable("secret");
+
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.MimeTypes =
+        ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
+});
+
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+    options.MaximumReceiveMessageSize = 1024 * 1024 * 10; // 10 MB
+});
+
+// Add services to the container.
+// GetAllHeadsets from the Postgres DB
+
 
 // Add services to the container.
 
@@ -124,6 +140,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.MapControllers();
 

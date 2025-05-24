@@ -1,4 +1,5 @@
 ﻿using BombermanGame.Source.Engine.Input;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 
 namespace BombermanGame

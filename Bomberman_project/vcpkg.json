@@ -1,0 +1,11 @@
+{
+  "dependencies": [
+    {
+      "name": "cpprestsdk",
+      "features": [
+        "websockets"
+      ]
+    },
+    "microsoft-signalr"
+  ]
+}
