@@ -1,9 +1,9 @@
 ﻿using BombermanGame.Source.Engine.Input;
 using Microsoft.Extensions.Configuration;
 using System;
-using Microsoft.Extensions.Configuration.Json;
-using static BombermanGame.MqttService.MqttServiceGame;
 using System.Threading;
+using System.Collections.Generic;
+using static BombermanGame.MqttService.MqttServiceGame;
 
 namespace BombermanGame
 {
@@ -13,14 +13,18 @@ namespace BombermanGame
         static void Main()
         {
             var config = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .Build();
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
 
-            var playerInput = new PlayerInput();
+            int playerCount = 4;
+            var inputs = new List<PlayerInput>();
+            for (int i = 0; i < playerCount; i++)
+                inputs.Add(new PlayerInput());
 
-            var mqttService = new MqttClientService(config, playerInput);
-            mqttService.StartAsync(CancellationToken.None);
-            using var game = new Main(playerInput);
+            var mqttService = new MqttClientService(config, inputs);
+            mqttService.StartAsync(CancellationToken.None); // start MQTT listener async
+
+            using var game = new Main(inputs);
             game.Run();
         }
     }

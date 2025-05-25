@@ -4,9 +4,9 @@ namespace BombermanGame.Source.Engine.Input
 {
     public class PlayerInput
     {
-        public string MoveDirection { get; set; } = "Idle";
-        public bool BombPlaced { get; set; }
-        public bool PowerUpUsed { get; set; }
+        public string MoveDirection { get; private set; } = "Idle";
+        public bool BombPlaced { get; private set; }
+        public bool PowerUpUsed { get; private set; }
 
         private bool fromMqtt = false;
 
@@ -17,7 +17,7 @@ namespace BombermanGame.Source.Engine.Input
             switch (type)
             {
                 case "tilt_move":
-                    MoveDirection = value;
+                    MoveDirection = value;  // e.g. "Up", "Down", "Left", "Right", or "Idle"
                     break;
                 case "bomb_press":
                     BombPlaced = true;
@@ -32,28 +32,35 @@ namespace BombermanGame.Source.Engine.Input
         {
             var keyboardState = Keyboard.GetState();
 
-            if (string.IsNullOrEmpty(MoveDirection))  // Only if MQTT hasn’t set anything
+            if (!fromMqtt) // only handle keyboard if no recent MQTT input
             {
+                // Only update MoveDirection if a movement key is pressed
                 if (keyboardState.IsKeyDown(Keys.W))
-                    MoveDirection = "up";
+                    MoveDirection = "Up";
                 else if (keyboardState.IsKeyDown(Keys.S))
-                    MoveDirection = "down";
+                    MoveDirection = "Down";
                 else if (keyboardState.IsKeyDown(Keys.A))
-                    MoveDirection = "left";
+                    MoveDirection = "Left";
                 else if (keyboardState.IsKeyDown(Keys.D))
-                    MoveDirection = "right";
+                    MoveDirection = "Right";
+                // IMPORTANT: do NOT reset to "Idle" here, keep last direction
             }
 
+            // Bomb placement key (Space)
             if (keyboardState.IsKeyDown(Keys.Space))
                 BombPlaced = true;
+
+            // Example: Use power-up on pressing E key
+            if (keyboardState.IsKeyDown(Keys.E))
+                PowerUpUsed = true;
         }
 
+        // Call after processing inputs each frame to reset one-time flags and MQTT flag
         public void ResetActions()
         {
             BombPlaced = false;
             PowerUpUsed = false;
-            fromMqtt = false;
+            fromMqtt = false; // allow keyboard input next frame if no MQTT input
         }
     }
-
 }

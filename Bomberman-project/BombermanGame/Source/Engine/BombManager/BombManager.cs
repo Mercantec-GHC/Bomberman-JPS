@@ -3,6 +3,7 @@ using BombermanGame.Source;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 public class BombManager
 {
@@ -22,41 +23,43 @@ public class BombManager
         this.explosionManager = explosionManager;
     }
 
-    public void Update(GameTime gameTime, Vector2 playerPosition, bool bombPlaced)
+    public void PlaceBomb(Vector2 playerPosition, int playerIndex)
     {
-        timeSinceLastBomb += gameTime.ElapsedGameTime.TotalMilliseconds;
-
         int tileX = (int)((playerPosition.X + tileSize / 2) / tileSize);
         int tileY = (int)((playerPosition.Y + tileSize / 2) / tileSize);
         Vector2 bombPos = new Vector2(tileX * tileSize, tileY * tileSize);
 
-        if (bombPlaced && timeSinceLastBomb >= bombCooldown && !world.Tilemap.IsWallAtTile(tileX, tileY) && world._player.IsAlive)
+        if (playerIndex < 0 || playerIndex >= world.Players.Count)
+            return;
+
+        var player = world.Players[playerIndex];
+
+        if (timeSinceLastBomb >= bombCooldown && !world.Tilemap.IsWallAtTile(tileX, tileY) && player.IsAlive)
         {
+            Console.WriteLine($"Player {playerIndex + 1} placed a bomb at {bombPos}");
             activeBombs.Add(new Bomb(bombPos));
             timeSinceLastBomb = 0;
         }
+    }
+
+    public void UpdateBombs(GameTime gameTime)
+    {
+        timeSinceLastBomb += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         for (int i = activeBombs.Count - 1; i >= 0; i--)
         {
             activeBombs[i].Update(bombTextures);
+
             if (activeBombs[i].IsFinsihed)
             {
-                int radius = world._player.ExplosionRadius;
-
-                if (world._player.HasBonusRadius)
-                {
-                    radius += world._player.BonusRadius;
-                    world._player.HasBonusRadius = false; // use the bonus once
-                    world._player.BonusRadius = 0;
-                }
-
+                // Example: get player 0 for explosion radius; adjust if needed
+                var radius = world.Players[0].ExplosionRadius;
                 explosionManager.CreateExplosion(activeBombs[i].Position, radius);
-
-
                 activeBombs.RemoveAt(i);
             }
         }
     }
+
 
     public void Draw(SpriteBatch spriteBatch)
     {
