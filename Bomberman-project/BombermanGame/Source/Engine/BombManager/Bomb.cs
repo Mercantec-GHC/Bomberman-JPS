@@ -13,7 +13,7 @@ namespace BombermanGame.Source.Engine.BombManager
         public int Frame;
         public int Counter;
         public bool IsFinsihed;
-        private int FrameSpeed = 7;
+        private int FrameSpeed = 12;
 
         public Bomb(Vector2 position)
         {

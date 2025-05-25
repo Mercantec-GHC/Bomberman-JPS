@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace BombermanGame.Source.Engine.Input
 {
@@ -13,30 +8,52 @@ namespace BombermanGame.Source.Engine.Input
         public bool BombPlaced { get; set; }
         public bool PowerUpUsed { get; set; }
 
+        private bool fromMqtt = false;
+
+        public void SetFromMQTT(string type, string value)
+        {
+            fromMqtt = true;
+
+            switch (type)
+            {
+                case "tilt_move":
+                    MoveDirection = value;
+                    break;
+                case "bomb_press":
+                    BombPlaced = true;
+                    break;
+                case "powerup_used":
+                    PowerUpUsed = true;
+                    break;
+            }
+        }
+
         public void HandleKeyboardInput()
         {
-            var state = Keyboard.GetState();
-            MoveDirection = "Idle";
+            var keyboardState = Keyboard.GetState();
 
-            if (state.IsKeyDown(Keys.A))
-                MoveDirection = "Left";
-            else if (state.IsKeyDown(Keys.D))
-                MoveDirection = "Right";
-            else if (state.IsKeyDown(Keys.W))
-                MoveDirection = "Up";
-            else if (state.IsKeyDown(Keys.S))
-                MoveDirection = "Down";           
+            if (string.IsNullOrEmpty(MoveDirection))  // Only if MQTT hasn’t set anything
+            {
+                if (keyboardState.IsKeyDown(Keys.W))
+                    MoveDirection = "up";
+                else if (keyboardState.IsKeyDown(Keys.S))
+                    MoveDirection = "down";
+                else if (keyboardState.IsKeyDown(Keys.A))
+                    MoveDirection = "left";
+                else if (keyboardState.IsKeyDown(Keys.D))
+                    MoveDirection = "right";
+            }
 
-            BombPlaced = state.IsKeyDown(Keys.Space);
-            PowerUpUsed = state.IsKeyDown(Keys.F);
-
-
+            if (keyboardState.IsKeyDown(Keys.Space))
+                BombPlaced = true;
         }
 
         public void ResetActions()
         {
             BombPlaced = false;
             PowerUpUsed = false;
+            fromMqtt = false;
         }
     }
+
 }
