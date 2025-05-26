@@ -37,7 +37,8 @@ public class BombManager
         if (timeSinceLastBomb >= bombCooldown && !world.Tilemap.IsWallAtTile(tileX, tileY) && player.IsAlive)
         {
             Console.WriteLine($"Player {playerIndex + 1} placed a bomb at {bombPos}");
-            activeBombs.Add(new Bomb(bombPos));
+            activeBombs.Add(new Bomb(bombPos, playerIndex));
+
             timeSinceLastBomb = 0;
         }
     }
@@ -52,11 +53,21 @@ public class BombManager
 
             if (activeBombs[i].IsFinsihed)
             {
-                // Example: get player 0 for explosion radius; adjust if needed
-                var radius = world.Players[0].ExplosionRadius;
-                explosionManager.CreateExplosion(activeBombs[i].Position, radius);
+                var bomb = activeBombs[i];
+                var player = world.Players[bomb.PlayerIndex];
+
+                int radius = player.ExplosionRadius;
+                if (player.HasBonusRadius && player.BonusRadius > 0)
+                {
+                    radius += player.BonusRadius;
+                    player.BonusRadius = 0;
+                    player.HasBonusRadius = false;
+                }
+
+                explosionManager.CreateExplosion(bomb.Position, radius);
                 activeBombs.RemoveAt(i);
             }
+
         }
     }
 

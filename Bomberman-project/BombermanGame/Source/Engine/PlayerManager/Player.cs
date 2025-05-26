@@ -26,7 +26,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
 
         public int ExplosionRadius { get; set; } = 3;
         public int BonusRadius { get; set; } = 0; // Extra radius from powerup
-        public bool HasBonusRadius => BonusRadius > 0; // Read-only based on BonusRadius
+        public bool HasBonusRadius { get; set; } = false;
 
         public bool CanLifeSteal { get; private set; }
         private bool isInvincible = false;
@@ -130,18 +130,21 @@ namespace BombermanGame.Source.Engine.PlayerManager
             if (IsGhost)
             {
                 ghostTimer -= timePassed;
+
                 if (ghostTimer <= 0)
                 {
-                    if (tilemap.IsOnGroundTile(_boundingBox))
+                    if (tilemap.IsFullyOnGroundTile(_boundingBox))
+
                     {
                         IsGhost = false;
                     }
                     else
                     {
-                        ghostTimer = 100; // prevent ending ghost mode until on ground tile
+                        ghostTimer = 100; // Wait a bit and recheck
                     }
                 }
             }
+
         }
 
         public void SetTexture(Texture2D texture)
@@ -169,11 +172,6 @@ namespace BombermanGame.Source.Engine.PlayerManager
             invincibilityTimer = milliseconds;
         }
 
-        public void EnableLifeSteal()
-        {
-            CanLifeSteal = true;
-        }
-
         public void EnableGhostMode(double duration)
         {
             IsGhost = true;
@@ -188,7 +186,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
             }
             else
             {
-                // You can add logic to handle swapping or stacking power-ups here if you want
+               
             }
         }
 
@@ -208,16 +206,15 @@ namespace BombermanGame.Source.Engine.PlayerManager
                     Heal(1);
                     break;
                 case PowerUpType.ExplosionRadius:
-                    BonusRadius = 1;
+                    HasBonusRadius = true;
+                    BonusRadius = 3;
+                    break;
                     break;
                 case PowerUpType.Invincible:
                     SetInvincibility(5000);
                     break;
                 case PowerUpType.Ghost:
                     EnableGhostMode(5000);
-                    break;
-                case PowerUpType.LifeSteal:
-                    EnableLifeSteal();
                     break;
             }
 

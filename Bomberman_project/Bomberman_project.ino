@@ -65,18 +65,33 @@ void sendMQTTMessage(const String& type, const String& value) {
 }
 
 void reconnect() {
-  while (!client.connected()) {
-    Serial.println("Attempting MQTT connection...");
-    if (client.connect("ArduinoMKR", mqtt_username, mqtt_password)) {
-      Serial.println("Connected to MQTT broker");
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.begin(ssid, password);
+    delay(2000);
+    return;
+  }
+
+  // Create a unique client ID using the player ID
+  String clientId = "ArduinoMKR_" + String(playerId);
+
+  Serial.print("Connecting with client ID: ");
+  Serial.println(clientId);
+
+  if (client.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
+    Serial.println("Connected to MQTT broker");
+
+    static bool alreadySubscribed = false;
+    if (!alreadySubscribed) {
       client.subscribe(mqttTopic);
-    } else {
-      Serial.print("Failed, status code: ");
-      Serial.println(client.state());
-      delay(5000);
+      alreadySubscribed = true;
     }
+  } else {
+    Serial.print("Failed to connect, status code: ");
+    Serial.println(client.state());
   }
 }
+
+
 
 void PlaceBomb() {
   unsigned long currentMillis = millis();
@@ -122,10 +137,26 @@ void Gyro() {
 }
 
 void loop() {
+  // Reconnect WiFi if dropped
+if (WiFi.status() != WL_CONNECTED) {
+  Serial.println("WiFi connection lost. Attempting to reconnect...");
+  WiFi.begin(ssid, password);
+  delay(2000); // wait before next try
+  return; // skip rest of loop if WiFi is not available
+}
+
   if (!client.connected()) {
+  static unsigned long lastReconnectAttempt = 0;
+  unsigned long now = millis();
+
+  if (now - lastReconnectAttempt > 5000) {
+    lastReconnectAttempt = now;
     reconnect();
   }
+}else{
   client.loop();
+}
+  
   carrier.Buttons.update();
 
   Gyro();

@@ -10,13 +10,22 @@ namespace BombermanGame.Source.Engine.BombManager
         public int Counter;
         public bool IsFinsihed;
         private int FrameSpeed = 60;
+        private Vector2 bombPos;
 
-        public Bomb(Vector2 position)
+        public int PlayerIndex { get; set; }
+
+        public Bomb(Vector2 position, int playerIndex)
         {
             Position = position;
             Frame = 0;
             Counter = 0;
             IsFinsihed = false;
+            PlayerIndex = playerIndex;
+        }
+
+        public Bomb(Vector2 bombPos)
+        {
+            this.bombPos = bombPos;
         }
 
         public void Update(Texture2D[] textures)
