@@ -6,7 +6,7 @@
 #include "config.h"
 #include "CommonClasses.h"
 
-const int playerId = 2; // <<< CHANGE this to 2, 3, or 4 for other Arduinos
+const int playerId = 1; // Change this to 1, 2, 3, or 4 for each arduino
 
 const char ssid[] = WIFI_SSID;
 const char password[] = WIFI_PASSWORD;
