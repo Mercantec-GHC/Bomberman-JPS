@@ -19,7 +19,7 @@ namespace BombermanGame.Source.Engine.PowerUps
 
         public void SpawnPowerUp(Vector2 position)
         {
-            if (rng.NextDouble() < 0.3) //The chance for a powerUp to spawn
+            if (rng.NextDouble() < 1) //The chance for a powerUp to spawn
             {
                 int powerUpCount = Enum.GetValues(typeof(PowerUpType)).Length - 1; 
                 var type = (PowerUpType)rng.Next(1, powerUpCount + 1); // doesnt spawn "None"

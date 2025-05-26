@@ -49,7 +49,6 @@ namespace BombermanGame.Source.Engine.Content
                 [PowerUpType.ExplosionRadius] = content.Load<Texture2D>("2d/PowerUps/SmokeStar"),
                 [PowerUpType.Ghost] = content.Load<Texture2D>("2d/PowerUps/GhostStar"),
                 [PowerUpType.Invincible] = content.Load<Texture2D>("2d/PowerUps/InvincibleStar"),
-                [PowerUpType.LifeSteal] = content.Load<Texture2D>("2d/PowerUps/VampireStar"),
                 [PowerUpType.HealthUp] = content.Load<Texture2D>("2d/PowerUps/HealthUp"),
             };
         }
