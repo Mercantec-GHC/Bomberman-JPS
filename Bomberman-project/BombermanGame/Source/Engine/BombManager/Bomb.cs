@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using BombermanGame.Source.Engine.PlayerManager;
 
 namespace BombermanGame.Source.Engine.BombManager
 {
@@ -13,7 +9,7 @@ namespace BombermanGame.Source.Engine.BombManager
         public int Frame;
         public int Counter;
         public bool IsFinsihed;
-        private int FrameSpeed = 12;
+        private int FrameSpeed = 60;
 
         public Bomb(Vector2 position)
         {

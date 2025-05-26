@@ -23,6 +23,9 @@ namespace BombermanGame
         private Texture2D[] runningTextures;
 
         private World world;
+        private readonly List<PlayerInput> _inputs;
+        private readonly List<Player> _players = new();
+
         private ExplosionManager explosionManager;
         private BombManager bombManager;
 
@@ -32,14 +35,15 @@ namespace BombermanGame
 
         
 
-        public Main(PlayerInput input)
+        public Main(List<PlayerInput> inputs)
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             _graphics.ApplyChanges();
 
-            _input = input;
+            _inputs = inputs;
+
         }
 
         protected override void Initialize()
@@ -63,7 +67,7 @@ namespace BombermanGame
 
         protected override void LoadContent()
         {
-            
+
             Globals.content = this.Content;
             Globals.spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -79,35 +83,92 @@ namespace BombermanGame
 
             world = new World();
             world.Load(Content);
-            world.SetPlayerTextures(new Texture2D[] { runningTextures[0] });
+
+            int tileWidth = world.Tilemap.TileSize;
+            int tileHeight = world.Tilemap.TileSize;
+            int mapWidth = world.Tilemap.MapWidth;
+            int mapHeight = world.Tilemap.MapHeight;
+
+            Vector2[] spawnPositions = new Vector2[]
+            {
+        new Vector2(tileWidth, tileHeight),                                      // Top-left
+        new Vector2((mapWidth - 2) * tileWidth, tileHeight),                    // Top-right
+        new Vector2(tileWidth, (mapHeight - 2) * tileHeight),                   // Bottom-left
+        new Vector2((mapWidth - 2) * tileWidth, (mapHeight - 2) * tileHeight),  // Bottom-right
+            };
+
+            // Spawn exactly one player per spawn position, max 4 players
+            for (int i = 0; i < _inputs.Count && i < 4; i++)
+            {
+                var player = new Player(runningTextures[0], spawnPositions[i]);
+                world.AddPlayer(player);
+                world.SetPlayerTexture(i, runningTextures[0]);
+            }
 
             explosionManager = new ExplosionManager(world, explosionCenter, explosionHorizontal, explosionVertical, powerUpManager);
             bombManager = new BombManager(world, bombTextures, explosionManager);
 
             playerAnimator = new FrameAnimator(runningTextures.Length);
 
-            
+            // Removed extra manual players here (player1, player2)
+
             world.SetPowerUpTextures(textures);
         }
 
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _input.HandleKeyboardInput();
-            world.Update(_input, gameTime);
+            int playerCount = world.Players.Count;
+            int inputCount = _inputs.Count;
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                if (i >= inputCount)
+                    continue;
+
+                var input = _inputs[i];
+                input.HandleKeyboardInput();
+
+                string dir = input.MoveDirection?.ToLowerInvariant();
+                string playerDir = dir switch
+                {
+                    "left" => "Left",
+                    "right" => "Right",
+                    "up" => "Up",
+                    "down" => "Down",
+                    _ => "Idle"
+                };
+
+                world.Players[i].Update(playerDir, world.Tilemap, gameTime);
+
+                if (input.BombPlaced)
+                    bombManager.PlaceBomb(world.Players[i].Position, i);
+                bombManager.UpdateBombs(gameTime);
+
+                if (input.PowerUpUsed)
+                    world.Players[i].UseStoredPowerUp();
+
+                input.ResetActions();
+            }
+
+            // Run bomb animations & explosions regardless of user input
+            bombManager.UpdateBombs(gameTime);
+            explosionManager.Update(world.Players);
 
             int currentFrame = playerAnimator.UpdateAndGetFrame();
-            world.SetPlayerTextures(new Texture2D[] { runningTextures[currentFrame] });
+            for (int i = 0; i < playerCount; i++)
+            {
+                world.SetPlayerTexture(i, runningTextures[currentFrame]);
+            }
 
-            bombManager.Update(gameTime, world._player.Position, _input.BombPlaced);
-            explosionManager.Update(new List<Player> { world._player });
-
-            powerUpManager.Update(world._player);
-
-            _input.ResetActions();
+            foreach (var player in world.Players)
+            {
+                powerUpManager.Update(player);
+            }
 
             base.Update(gameTime);
         }
