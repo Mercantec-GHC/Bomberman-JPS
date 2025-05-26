@@ -1,0 +1,26 @@
+﻿@page "/userPage"
+
+<MudCard Outlined="true">
+    <MudCardHeader>
+        @* <MudText Typo="Typo.h2">Settings</MudText> *@
+
+        <ul>
+            <li class="nav-item">
+                <MudButton Variant="Variant.Text" Color="Color.Primary">User settings</MudButton>
+            </li>
+            <li class="nav-item">
+                <MudButton Variant="Variant.Text" Color="Color.Primary">Device settings</MudButton>
+            </li>
+        </ul>
+    </MudCardHeader>
+</MudCard>
+
+@code {
+
+
+    public enum PageEnum
+    {
+        Settings,
+        ArduinoSettings
+    }
+}
