@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -134,3 +135,5 @@ app.UseCors(policy =>
           .AllowAnyHeader());
 
 app.Run();
+
+public partial class Program { }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bomberman_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250519085848_controllerLogs_0001")]
-    partial class controllerLogs_0001
+    [Migration("20250527055510_exam_Version_001")]
+    partial class exam_Version_001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,7 +64,8 @@ namespace Bomberman_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PlayerUserId")
+                    b.Property<Guid>("PlayerID")
+                        .HasMaxLength(200)
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("TimeStamp")
@@ -72,7 +73,8 @@ namespace Bomberman_Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerUserId");
+                    b.HasIndex("PlayerID")
+                        .IsUnique();
 
                     b.ToTable("controllerLogs");
                 });
@@ -261,7 +263,7 @@ namespace Bomberman_Backend.Migrations
                 {
                     b.HasOne("DomainModels.Player", "Player")
                         .WithMany()
-                        .HasForeignKey("PlayerUserId")
+                        .HasForeignKey("PlayerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

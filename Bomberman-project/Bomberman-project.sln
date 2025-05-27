@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainModels", "DomainModels\DomainModels.csproj", "{5BFF8D81-D787-4ED2-9EE6-11542058A8DE}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bomberman-frontend", "Bomberman-frontend\Bomberman-frontend.csproj", "{02C783D3-0146-4685-B807-F83ACCC1D28B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombermanGame", "BombermanGame\BombermanGame.csproj", "{61771037-DB7D-4DFF-8A11-3C32597A4BF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bomberman-Backend.Tests", "Bomberman-Backend.Tests\Bomberman-Backend.Tests.csproj", "{F424951A-AFF3-4659-BF4F-B24C93DAC451}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{61771037-DB7D-4DFF-8A11-3C32597A4BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61771037-DB7D-4DFF-8A11-3C32597A4BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61771037-DB7D-4DFF-8A11-3C32597A4BF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F424951A-AFF3-4659-BF4F-B24C93DAC451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F424951A-AFF3-4659-BF4F-B24C93DAC451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F424951A-AFF3-4659-BF4F-B24C93DAC451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F424951A-AFF3-4659-BF4F-B24C93DAC451}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
