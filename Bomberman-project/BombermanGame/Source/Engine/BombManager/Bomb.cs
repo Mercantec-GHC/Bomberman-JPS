@@ -9,8 +9,7 @@ namespace BombermanGame.Source.Engine.BombManager
         public int Frame;
         public int Counter;
         public bool IsFinsihed;
-        private int FrameSpeed = 60;
-        private Vector2 bombPos;
+        private int FrameSpeed = 75;
 
         public int PlayerIndex { get; set; }
 
@@ -23,10 +22,7 @@ namespace BombermanGame.Source.Engine.BombManager
             PlayerIndex = playerIndex;
         }
 
-        public Bomb(Vector2 bombPos)
-        {
-            this.bombPos = bombPos;
-        }
+       
 
         public void Update(Texture2D[] textures)
         {

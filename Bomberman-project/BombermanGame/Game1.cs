@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using BombermanGame.Source;
 using BombermanGame.Source.Engine;
 using BombermanGame.Source.Engine.Input;
-using BombermanGame.Source.Engine.Map;
 using BombermanGame.Source.Engine.PlayerManager;
 using BombermanGame.Source.Engine.BombManager;
 using System.Collections.Generic;
@@ -17,14 +16,12 @@ namespace BombermanGame
     public class Main : Game
     {
         private GraphicsDeviceManager _graphics;
-        private PlayerInput _input;
 
         private Texture2D[] bombTextures;
         private Texture2D[] runningTextures;
 
         private World world;
         private readonly List<PlayerInput> _inputs;
-        private readonly List<Player> _players = new();
 
         private ExplosionManager explosionManager;
         private BombManager bombManager;
@@ -214,7 +211,7 @@ namespace BombermanGame
                 Vector2 textSize = world._font.MeasureString(winnerText);
                 Vector2 screenCenter = new Vector2(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height / 2f);
 
-                Globals.spriteBatch.DrawString(world._font, winnerText, screenCenter - textSize / 2f, Color.Gold);
+                Globals.spriteBatch.DrawString(world._font, winnerText, screenCenter - textSize / 2f, Color.White);
             }
             else
             {

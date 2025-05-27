@@ -23,7 +23,6 @@ namespace BombermanGame.Source
         private Texture2D _breakable;
         private Texture2D _specialTexture;
         public SpriteFont _font;
-        private Dictionary<PowerUpType, Texture2D> _powerUpIcons;
 
 
 
@@ -65,7 +64,7 @@ namespace BombermanGame.Source
 
         public void SetPowerUpTextures(Dictionary<PowerUpType, Texture2D> textures)
         {
-            _powerUpIcons = textures;
+            
             foreach (var player in _players)
                 player.SetPowerUpIcons(textures);
         }
