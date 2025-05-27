@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using BombermanGame.Source;
 using BombermanGame.Source.Engine;
 using BombermanGame.Source.Engine.Input;
-using BombermanGame.Source.Engine.Map;
 using BombermanGame.Source.Engine.PlayerManager;
 using BombermanGame.Source.Engine.BombManager;
 using System.Collections.Generic;
@@ -17,14 +16,12 @@ namespace BombermanGame
     public class Main : Game
     {
         private GraphicsDeviceManager _graphics;
-        private PlayerInput _input;
 
         private Texture2D[] bombTextures;
         private Texture2D[] runningTextures;
 
         private World world;
         private readonly List<PlayerInput> _inputs;
-        private readonly List<Player> _players = new();
 
         private ExplosionManager explosionManager;
         private BombManager bombManager;
@@ -33,7 +30,18 @@ namespace BombermanGame
 
         private PowerUpManager powerUpManager;
 
-        
+        enum GameState
+        {
+            Playing,
+            Winner
+        }
+
+        GameState gameState = GameState.Playing;
+        bool isGameOver = false;
+        int winningPlayerId = -1;
+        double gameOverTimer = 0;
+
+
 
         public Main(List<PlayerInput> inputs)
         {
@@ -170,22 +178,51 @@ namespace BombermanGame
                 powerUpManager.Update(player);
             }
 
+            if (!isGameOver)
+            {
+                int? winnerId = world.CheckWinner();
+                if (winnerId.HasValue)
+                {
+                    isGameOver = true;
+                    winningPlayerId = winnerId.Value;
+                }
+            }
+            else
+            {
+                gameOverTimer -= gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (gameOverTimer <= 0)
+                {
+                    gameState = GameState.Winner; 
+                }
+            }
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             Globals.spriteBatch.Begin();
-            world.Draw();
 
-            bombManager.Draw(Globals.spriteBatch);
-            explosionManager.Draw(Globals.spriteBatch);
+            if (gameState == GameState.Winner && winningPlayerId != null)
+            {
+                string winnerText = $"Player {winningPlayerId} Wins!";
+                Vector2 textSize = world._font.MeasureString(winnerText);
+                Vector2 screenCenter = new Vector2(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height / 2f);
 
-            powerUpManager.Draw(Globals.spriteBatch);
+                Globals.spriteBatch.DrawString(world._font, winnerText, screenCenter - textSize / 2f, Color.White);
+            }
+            else
+            {
+                world.Draw();
+                bombManager.Draw(Globals.spriteBatch);
+                explosionManager.Draw(Globals.spriteBatch);
+                powerUpManager.Draw(Globals.spriteBatch);
+            }
 
             Globals.spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

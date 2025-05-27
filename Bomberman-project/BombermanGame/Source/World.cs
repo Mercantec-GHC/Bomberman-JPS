@@ -23,7 +23,6 @@ namespace BombermanGame.Source
         private Texture2D _breakable;
         private Texture2D _specialTexture;
         public SpriteFont _font;
-        private Dictionary<PowerUpType, Texture2D> _powerUpIcons;
 
 
 
@@ -65,11 +64,31 @@ namespace BombermanGame.Source
 
         public void SetPowerUpTextures(Dictionary<PowerUpType, Texture2D> textures)
         {
-            _powerUpIcons = textures;
+            
             foreach (var player in _players)
                 player.SetPowerUpIcons(textures);
         }
 
+        public int? CheckWinner()
+        {
+            int aliveCount = 0;
+            int lastAlivePlayerId = -1;
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].IsAlive)
+                {
+                    aliveCount++;
+                    lastAlivePlayerId = i;
+                }
+            }
+
+            if (aliveCount == 1)
+                return lastAlivePlayerId; // return winning player index (ID)
+
+            return null; // no winner yet
+        }
+       
         public void Draw()
         {
             _tilemap.Draw(Globals.spriteBatch);
