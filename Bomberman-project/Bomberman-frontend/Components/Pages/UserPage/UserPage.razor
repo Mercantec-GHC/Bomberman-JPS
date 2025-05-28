@@ -5,18 +5,36 @@
         @* <MudText Typo="Typo.h2">Settings</MudText> *@
 
         <ul>
-            <li class="nav-item">
-                <MudButton Variant="Variant.Text" Color="Color.Primary">User settings</MudButton>
-            </li>
-            <li class="nav-item">
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Device settings</MudButton>
-            </li>
+            <MudButton OnClick="@(() => page = PageEnum.Settings)" Variant="Variant.Text" Color="Color.Primary">User settings</MudButton>
+
+            <MudButton OnClick="@(() => page = PageEnum.ArduinoSettings)" Variant="Variant.Text" Color="Color.Primary">Device settings</MudButton>
         </ul>
     </MudCardHeader>
+    @if (page == PageEnum.Settings)
+    {
+        <MudCardContent>
+            <MudText Typo="Typo.h3">User settings:</MudText>
+        </MudCardContent>
+        <MudCardContent>
+            <SettingsComponent />
+        </MudCardContent>
+    }
+    @if (page == PageEnum.ArduinoSettings)
+    {
+        <MudCardContent>
+            <MudText Typo="Typo.h3">Device settings:</MudText>
+        </MudCardContent>
+        <MudCardContent>
+            <ArduinoSettingsComponent />
+        </MudCardContent>
+    }
 </MudCard>
 
-@code {
 
+
+
+@code {
+    private PageEnum page = PageEnum.Settings;
 
     public enum PageEnum
     {

@@ -1,5 +1,38 @@
-﻿<h3>SettingsComponent</h3>
+﻿@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProv
+@using DomainModels
+@using DomainModels.DTO
+
+<EditForm Model="updateUserDTO" OnValidSubmit="SubmitChanges">
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudCardContent>
+            <MudText>Change email:</MudText>
+            <MudTextField Label="Email" @bind-Value="updateUserDTO.Email" For="@(() => updateUserDTO.Email)">
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudText Class="mt-2">Change username:</MudText>
+            <MudTextField Label="Email" @bind-Value="updateUserDTO.Username" For="@(() => updateUserDTO.Username)">
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudText Class="mt-2">Change password:</MudText>
+            <MudTextField Label="Email" @bind-Value="updateUserDTO.Password" For="@(() => updateUserDTO.Password)">
+            </MudTextField>
+        </MudCardContent>
+    </MudCard>
+</EditForm>
 
 @code {
+    private UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+    public bool editingInfo = false;
 
+    public async Task SubmitChanges()
+    {
+
+    }
+
+    private void EnableEditingInfo()
+    {
+        
+    }
 }

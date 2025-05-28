@@ -21,18 +21,18 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
             <AuthorizeView>
                 <Authorized>
                     <MudTooltip Text="Settings">
-                    <MudMenu Icon="@Icons.Material.Filled.MiscellaneousServices" Color="Color.Inherit">
-                        <MudMenuItem OnClick="@UserSettingsNavigate">
-                            <MudTooltip Text="User settings">
-                                <MudIconButton Icon="@Icons.Material.Filled.ManageAccounts" Color="Color.Inherit" />
-                            </MudTooltip>
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="@LogoutNavigate">
-                            <MudTooltip Text="Logout">
-                                <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="@LogoutNavigate" />
-                            </MudTooltip>
-                        </MudMenuItem>
-                    </MudMenu>
+                        <MudMenu Icon="@Icons.Material.Filled.MiscellaneousServices" Color="Color.Inherit">
+                            <MudMenuItem>
+                                <MudTooltip Text="User settings">
+                                        <MudIconButton Icon="@Icons.Material.Filled.ManageAccounts" Color="Color.Inherit" OnClick="@UserSettingsNavigate" />
+                                </MudTooltip>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudTooltip Text="Logout">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="@LogoutNavigate" />
+                                </MudTooltip>
+                            </MudMenuItem>
+                        </MudMenu>
                     </MudTooltip>
                 </Authorized>
                 <NotAuthorized>
@@ -63,7 +63,7 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
 @code {
     private async Task UserSettingsNavigate()
     {
-        NavigationManager.NavigateTo("/userPage");
+        NavigationManager.NavigateTo("/userpage");
     }
     private async Task LogoutNavigate()
     {
