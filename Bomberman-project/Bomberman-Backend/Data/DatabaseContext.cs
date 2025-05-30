@@ -17,6 +17,11 @@ namespace Bomberman_Backend.Data
         public virtual DbSet<Lobby> lobby { get; set; }
         public virtual DbSet<PowerUp> powerup { get; set; }
 
+        public virtual DbSet<Controller> Controllers { get; set; }
+
+        public virtual DbSet<Gyroscope> Gyroscopes { get; set; }
+        public virtual DbSet<Buttons> Buttons { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);

@@ -49,6 +49,8 @@ builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
 builder.Services.AddScoped<ILobbyRepo, LobbyRepo>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHash>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+builder.Services.AddScoped<IControllerRepo, ControllerRepo>();
+builder.Services.AddScoped<IControllerLogRepo, ControllerLogRepo>();
 
 
 //Services
@@ -57,6 +59,8 @@ builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IPowerUpService, PowerUpService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<ILobbyService, LobbyService>();
+builder.Services.AddScoped<IControllerService, ControllerService>();
+builder.Services.AddScoped<IControllerLogService, ControllerLogService>();
 
 
 builder.Services.AddHealthChecks();
