@@ -39,7 +39,7 @@ namespace Bomberman_Backend.Repository
                 return Task.FromResult(false);
             }
             _context.Controllers.Remove(controller);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return Task.FromResult(true);
         }
 
@@ -85,7 +85,7 @@ namespace Bomberman_Backend.Repository
             }
             existingController.playerColor = controller.PlayerColor;
             _context.Controllers.Update(existingController);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return Task.FromResult(new UpdateControllerPlayerColorDTO
             {
                 Id = existingController.Id,
@@ -102,7 +102,7 @@ namespace Bomberman_Backend.Repository
             }
             existingController.playerId = controller.playerId;
             _context.Controllers.Update(existingController);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return Task.FromResult(new UpdateControllerPlayerDTO
             {
                 Id = existingController.Id,
@@ -121,7 +121,7 @@ namespace Bomberman_Backend.Repository
             existingController.ledBrightness = controller.ledBrightness;
             existingController.playerId = controller.playerId;
             _context.Controllers.Update(existingController);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return Task.FromResult(new UpdateControllerDTO
             {
                 Id = existingController.Id,
