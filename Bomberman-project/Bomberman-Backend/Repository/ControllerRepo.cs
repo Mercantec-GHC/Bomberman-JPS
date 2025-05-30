@@ -112,7 +112,7 @@ namespace Bomberman_Backend.Repository
 
         public Task<UpdateControllerDTO> UpdateControllerAsync(UpdateControllerDTO controller)
         {
-            var existingController = _context.Controllers.Find(controller);
+            var existingController = _context.Controllers.Find(controller.Id);
             if (existingController == null)
             {
                 return Task.FromResult<UpdateControllerDTO>(null);
