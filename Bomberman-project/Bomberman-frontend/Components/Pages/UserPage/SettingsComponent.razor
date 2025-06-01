@@ -15,7 +15,7 @@
             </MudTextField>
             <MudDivider Class="my-2" />
             <MudText Class="mt-2">Change username:</MudText>
-            <MudTextField Disabled="@(!editingInfo)" Label="Username" @bind-Value="updateUserDTO.UserName" For="@(() => updateUserDTO.UserName)">
+            <MudTextField Disabled="@(!editingInfo)" Label="Username" @bind-Value="updateUserDTO.Username" For="@(() => updateUserDTO.Username)">
             </MudTextField>
             <MudDivider Class="my-2" />
             <MudButton Variant="Variant.Outlined" ButtonType="@B1BT" Class="mt-2" Color="@B1" OnClick="@EnableEditingInfo">@B1S</MudButton>
@@ -54,20 +54,6 @@
         string idString = userID.Value;
 
         player = await PlayerService.GetPlayer(idString);
-    }
-
-    private const int SaltSize = 16;
-    private const int HashSize = 32;
-    private const int HashIterations = 10000;
-    private static readonly HashAlgorithmName algorithm = HashAlgorithmName.SHA512;
-    public bool Verify(string password, string passwordHash)
-    {
-        string[] parts = passwordHash.Split('-');
-        byte[] hash = Convert.FromHexString(parts[0]);
-        byte[] salt = Convert.FromHexString(parts[1]);
-
-        byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, HashIterations, algorithm, HashSize);
-        return hash.SequenceEqual(inputHash);
     }
 
     public bool editingInfo = false;

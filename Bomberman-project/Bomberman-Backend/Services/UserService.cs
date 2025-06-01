@@ -28,9 +28,14 @@ namespace Bomberman_Backend.Services
             return _userRepo.GetUsers();
         }
 
-        public GetUserDTO UpdateUser(Guid id, string password)
+        public UpdateUserInfoDTO UpdateUser(Guid id, UpdateUserInfoDTO user)
         {
-            return _userRepo.UpdateUser(id, password);
+            return _userRepo.UpdateUser(id, user);
+        }
+
+        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, string password)
+        {
+            return _userRepo.UpdateUserPassword(id, password);
         }
     }
 }

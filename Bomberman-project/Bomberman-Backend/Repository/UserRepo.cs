@@ -62,7 +62,7 @@ namespace Bomberman_Backend.Repository
             return getUserDTOs;
         }
 
-        public UpdateUserInfoDTO UpdateUserInfo(Guid id, UpdateUserInfoDTO user)
+        public UpdateUserInfoDTO UpdateUser(Guid id, UpdateUserInfoDTO user)
         {
             var _user = _databaseContext.users.SingleOrDefault(o => o.UserId == id);
 
