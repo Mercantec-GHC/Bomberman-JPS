@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration = builder.Configuration;
 var connectionString = Configuration.GetConnectionString("dbcontext") ??
                       Environment.GetEnvironmentVariable("dbcontext");
+Console.WriteLine(connectionString);
 
 var issuer = Configuration["Jwt:Issuer"] ??
              Environment.GetEnvironmentVariable("issuer");
