@@ -41,7 +41,6 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-Console.WriteLine(DatabaseContext.GetType().FullName);
 // Repos
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ILeaderboardRepo, LeaderboardRepo>();
