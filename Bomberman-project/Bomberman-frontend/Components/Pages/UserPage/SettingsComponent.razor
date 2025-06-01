@@ -1,38 +1,125 @@
-﻿@inject NavigationManager Navigation
-@inject AuthenticationStateProvider AuthStateProv
+﻿@using System.ComponentModel.DataAnnotations
 @using DomainModels
 @using DomainModels.DTO
+@using System.Security.Cryptography
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProv
+@inject PlayerService PlayerService
 
-<EditForm Model="updateUserDTO" OnValidSubmit="SubmitChanges">
-    <DataAnnotationsValidator />
-    <MudCard>
+<MudCard>
+    <EditForm Model="updateUserDTO" OnValidSubmit="ChangeInfoSubmit">
+        <DataAnnotationsValidator />
         <MudCardContent>
             <MudText>Change email:</MudText>
-            <MudTextField Label="Email" @bind-Value="updateUserDTO.Email" For="@(() => updateUserDTO.Email)">
+            <MudTextField Disabled="@(!editingInfo)" Label="Email" @bind-Value="updateUserDTO.Email" For="@(() => updateUserDTO.Email)">
             </MudTextField>
             <MudDivider Class="my-2" />
             <MudText Class="mt-2">Change username:</MudText>
-            <MudTextField Label="Email" @bind-Value="updateUserDTO.Username" For="@(() => updateUserDTO.Username)">
+            <MudTextField Disabled="@(!editingInfo)" Label="Username" @bind-Value="updateUserDTO.UserName" For="@(() => updateUserDTO.UserName)">
             </MudTextField>
             <MudDivider Class="my-2" />
-            <MudText Class="mt-2">Change password:</MudText>
-            <MudTextField Label="Email" @bind-Value="updateUserDTO.Password" For="@(() => updateUserDTO.Password)">
-            </MudTextField>
+            <MudButton Variant="Variant.Outlined" ButtonType="@B1BT" Class="mt-2" Color="@B1" OnClick="@EnableEditingInfo">@B1S</MudButton>
+            @if (editingInfo)
+            {
+                <MudButton Variant="Variant.Outlined" Class="mt-2 ml-1" Color="Color.Secondary" OnClick="@DisableEditingInfo">Cancel</MudButton>
+            }
         </MudCardContent>
-    </MudCard>
-</EditForm>
+    </EditForm>
+
+    <EditForm Model="updateUserPasswordDTO" OnValidSubmit="ChangePasswordSubmit">
+        <MudCardContent>
+            <MudText Class="mt-2">Change password:</MudText>
+            <MudTextField Disabled="@(!editingPassword)" Label="Password" @bind-Value="updateUserPasswordDTO.Password" For="@(() => updateUserPasswordDTO.Password)">
+            </MudTextField>
+            <MudButton Variant="Variant.Outlined" Class="mt-2 mb-2" Color="@B2" OnClick="@EnableEditingPassword">@B2S</MudButton>
+            @if (editingPassword)
+            {
+                <MudButton Variant="Variant.Outlined" Class="mt-2 ml-1 mb-2" Color="Color.Secondary" OnClick="@DisableEditingPassword">Cancel</MudButton>
+            }
+        </MudCardContent>
+    </EditForm>
+</MudCard>
 
 @code {
-    private UpdateUserDTO updateUserDTO = new UpdateUserDTO();
-    public bool editingInfo = false;
+    private UpdateUserInfoDTO updateUserDTO = new UpdateUserInfoDTO();
+    private UpdateUserPasswordDTO updateUserPasswordDTO = new UpdateUserPasswordDTO();
 
-    public async Task SubmitChanges()
+    protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthStateProv.GetAuthenticationStateAsync();
+        var user = authState.User;
 
+        Player player = new Player();
+        var userID = user.Claims.FirstOrDefault(c => c.Type == "sub");
+        string idString = userID.Value;
+
+        player = await PlayerService.GetPlayer(idString);
     }
+
+    private const int SaltSize = 16;
+    private const int HashSize = 32;
+    private const int HashIterations = 10000;
+    private static readonly HashAlgorithmName algorithm = HashAlgorithmName.SHA512;
+    public bool Verify(string password, string passwordHash)
+    {
+        string[] parts = passwordHash.Split('-');
+        byte[] hash = Convert.FromHexString(parts[0]);
+        byte[] salt = Convert.FromHexString(parts[1]);
+
+        byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, HashIterations, algorithm, HashSize);
+        return hash.SequenceEqual(inputHash);
+    }
+
+    public bool editingInfo = false;
+    public string B1S = "Edit info";
+    public ButtonType B1BT = ButtonType.Button;
+    public Color B1 = new Color();
+
+    public bool editingPassword = false;
+    public string B2S = "Edit password";
+    public ButtonType B2BT = ButtonType.Button;
+    public Color B2 = new Color();
 
     private void EnableEditingInfo()
     {
+        editingInfo = true;
+        B1 = Color.Primary;
+        B1BT = ButtonType.Submit;
+        B1S = "Save changes";
+    }
+
+    private void DisableEditingInfo()
+    {
+        editingInfo = false;
+        B1 = Color.Default;
+        B1BT = ButtonType.Button;
+        B1S = "Edit info";
+    }
+
+    private void EnableEditingPassword()
+    {
+        editingPassword = true;
+        B2 = Color.Primary;
+        B2BT = ButtonType.Submit;
+        B2S = "Save changes";
+    }
+
+    private void DisableEditingPassword()
+    {
+        editingPassword = false;
+        B2 = Color.Default;
+        B2BT = ButtonType.Button;
+        B2S = "Edit password";
+    }
+
+    public async Task ChangeInfoSubmit()
+    {
+
+    }
+
+    public async Task ChangePasswordSubmit()
+    {
         
     }
+
 }

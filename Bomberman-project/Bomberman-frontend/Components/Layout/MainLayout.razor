@@ -20,11 +20,12 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
             <MudSpacer />
             <AuthorizeView>
                 <Authorized>
+                    <MudText Class="mr-2">@GetUsername(context)</MudText>
                     <MudTooltip Text="Settings">
                         <MudMenu Icon="@Icons.Material.Filled.MiscellaneousServices" Color="Color.Inherit">
                             <MudMenuItem>
                                 <MudTooltip Text="User settings">
-                                        <MudIconButton Icon="@Icons.Material.Filled.ManageAccounts" Color="Color.Inherit" OnClick="@UserSettingsNavigate" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.ManageAccounts" Color="Color.Inherit" OnClick="@UserSettingsNavigate" />
                                 </MudTooltip>
                             </MudMenuItem>
                             <MudMenuItem>
@@ -61,6 +62,14 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
 </MudLayout>
 
 @code {
+    private string GetUsername(AuthenticationState context)
+    {
+        var usernameClaim = context.User.Claims.FirstOrDefault(c => c.Type == "name");
+        return usernameClaim.Value;
+    }
+
+
+
     private async Task UserSettingsNavigate()
     {
         NavigationManager.NavigateTo("/userpage");

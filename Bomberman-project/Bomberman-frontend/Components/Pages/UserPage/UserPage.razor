@@ -5,13 +5,15 @@
         @* <MudText Typo="Typo.h2">Settings</MudText> *@
 
         <ul>
-            <MudButton OnClick="@(() => page = PageEnum.Settings)" Variant="Variant.Text" Color="Color.Primary">User settings</MudButton>
+            <MudButton OnClick="@(() => page = PageEnum.Settings)" Variant="Variant.Text" Color="@C1">User settings</MudButton>
 
-            <MudButton OnClick="@(() => page = PageEnum.ArduinoSettings)" Variant="Variant.Text" Color="Color.Primary">Device settings</MudButton>
+            <MudButton OnClick="@(() => page = PageEnum.ArduinoSettings)" Variant="Variant.Text" Color="@C2">Device settings</MudButton>
         </ul>
     </MudCardHeader>
     @if (page == PageEnum.Settings)
     {
+        C1 = Color.Primary;
+        C2 = Color.Default;
         <MudCardContent>
             <MudText Typo="Typo.h3">User settings:</MudText>
         </MudCardContent>
@@ -21,6 +23,8 @@
     }
     @if (page == PageEnum.ArduinoSettings)
     {
+        C1 = Color.Default;
+        C2 = Color.Primary;
         <MudCardContent>
             <MudText Typo="Typo.h3">Device settings:</MudText>
         </MudCardContent>
@@ -35,6 +39,8 @@
 
 @code {
     private PageEnum page = PageEnum.Settings;
+    private Color C1 = new Color();
+    private Color C2 = new Color();
 
     public enum PageEnum
     {

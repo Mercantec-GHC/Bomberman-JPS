@@ -2,16 +2,20 @@
 using Bomberman_Backend.Repository.Interfaces;
 using DomainModels;
 using DomainModels.DTO;
+using Microsoft.AspNetCore.Identity;
+using System.Numerics;
 
 namespace Bomberman_Backend.Repository
 {
     public class UserRepo : IUserRepo
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UserRepo(DatabaseContext databaseContext)
+        public UserRepo(DatabaseContext databaseContext, IPasswordHasher passwordHasher)
         {
             _databaseContext = databaseContext;
+            _passwordHasher = passwordHasher;
         }
 
 
@@ -58,7 +62,7 @@ namespace Bomberman_Backend.Repository
             return getUserDTOs;
         }
 
-        public GetUserDTO UpdateUser(Guid id, CreateUserDTO user)
+        public UpdateUserInfoDTO UpdateUserInfo(Guid id, UpdateUserInfoDTO user)
         {
             var _user = _databaseContext.users.SingleOrDefault(o => o.UserId == id);
 
@@ -67,19 +71,37 @@ namespace Bomberman_Backend.Repository
                 return null;
             }
 
-            _user.UserName = user.UserName;
+            _user.UserName = user.Username;
             _user.Email = user.Email;
-            _user.Password = user.Password;
 
             var User = _databaseContext.users.Update(_user);
             _databaseContext.SaveChanges();
 
-            var userDTO = new GetUserDTO
+            var userDTO = new UpdateUserInfoDTO
             {
-                Id = User.Entity.Id,
-                UserId = User.Entity.UserId,
-                UserName = User.Entity.UserName,
+                Username = User.Entity.UserName,
                 Email = User.Entity.Email
+            };
+            return userDTO;
+        }
+
+        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, string password)
+        {
+            var _user = _databaseContext.users.SingleOrDefault(o => o.UserId == id);
+
+            if (_user == null)
+            {
+                return null;
+            }
+
+            _user.Password = password;
+
+            var User = _databaseContext.users.Update(_user);
+            _databaseContext.SaveChanges();
+
+            var userDTO = new UpdateUserPasswordDTO
+            {
+                Password = _passwordHasher.Hash(password),
             };
             return userDTO;
         }

@@ -1,5 +1,6 @@
 ﻿using Bomberman_Backend.Repository.Interfaces;
 using Bomberman_Backend.Services.Interfaces;
+using DomainModels;
 using DomainModels.DTO;
 
 namespace Bomberman_Backend.Services
@@ -27,9 +28,9 @@ namespace Bomberman_Backend.Services
             return _userRepo.GetUsers();
         }
 
-        public GetUserDTO UpdateUser(Guid id, CreateUserDTO user)
+        public GetUserDTO UpdateUser(Guid id, string password)
         {
-            return _userRepo.UpdateUser(id, user);
+            return _userRepo.UpdateUser(id, password);
         }
     }
 }

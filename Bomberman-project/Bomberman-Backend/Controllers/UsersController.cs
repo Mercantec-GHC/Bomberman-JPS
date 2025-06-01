@@ -1,4 +1,5 @@
 ﻿using Bomberman_Backend.Services.Interfaces;
+using DomainModels;
 using DomainModels.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,9 +36,8 @@ namespace Bomberman_Backend.Controllers
             return users;
         }
 
-
         [HttpPut]
-        public ActionResult<GetUserDTO> Put([FromQuery] Guid id, [FromBody] CreateUserDTO user)
+        public ActionResult<GetUserDTO> Put([FromQuery] Guid id, [FromBody] UpdateUserInfoDTO user)
         {
             var _user = _users.UpdateUser(id, user);
             if (Object.ReferenceEquals(_user, null))
