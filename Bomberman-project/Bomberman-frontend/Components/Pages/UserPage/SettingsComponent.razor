@@ -5,17 +5,20 @@
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthStateProv
 @inject PlayerService PlayerService
+@inject UserService UserService
 
 <MudCard>
     <EditForm Model="updateUserDTO" OnValidSubmit="ChangeInfoSubmit">
         <DataAnnotationsValidator />
         <MudCardContent>
             <MudText>Change email:</MudText>
-            <MudTextField Disabled="@(!editingInfo)" Label="Email" @bind-Value="updateUserDTO.Email" For="@(() => updateUserDTO.Email)">
+            <MudTextField Disabled="@(!editingInfo)" Label="Email" @bind-Value="updateUserDTO.Email" 
+                For="@(() => updateUserDTO.Email)">@updateUserDTO.Email
             </MudTextField>
             <MudDivider Class="my-2" />
             <MudText Class="mt-2">Change username:</MudText>
-            <MudTextField Disabled="@(!editingInfo)" Label="Username" @bind-Value="updateUserDTO.Username" For="@(() => updateUserDTO.Username)">
+            <MudTextField Disabled="@(!editingInfo)" Label="Username" @bind-Value="updateUserDTO.Username" 
+                For="@(() => updateUserDTO.Username)">@updateUserDTO.Username
             </MudTextField>
             <MudDivider Class="my-2" />
             <MudButton Variant="Variant.Outlined" ButtonType="@B1BT" Class="mt-2" Color="@B1" OnClick="@EnableEditingInfo">@B1S</MudButton>
@@ -29,9 +32,10 @@
     <EditForm Model="updateUserPasswordDTO" OnValidSubmit="ChangePasswordSubmit">
         <MudCardContent>
             <MudText Class="mt-2">Change password:</MudText>
-            <MudTextField Disabled="@(!editingPassword)" Label="Password" @bind-Value="updateUserPasswordDTO.Password" For="@(() => updateUserPasswordDTO.Password)">
+            <MudTextField Disabled="@(!editingPassword)" Label="Password" @bind-Value="updateUserPasswordDTO.Password"
+                For="@(() => updateUserPasswordDTO.Password)" InputType="InputType.Password">
             </MudTextField>
-            <MudButton Variant="Variant.Outlined" Class="mt-2 mb-2" Color="@B2" OnClick="@EnableEditingPassword">@B2S</MudButton>
+            <MudButton Variant="Variant.Outlined" Class="mt-2 mb-2" Color="@B2" OnClick="@EnableEditingPassword" ButtonType="@B2BT">@B2S</MudButton>
             @if (editingPassword)
             {
                 <MudButton Variant="Variant.Outlined" Class="mt-2 ml-1 mb-2" Color="Color.Secondary" OnClick="@DisableEditingPassword">Cancel</MudButton>
@@ -43,6 +47,7 @@
 @code {
     private UpdateUserInfoDTO updateUserDTO = new UpdateUserInfoDTO();
     private UpdateUserPasswordDTO updateUserPasswordDTO = new UpdateUserPasswordDTO();
+    public Guid UID;
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,7 +56,13 @@
 
         Player player = new Player();
         var userID = user.Claims.FirstOrDefault(c => c.Type == "sub");
+        var username = user.Claims.FirstOrDefault(c => c.Type == "name");
+        var userEmail = user.Claims.FirstOrDefault(c => c.Type == "email");
+        updateUserDTO.Email = userEmail.Value;
+        updateUserDTO.Username = username.Value;
         string idString = userID.Value;
+        Guid guid = new Guid(idString);
+        UID = guid;
 
         player = await PlayerService.GetPlayer(idString);
     }
@@ -100,12 +111,20 @@
 
     public async Task ChangeInfoSubmit()
     {
-
+        var result = await UserService.ChangeInfo(UID, updateUserDTO);
+        if (result != null)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 
     public async Task ChangePasswordSubmit()
     {
-        
+        var result = await UserService.ChangePassword(UID, updateUserPasswordDTO);
+        if (result != null)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 
 }

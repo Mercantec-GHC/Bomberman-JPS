@@ -11,11 +11,13 @@ namespace Bomberman_Backend.Repository
     {
         private readonly DatabaseContext _databaseContext;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ITokenProvider _tokenProvider;
 
-        public UserRepo(DatabaseContext databaseContext, IPasswordHasher passwordHasher)
+        public UserRepo(DatabaseContext databaseContext, IPasswordHasher passwordHasher, ITokenProvider tokenProvider)
         {
             _databaseContext = databaseContext;
             _passwordHasher = passwordHasher;
+            _tokenProvider = tokenProvider;
         }
 
 
@@ -94,15 +96,16 @@ namespace Bomberman_Backend.Repository
                 return null;
             }
 
-            _user.Password = password;
+            _user.Password = _passwordHasher.Hash(password);
 
-            var User = _databaseContext.users.Update(_user);
-            _databaseContext.SaveChanges();
 
             var userDTO = new UpdateUserPasswordDTO
             {
-                Password = _passwordHasher.Hash(password),
+                Password = _user.Password,
             };
+
+            var User = _databaseContext.users.Update(_user);
+            _databaseContext.SaveChanges();
             return userDTO;
         }
     }
