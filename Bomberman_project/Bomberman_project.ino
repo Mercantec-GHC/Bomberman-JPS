@@ -2,6 +2,7 @@
 #include <Arduino_LSM6DS3.h>
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
+#include <ArduinoHttpClient.h>
 #include <ArduinoJson.h>
 #include "config.h"
 #include "CommonClasses.h"
@@ -15,10 +16,13 @@ const int mqtt_port = 8883;
 const char mqtt_username[] = MQTT_USERNAME;
 const char mqtt_password[] = MQTT_PASSWORD;
 const char mqttTopic[] = "game/status";
+const char baseAPI[] = BASE_API_URI;
 
-WiFiSSLClient wifiClient;
+WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 MKRIoTCarrier carrier;
+HttpClient http = HttpClient(wifiClient, baseAPI, 8080);
+JsonDocument doc;
 
 unsigned long lastGyroUpdate = 0;
 String lastDirection = "";
@@ -35,6 +39,7 @@ void setup() {
   carrier.noCase();
   carrier.begin();
 
+
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");
     delay(1000); 
@@ -49,6 +54,9 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   client.setServer(mqtt_server, mqtt_port);
+
+  InitialCreationOfController();
+
 }
 
 void sendMQTTMessage(const String& type, const String& value) {
@@ -91,6 +99,44 @@ void reconnect() {
   }
 }
 
+void InitialCreationOfController(){
+    JsonDocument doc;
+
+    doc["id"] = 12;
+    doc["playerColor"] = "red";
+    doc["ledBrightness"] = 0.8;
+    doc["gyroScopeId"] = 12;
+    doc["buttonsId"] = 12;
+
+    JsonObject gyroscope = doc["gyroscope"].to<JsonObject>();
+    gyroscope["id"] = 12;
+    gyroscope["xCordinate"] = 2.13;
+    gyroscope["yCordinate"] = 4.27;
+    gyroscope["zCordinate"] = 1.82;
+
+    JsonObject buttons = doc["buttons"].to<JsonObject>();
+    buttons["id"] = 12;
+    buttons["name"] = "PowerUp";
+    String output;
+    serializeJson(doc, output);
+
+    Serial.println(output);
+    http.beginRequest();
+    http.post("/api/Carrier/controller");
+    http.sendHeader("Content-Type", "application/json");
+    http.sendHeader("Content-Length", output.lenght());
+    http.beginBody();
+    http.print(output);
+    http.endRequest();
+
+    int statusCode = http.responseStatusCode();
+    String response = http.responseBody();
+
+    Serial.print("Status code: ");
+    Serial.println(statusCode);
+    Serial.print("Response: ");
+    Serial.println(response);
+}
 
 
 void PlaceBomb() {
@@ -144,6 +190,19 @@ if (WiFi.status() != WL_CONNECTED) {
   delay(2000); // wait before next try
   return; // skip rest of loop if WiFi is not available
 }
+  
+  String path = "/api/Player?id=2c8452ac-4330-47a9-8cc0-23abb46a154e";
+  http.get(path);
+
+
+
+  int statusCode = http.responseStatusCode();
+  String response = http.responseBody();
+
+  Serial.print("Status code: ");
+  Serial.println(statusCode);
+  Serial.print("Response: ");
+  Serial.println(response);
 
   if (!client.connected()) {
   static unsigned long lastReconnectAttempt = 0;
@@ -162,4 +221,6 @@ if (WiFi.status() != WL_CONNECTED) {
   Gyro();
   PlaceBomb();   
   UsePowerUp();
+
+
 }
