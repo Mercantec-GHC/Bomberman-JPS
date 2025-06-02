@@ -1,59 +1,17 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Bomberman-frontend</a>
-    </div>
-</div>
+﻿@using MudBlazor
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<MudPaper Class="nav-menu p-3" Elevation="1">
+    <MudNavMenu>
+        <MudText Typo="Typo.h6" Class="px-2">Bomberman JPS</MudText>
+        <MudText Typo="Typo.body2" Class="px-2 mud-text-secondary">By Jonas, Patrick & Silas</MudText>
+        <MudDivider Class="my-2" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All">
+            Home
+        </MudNavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="leaderboard">
-                <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Leaderboard" />
-                <span class="bi" aria-hidden="true"></span> Leaderboard
-            </NavLink>
-        </div>
-       <AuthorizeView>
-           <NotAuthorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Login">
-                <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Person" />
-                <span class="bi" aria-hidden="true"></span> Login
-            </NavLink>
-        </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Signup">
-                        <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Person" />
-                        <span class="bi" aria-hidden="true"></span> Signup
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        <Authorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Logout">
-                <MudIcon Class="text-white" Icon="@Icons.Material.Filled.Person" />
-                <span class="bi" aria-hidden="true"></span> Logout
-            </NavLink>
-        </div>
-       </Authorized>
-        </AuthorizeView>
-    </nav>
-</div>
+        <MudNavLink Href="/leaderboard" Icon="@Icons.Material.Filled.FormatListNumbered" Match="NavLinkMatch.Prefix">
+            Leaderboard
+        </MudNavLink>
+    </MudNavMenu>
+</MudPaper>

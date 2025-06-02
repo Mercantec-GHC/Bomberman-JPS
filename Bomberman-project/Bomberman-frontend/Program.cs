@@ -9,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<PlayerInput>();
 builder.Services.AddHttpClient();
 builder.Services.AddMudServices();
-builder.Services.AddHostedService<MqttClientService>();
-builder.Services.AddSingleton<MqttClientService>();
 
 
 // Authentication and authorization
@@ -21,6 +19,14 @@ builder.Services.AddHttpClient<AuthService>("api", options =>
 {
     options.BaseAddress = new Uri(baseUrl);
 });
+builder.Services.AddHttpClient<PlayerService>("api", options =>
+{
+    options.BaseAddress = new Uri(baseUrl);
+});
+builder.Services.AddHttpClient<UserService>("api", options =>
+{
+    options.BaseAddress = new Uri(baseUrl);
+}); 
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddAuthenticationCore();
 builder.Services.AddAuthorization();
@@ -35,13 +41,10 @@ var app = builder.Build();
 
 
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+
+app.UseExceptionHandler("/Error", createScopeForErrors: true);
+// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+app.UseHsts();
 
 app.UseHttpsRedirection();
 

@@ -1,27 +1,89 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@using MudBlazor
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
+@*
+Logout logo: @Icons.Material.Filled.Logout
+User settings logo: @Icons.Material.Filled.ManageAccounts
+Password icon (in case of whatever) @Icons.Material.Filled.Password
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+
+*@
+
+<MudLayout>
+    <MudAppBar Fixed="false" Color="Color.Primary">
+        <div style="display: flex; width: 100%; align-items: center;">
+            <MudSpacer />
+            <AuthorizeView>
+                <Authorized>
+                    <MudText Class="mr-2">@GetUsername(context)</MudText>
+                    <MudTooltip Text="Settings">
+                        <MudMenu Icon="@Icons.Material.Filled.MiscellaneousServices" Color="Color.Inherit">
+                            <MudMenuItem>
+                                <MudTooltip Text="User settings">
+                                    <MudIconButton Icon="@Icons.Material.Filled.ManageAccounts" Color="Color.Inherit" OnClick="@UserSettingsNavigate" />
+                                </MudTooltip>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudTooltip Text="Logout">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="@LogoutNavigate" />
+                                </MudTooltip>
+                            </MudMenuItem>
+                        </MudMenu>
+                    </MudTooltip>
+                </Authorized>
+                <NotAuthorized>
+                    <MudTooltip Text="Login">
+                        <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" onclick="@LoginNavigate" />
+                    </MudTooltip>
+                    <MudTooltip Text="Register">
+                        <MudIconButton Icon="@Icons.Material.Filled.PersonAddAlt1" Color="Color.Inherit" OnClick="@RegisterNavigate" />
+                    </MudTooltip>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
+    </MudAppBar>
 
-        <article class="content px-4">
+    <!-- Main layout below the AppBar -->
+    <MudContainer MaxWidth="MaxWidth.False" Class="d-flex">
+        <!-- Sidebar / NavMenu -->
+        <NavMenu />
+
+        <!-- Main Page Content -->
+        <MudMainContent Class="p-4">
             @Body
-        </article>
-    </main>
-</div>
+        </MudMainContent>
+    </MudContainer>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+</MudLayout>
+
+@code {
+    private string GetUsername(AuthenticationState context)
+    {
+        var usernameClaim = context.User.Claims.FirstOrDefault(c => c.Type == "name");
+        return usernameClaim.Value;
+    }
+
+
+
+    private async Task UserSettingsNavigate()
+    {
+        NavigationManager.NavigateTo("/userpage");
+    }
+    private async Task LogoutNavigate()
+    {
+        NavigationManager.NavigateTo("/Logout");
+    }
+    private async Task LoginNavigate()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+    private async Task RegisterNavigate()
+    {
+        NavigationManager.NavigateTo("/signup");
+    }
+}

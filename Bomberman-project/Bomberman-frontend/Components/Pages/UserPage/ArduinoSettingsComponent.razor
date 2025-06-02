@@ -1,0 +1,24 @@
+﻿<MudCard>
+    <EditForm Model="updateUserDTO" OnValidSubmit="ChangeInfoSubmit">
+        <DataAnnotationsValidator />
+        <MudCardContent>
+            <MudText>Change email:</MudText>
+            <MudTextField Disabled="@(!editingInfo)" Label="Email" @bind-Value="updateUserDTO.Email"
+                          For="@(() => updateUserDTO.Email)">
+                @updateUserDTO.Email
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudText Class="mt-2">Change username:</MudText>
+            <MudTextField Disabled="@(!editingInfo)" Label="Username" @bind-Value="updateUserDTO.Username"
+                          For="@(() => updateUserDTO.Username)">
+                @updateUserDTO.Username
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" Class="mt-2" Color="Color.Primary">Save</MudButton>
+        </MudCardContent>
+    </EditForm>
+</MudCard>
+
+@code {
+
+}

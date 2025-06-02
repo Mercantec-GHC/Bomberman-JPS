@@ -15,4 +15,15 @@ namespace DomainModels
         public string? UserName { get; set; }
 
     }
+
+    public class UpdateUserInfoDTO
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class UpdateUserPasswordDTO
+    {
+        public string Password { get; set; }
+    }
 }
