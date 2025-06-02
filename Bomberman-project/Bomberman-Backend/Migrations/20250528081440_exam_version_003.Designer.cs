@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bomberman_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250513055335_add_tokens2")]
-    partial class add_tokens2
+    [Migration("20250528081440_exam_version_003")]
+    partial class exam_version_003
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,61 @@ namespace Bomberman_Backend.Migrations
                     b.ToTable("bomb");
                 });
 
+            modelBuilder.Entity("DomainModels.Buttons", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Buttons");
+                });
+
+            modelBuilder.Entity("DomainModels.Controller", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("buttonsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("gyroScopeId")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("ledBrightness")
+                        .HasColumnType("real");
+
+                    b.Property<string>("playerColor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("playerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("buttonsId");
+
+                    b.HasIndex("gyroScopeId");
+
+                    b.HasIndex("playerId");
+
+                    b.ToTable("Controllers");
+                });
+
             modelBuilder.Entity("DomainModels.ControllerLogs", b =>
                 {
                     b.Property<int>("Id")
@@ -60,10 +115,12 @@ namespace Bomberman_Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("InputTypeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("InputType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("PlayerUserId")
+                    b.Property<Guid>("PlayerID")
+                        .HasMaxLength(200)
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("TimeStamp")
@@ -71,14 +128,13 @@ namespace Bomberman_Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InputTypeId");
-
-                    b.HasIndex("PlayerUserId");
+                    b.HasIndex("PlayerID")
+                        .IsUnique();
 
                     b.ToTable("controllerLogs");
                 });
 
-            modelBuilder.Entity("DomainModels.InputType", b =>
+            modelBuilder.Entity("DomainModels.Gyroscope", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,12 +142,21 @@ namespace Bomberman_Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("inputID")
-                        .HasColumnType("integer");
+                    b.Property<float>("xCordinate")
+                        .HasColumnType("real");
+
+                    b.Property<float>("yCordinate")
+                        .HasColumnType("real");
+
+                    b.Property<float>("zCordinate")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
-                    b.ToTable("InputType");
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Gyroscopes");
                 });
 
             modelBuilder.Entity("DomainModels.Leaderboard", b =>
@@ -274,21 +339,40 @@ namespace Bomberman_Backend.Migrations
                     b.ToTable("players");
                 });
 
-            modelBuilder.Entity("DomainModels.ControllerLogs", b =>
+            modelBuilder.Entity("DomainModels.Controller", b =>
                 {
-                    b.HasOne("DomainModels.InputType", "InputType")
+                    b.HasOne("DomainModels.Buttons", "Buttons")
                         .WithMany()
-                        .HasForeignKey("InputTypeId")
+                        .HasForeignKey("buttonsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainModels.Gyroscope", "Gyroscope")
+                        .WithMany()
+                        .HasForeignKey("gyroScopeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DomainModels.Player", "Player")
                         .WithMany()
-                        .HasForeignKey("PlayerUserId")
+                        .HasForeignKey("playerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("InputType");
+                    b.Navigation("Buttons");
+
+                    b.Navigation("Gyroscope");
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("DomainModels.ControllerLogs", b =>
+                {
+                    b.HasOne("DomainModels.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Player");
                 });

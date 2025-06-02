@@ -11,6 +11,7 @@ namespace Bomberman_Backend.Repository
         public LeaderboardRepo(DatabaseContext databaseContext)
         {
             _databaseContext = databaseContext;
+            Console.WriteLine(_databaseContext.GetType().FullName);
         }
         public Leaderboard CreateLeaderboard(CreateLeaderboardDTO leaderboard)
         {

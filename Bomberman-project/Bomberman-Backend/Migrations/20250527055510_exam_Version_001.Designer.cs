@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bomberman_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250519101800_controllerLogs_0002")]
-    partial class controllerLogs_0002
+    [Migration("20250527055510_exam_Version_001")]
+    partial class exam_Version_001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

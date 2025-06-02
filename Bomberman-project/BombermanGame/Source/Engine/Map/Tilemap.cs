@@ -126,6 +126,47 @@ namespace BombermanGame.Source.Engine.Map
             return _map[tileY, tileX] == 1;
         }
 
+        public Tile GetTile(int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight)
+                return null;
+
+            return _tiles[x, y];
+        }
+
+
+        public bool IsGroundTileAtPixel(Point pixelPos)
+        {
+            int tileX = pixelPos.X / TileSize;
+            int tileY = pixelPos.Y / TileSize;
+
+            Tile tile = GetTile(tileX, tileY);
+            return tile != null && _map[tileY, tileX] == 1;
+        }
+
+
+
+        public bool IsFullyOnGroundTile(Rectangle boundingBox)
+        {
+            Point[] pointsToCheck = new Point[]
+            {
+        new Point(boundingBox.Left, boundingBox.Top),
+        new Point(boundingBox.Right - 1, boundingBox.Top),
+        new Point(boundingBox.Left, boundingBox.Bottom - 1),
+        new Point(boundingBox.Right - 1, boundingBox.Bottom - 1),
+            };
+
+            foreach (var point in pointsToCheck)
+            {
+                if (!IsGroundTileAtPixel(point))
+                    return false;
+            }
+
+            return true;
+        }
+
+
+
 
         public bool IsTileCollidable(Rectangle playerBounds, bool isGhost = false)
         {

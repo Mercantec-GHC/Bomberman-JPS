@@ -6,6 +6,8 @@
 #include "config.h"
 #include "CommonClasses.h"
 
+const int playerId = 1; // Change this to 1, 2, 3, or 4 for each arduino
+
 const char ssid[] = WIFI_SSID;
 const char password[] = WIFI_PASSWORD;
 const char mqtt_server[] = MQTT_SERVER;
@@ -16,10 +18,8 @@ const char mqttTopic[] = "game/status";
 
 WiFiSSLClient wifiClient;
 PubSubClient client(wifiClient);
-
-
-
 MKRIoTCarrier carrier;
+
 unsigned long lastGyroUpdate = 0;
 String lastDirection = "";
 unsigned long gyroInterval = 0;
@@ -27,103 +27,107 @@ unsigned long lastBombUpdate = 0;
 const unsigned long BombCooldown = 3000;
 float x, y, z;
 float tiltThreshold = 0.2;
+
 UUID uuid;  
 
 void setup() {
   Serial.begin(9600);
   carrier.noCase();
- carrier.begin();
-  // Initialize IMU
+  carrier.begin();
+
   if (!IMU.begin()) {
     Serial.println("Failed to initialize IMU!");
     delay(1000); 
   }
 
-Serial.println("Connecting to WiFi...");
-   WiFi.begin(ssid, password);  // Use your Wi-Fi credentials
-   while (WiFi.status() != WL_CONNECTED) {
-     delay(1000);
-     Serial.print(".");
-   }
-   Serial.println("Connected to WiFi");
- 
-   client.setServer(mqtt_server, mqtt_port);  // Set the MQTT server and port
+  Serial.println("Connecting to WiFi...");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("Connected to WiFi");
 
-   
-  /* 
- // Generate
-  uuid.seed(random(0, 65535));  
-  uuid.generate();
-  */
+  client.setServer(mqtt_server, mqtt_port);
 }
 
-  void sendMQTTMessage(const String& type, const String& value) {
+void sendMQTTMessage(const String& type, const String& value) {
   if (!client.connected()) return;
 
-  StaticJsonDocument<128> doc;
-  doc["type"] = type;
-  doc["value"] = value;
+  StaticJsonDocument<256> doc;
+  doc["PlayerId"] = playerId;
+  doc["Type"] = type;
+  doc["Value"] = value;
 
-  char buffer[128];
+  char buffer[256];
   serializeJson(doc, buffer);
-
   client.publish(mqttTopic, buffer);
 }
 
-
-    
-    void reconnect() {
-   while (!client.connected()) {
-     Serial.println("Attempting MQTT connection...");
-     if (client.connect("ArduinoMKR", mqtt_username, mqtt_password)) {
-       Serial.println("Connected to MQTT broker");
-       client.subscribe(mqttTopic);  // Subscribe to the topic
-     } else {
-       Serial.print("Failed, status code: ");
-       Serial.println(client.state());
-       delay(5000);
-     }
-   }
- }
-    void PlaceBomb(){
-      unsigned long currentMillis = millis();
-
-    if(carrier.Buttons.onTouchDown(TOUCH2)){
-      if (currentMillis - lastBombUpdate >= BombCooldown) {
-      lastBombUpdate = currentMillis;
-      Serial.println("Bomb");
-      String Message = "Bomb";
-       sendMQTTMessage("bomb_press", "true");
-    }
-   }
+void reconnect() {
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.begin(ssid, password);
+    delay(2000);
+    return;
   }
 
-  void UsePowerUp(){
-      
-    if(carrier.Buttons.onTouchDown(TOUCH0)){     
-      Serial.println("Powerup Activated");
+  // Create a unique client ID using the player ID
+  String clientId = "ArduinoMKR_" + String(playerId);
 
-      String powerUpMsg;      
-        sendMQTTMessage("powerup_used", powerUpMsg);
+  Serial.print("Connecting with client ID: ");
+  Serial.println(clientId);
+
+  if (client.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
+    Serial.println("Connected to MQTT broker");
+
+    static bool alreadySubscribed = false;
+    if (!alreadySubscribed) {
+      client.subscribe(mqttTopic);
+      alreadySubscribed = true;
     }
-   }
+  } else {
+    Serial.print("Failed to connect, status code: ");
+    Serial.println(client.state());
+  }
+}
 
-  void Gyro() {
+
+
+void PlaceBomb() {
+  unsigned long currentMillis = millis();
+
+  if (carrier.Buttons.onTouchDown(TOUCH2)) {
+    if (currentMillis - lastBombUpdate >= BombCooldown) {
+      lastBombUpdate = currentMillis;
+      Serial.println("Bomb");
+      sendMQTTMessage("bomb_press", "true");
+    }
+  }
+}
+
+void UsePowerUp() {
+  if (carrier.Buttons.onTouchDown(TOUCH0)) {
+    Serial.println("Powerup Activated");
+    sendMQTTMessage("powerup_used", "true");
+  }
+}
+
+void Gyro() {
   unsigned long currentMillis = millis();
 
   if (currentMillis - lastGyroUpdate >= gyroInterval) {
     lastGyroUpdate = currentMillis;
 
     if (IMU.accelerationAvailable()) {
-      IMU.readAcceleration(x, y, z);  
+      IMU.readAcceleration(x, y, z);
 
       String direction = "Idle";
       if (x > tiltThreshold) direction = "Right";
       else if (x < -tiltThreshold) direction = "Left";
-      else if (y < tiltThreshold) direction = "Down";
-      else if (y > -tiltThreshold) direction = "Up";
+      else if (y < -tiltThreshold) direction = "Down";
+      else if (y > tiltThreshold) direction = "Up";
 
-      if (direction != lastDirection) {
+      if (direction != lastDirection && direction != "Idle") {
         Serial.println("MOVE: " + direction);
         sendMQTTMessage("tilt_move", direction);
         lastDirection = direction;
@@ -133,16 +137,29 @@ Serial.println("Connecting to WiFi...");
 }
 
 void loop() {
-    
-if (!client.connected()) {
-  reconnect();
+  // Reconnect WiFi if dropped
+if (WiFi.status() != WL_CONNECTED) {
+  Serial.println("WiFi connection lost. Attempting to reconnect...");
+  WiFi.begin(ssid, password);
+  delay(2000); // wait before next try
+  return; // skip rest of loop if WiFi is not available
+}
+
+  if (!client.connected()) {
+  static unsigned long lastReconnectAttempt = 0;
+  unsigned long now = millis();
+
+  if (now - lastReconnectAttempt > 5000) {
+    lastReconnectAttempt = now;
+    reconnect();
   }
+}else{
   client.loop();
-  carrier.Buttons.update();
+}
   
+  carrier.Buttons.update();
+
   Gyro();
   PlaceBomb();   
   UsePowerUp();
- 
 }
-

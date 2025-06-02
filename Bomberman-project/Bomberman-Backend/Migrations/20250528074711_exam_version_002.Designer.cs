@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bomberman_Backend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250519085848_controllerLogs_0001")]
-    partial class controllerLogs_0001
+    [Migration("20250528074711_exam_version_002")]
+    partial class exam_version_002
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,58 @@ namespace Bomberman_Backend.Migrations
                     b.ToTable("bomb");
                 });
 
+            modelBuilder.Entity("DomainModels.Buttons", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Buttons");
+                });
+
+            modelBuilder.Entity("DomainModels.Controller", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("buttonsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("gyroScopeId")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("ledBrightness")
+                        .HasColumnType("real");
+
+                    b.Property<string>("playerColor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("playerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("buttonsId");
+
+                    b.HasIndex("gyroScopeId");
+
+                    b.HasIndex("playerId");
+
+                    b.ToTable("Controllers");
+                });
+
             modelBuilder.Entity("DomainModels.ControllerLogs", b =>
                 {
                     b.Property<int>("Id")
@@ -64,7 +116,8 @@ namespace Bomberman_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PlayerUserId")
+                    b.Property<Guid>("PlayerID")
+                        .HasMaxLength(200)
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("TimeStamp")
@@ -72,9 +125,32 @@ namespace Bomberman_Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerUserId");
+                    b.HasIndex("PlayerID")
+                        .IsUnique();
 
                     b.ToTable("controllerLogs");
+                });
+
+            modelBuilder.Entity("DomainModels.Gyroscope", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("xCordinate")
+                        .HasColumnType("real");
+
+                    b.Property<float>("yCordinate")
+                        .HasColumnType("real");
+
+                    b.Property<float>("zCordinate")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gyroscope");
                 });
 
             modelBuilder.Entity("DomainModels.Leaderboard", b =>
@@ -257,11 +333,38 @@ namespace Bomberman_Backend.Migrations
                     b.ToTable("players");
                 });
 
+            modelBuilder.Entity("DomainModels.Controller", b =>
+                {
+                    b.HasOne("DomainModels.Buttons", "Buttons")
+                        .WithMany()
+                        .HasForeignKey("buttonsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainModels.Gyroscope", "Gyroscope")
+                        .WithMany()
+                        .HasForeignKey("gyroScopeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainModels.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("playerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Buttons");
+
+                    b.Navigation("Gyroscope");
+
+                    b.Navigation("Player");
+                });
+
             modelBuilder.Entity("DomainModels.ControllerLogs", b =>
                 {
                     b.HasOne("DomainModels.Player", "Player")
                         .WithMany()
-                        .HasForeignKey("PlayerUserId")
+                        .HasForeignKey("PlayerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

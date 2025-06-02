@@ -15,18 +15,19 @@ namespace BombermanGame.Source.Engine.PlayerManager
         public int Health { get; private set; } = 3;
         public Rectangle BoundingBox => _boundingBox;
         public bool IsAlive { get; private set; } = true;
-        private double damageCooldown = 1000; 
+        private double damageCooldown = 1000;
         private double timeSinceLastDamage = 0;
 
-        public float BaseSpeed { get; set; } = 4f; // your normal speed
-        public float speed = 4f;                   // current speed
+        public float BaseSpeed { get; set; } = 3f; // your normal speed
+        public float Speed { get; private set; } = 3f; // current speed (property with getter for consistency)
 
-        public double speedBoostTimer = 0;
-        public bool hasSpeedBoost = false;
+        private double speedBoostTimer = 0;
+        private bool hasSpeedBoost = false;
 
         public int ExplosionRadius { get; set; } = 3;
         public int BonusRadius { get; set; } = 0; // Extra radius from powerup
         public bool HasBonusRadius { get; set; } = false;
+
         public bool CanLifeSteal { get; private set; }
         private bool isInvincible = false;
         private double invincibilityTimer = 0;
@@ -38,13 +39,12 @@ namespace BombermanGame.Source.Engine.PlayerManager
 
         private Dictionary<PowerUpType, Texture2D> powerUpIcons;
 
-
-
         public Player(Texture2D texture, Vector2 position)
         {
             _texture = texture;
             Position = position;
             UpdateBoundingBox();
+            Speed = BaseSpeed;
         }
 
         public void TakeDamage(int amount)
@@ -72,22 +72,19 @@ namespace BombermanGame.Source.Engine.PlayerManager
             Vector2 newPosition = Position;
             double timePassed = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // Store the current position before any movement
-            Rectangle previousBoundingBox = _boundingBox;
-
             switch (direction)
             {
                 case "Left":
-                    newPosition.X -= speed;
+                    newPosition.X -= Speed;
                     break;
                 case "Right":
-                    newPosition.X += speed;
+                    newPosition.X += Speed;
                     break;
                 case "Up":
-                    newPosition.Y -= speed;
+                    newPosition.Y -= Speed;
                     break;
                 case "Down":
-                    newPosition.Y += speed;
+                    newPosition.Y += Speed;
                     break;
             }
 
@@ -96,22 +93,21 @@ namespace BombermanGame.Source.Engine.PlayerManager
                 speedBoostTimer -= timePassed;
                 if (speedBoostTimer <= 0)
                 {
-                    // Speed boost ended
                     hasSpeedBoost = false;
-                    speed = BaseSpeed;
+                    Speed = BaseSpeed;
                 }
             }
 
             if (isInvincible)
             {
-                invincibilityTimer -= gameTime.ElapsedGameTime.TotalMilliseconds;
+                invincibilityTimer -= timePassed;
                 if (invincibilityTimer <= 0)
                     isInvincible = false;
             }
 
             if (IsGhost)
             {
-                ghostTimer -= gameTime.ElapsedGameTime.TotalMilliseconds;
+                ghostTimer -= timePassed;
                 if (ghostTimer <= 0)
                     IsGhost = false;
             }
@@ -124,7 +120,6 @@ namespace BombermanGame.Source.Engine.PlayerManager
                 newBoundingBox.Height - 40
             );
 
-
             if (!tilemap.IsTileCollidable(collisionBounds, IsGhost))
             {
                 Position = newPosition;
@@ -134,21 +129,22 @@ namespace BombermanGame.Source.Engine.PlayerManager
             // Ghost timer handling
             if (IsGhost)
             {
-                ghostTimer -= gameTime.ElapsedGameTime.TotalMilliseconds;
+                ghostTimer -= timePassed;
+
                 if (ghostTimer <= 0)
                 {
-                    // Check if standing on type 1 tile
-                    if (tilemap.IsOnGroundTile(_boundingBox))
+                    if (tilemap.IsFullyOnGroundTile(_boundingBox))
+
                     {
-                        IsGhost = false; // End ghost mode safely
+                        IsGhost = false;
                     }
                     else
                     {
-                        // Prevent ghost mode from ending until on ground tile
-                        ghostTimer = 100;
+                        ghostTimer = 100; // Wait a bit and recheck
                     }
                 }
             }
+
         }
 
         public void SetTexture(Texture2D texture)
@@ -176,17 +172,11 @@ namespace BombermanGame.Source.Engine.PlayerManager
             invincibilityTimer = milliseconds;
         }
 
-        public void EnableLifeSteal()
-        {
-            CanLifeSteal = true;
-        }
-
         public void EnableGhostMode(double duration)
         {
             IsGhost = true;
             ghostTimer = duration;
         }
-
 
         public void PickUpPowerUp(PowerUpType powerUp)
         {
@@ -196,7 +186,7 @@ namespace BombermanGame.Source.Engine.PlayerManager
             }
             else
             {
-                
+               
             }
         }
 
@@ -208,8 +198,8 @@ namespace BombermanGame.Source.Engine.PlayerManager
             switch (StoredPowerUp)
             {
                 case PowerUpType.Speed:
-                    speed = BaseSpeed + 4.5f;
-                    speedBoostTimer = 5000; 
+                    Speed = BaseSpeed + 4.5f;
+                    speedBoostTimer = 5000;
                     hasSpeedBoost = true;
                     break;
                 case PowerUpType.HealthUp:
@@ -217,7 +207,8 @@ namespace BombermanGame.Source.Engine.PlayerManager
                     break;
                 case PowerUpType.ExplosionRadius:
                     HasBonusRadius = true;
-                    BonusRadius = 1;
+                    BonusRadius = 3;
+                    break;
                     break;
                 case PowerUpType.Invincible:
                     SetInvincibility(5000);
@@ -225,31 +216,28 @@ namespace BombermanGame.Source.Engine.PlayerManager
                 case PowerUpType.Ghost:
                     EnableGhostMode(5000);
                     break;
-                case PowerUpType.LifeSteal:
-                    EnableLifeSteal();
-                    break;
             }
 
-            // After using it, remove from inventory
             StoredPowerUp = PowerUpType.None;
         }
 
         public void SetPowerUpIcons(Dictionary<PowerUpType, Texture2D> icons)
         {
-            this.powerUpIcons = icons;
+            powerUpIcons = icons;
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             if (!IsAlive) return;
             spriteBatch.Draw(_texture, Position, Color.White);
-            Vector2 healthPos = new Vector2(Position.X, Position.Y - 20); // 20 pixels above player
+
+            Vector2 healthPos = new Vector2(Position.X, Position.Y - 20);
             spriteBatch.DrawString(font, Health.ToString(), healthPos, Color.Red);
 
             if (StoredPowerUp != PowerUpType.None && powerUpIcons != null && powerUpIcons.ContainsKey(StoredPowerUp))
             {
                 Texture2D icon = powerUpIcons[StoredPowerUp];
-                Vector2 iconPos = new Vector2(Position.X + _texture.Width - 16, Position.Y - 40); // Top right of player
+                Vector2 iconPos = new Vector2(Position.X + _texture.Width - 16, Position.Y - 40);
                 spriteBatch.Draw(icon, iconPos, Color.White);
             }
         }

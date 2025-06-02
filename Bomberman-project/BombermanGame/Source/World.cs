@@ -12,7 +12,9 @@ namespace BombermanGame.Source
 {
     public class World
     {
-        public Player _player;
+        public List<Player> _players = new List<Player>();
+        public List<Player> Players => _players;
+
         private Tilemap _tilemap;
         public Tilemap Tilemap => _tilemap;
 
@@ -21,7 +23,8 @@ namespace BombermanGame.Source
         private Texture2D _breakable;
         private Texture2D _specialTexture;
         public SpriteFont _font;
-        private Dictionary<PowerUpType, Texture2D> _powerUpIcons;
+
+
 
         public void Load(ContentManager content)
         {
@@ -29,43 +32,68 @@ namespace BombermanGame.Source
             _tileTexture = content.Load<Texture2D>("2d/Tile");
             _breakable = content.Load<Texture2D>("2d/breakableBarrel");
             _specialTexture = content.Load<Texture2D>("2d/Wall");
-            _player = new Player(null, new Vector2(50, 50));
 
             _tilemap = new Tilemap(10, 10, _tileTexture, _wallTexture, _breakable, _specialTexture);
 
             _font = Globals.content.Load<SpriteFont>("DefaultFont");
-
-            _player = new Player(null, new Vector2(50, 50));
         }
-        public void Update(PlayerInput input, GameTime gameTime)
-        {
-            _player.Update(input.MoveDirection, _tilemap, gameTime);
 
-           
-            if (input.PowerUpUsed)
+        public void AddPlayer(Player player)
+        {
+            _players.Add(player);
+        }
+
+        public void UpdatePlayer(int index, PlayerInput input, GameTime gameTime)
+        {
+            if (index >= 0 && index < _players.Count)
             {
-                _player.UseStoredPowerUp();
+                _players[index].Update(input.MoveDirection, _tilemap, gameTime);
+
+                if (input.PowerUpUsed)
+                    _players[index].UseStoredPowerUp();
             }
         }
 
-        public void SetPlayerTextures(Texture2D[] textures)
+        public void SetPlayerTexture(int index, Texture2D texture)
         {
-            if (_player != null)
-                _player.SetTexture(textures[0]); // Start with first frame
+            if (index >= 0 && index < _players.Count)
+            {
+                _players[index].SetTexture(texture);
+            }
         }
 
         public void SetPowerUpTextures(Dictionary<PowerUpType, Texture2D> textures)
         {
-            _powerUpIcons = textures;
-            if (_player != null)
-                _player.SetPowerUpIcons(textures);
+            
+            foreach (var player in _players)
+                player.SetPowerUpIcons(textures);
         }
 
+        public int? CheckWinner()
+        {
+            int aliveCount = 0;
+            int lastAlivePlayerId = -1;
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].IsAlive)
+                {
+                    aliveCount++;
+                    lastAlivePlayerId = i;
+                }
+            }
+
+            if (aliveCount == 1)
+                return lastAlivePlayerId; // return winning player index (ID)
+
+            return null; // no winner yet
+        }
+       
         public void Draw()
         {
             _tilemap.Draw(Globals.spriteBatch);
-            _player.Draw(Globals.spriteBatch, _font);
-
+            foreach (var player in _players)
+                player.Draw(Globals.spriteBatch, _font);
         }
     }
 }

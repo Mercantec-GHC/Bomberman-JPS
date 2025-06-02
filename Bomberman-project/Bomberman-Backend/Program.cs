@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 IConfiguration Configuration = builder.Configuration;
 var connectionString = Configuration.GetConnectionString("dbcontext") ??
                       Environment.GetEnvironmentVariable("dbcontext");
+Console.WriteLine(connectionString);
 
 var issuer = Configuration["Jwt:Issuer"] ??
              Environment.GetEnvironmentVariable("issuer");
@@ -39,7 +41,6 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-
 // Repos
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ILeaderboardRepo, LeaderboardRepo>();
@@ -48,6 +49,8 @@ builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
 builder.Services.AddScoped<ILobbyRepo, LobbyRepo>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHash>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+builder.Services.AddScoped<IControllerRepo, ControllerRepo>();
+builder.Services.AddScoped<IControllerLogRepo, ControllerLogRepo>();
 
 
 //Services
@@ -56,6 +59,8 @@ builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IPowerUpService, PowerUpService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<ILobbyService, LobbyService>();
+builder.Services.AddScoped<IControllerService, ControllerService>();
+builder.Services.AddScoped<IControllerLogService, ControllerLogService>();
 
 
 builder.Services.AddHealthChecks();
@@ -119,7 +124,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
@@ -134,3 +139,5 @@ app.UseCors(policy =>
           .AllowAnyHeader());
 
 app.Run();
+
+public partial class Program { }
