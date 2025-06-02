@@ -19,7 +19,8 @@ const char mqttTopic[] = "game/status";
 const char baseAPI[] = BASE_API_URI;
 
 WiFiClient wifiClient;
-PubSubClient client(wifiClient);
+WiFiSSLClient wifiSSlClient;
+PubSubClient client(wifiSSlClient);
 MKRIoTCarrier carrier;
 HttpClient http = HttpClient(wifiClient, baseAPI, 8080);
 JsonDocument doc;
@@ -124,7 +125,7 @@ void InitialCreationOfController(){
     http.beginRequest();
     http.post("/api/Carrier/controller");
     http.sendHeader("Content-Type", "application/json");
-    http.sendHeader("Content-Length", output.lenght());
+    http.sendHeader("Content-Length", output.length());
     http.beginBody();
     http.print(output);
     http.endRequest();
@@ -182,6 +183,36 @@ void Gyro() {
   }
 }
 
+void Screen(){
+
+  String path = "/api/Player?id=2c8452ac-4330-47a9-8cc0-23abb46a154e";
+  http.get(path);
+
+  int statusCode = http.responseStatusCode();
+  String response = http.responseBody();
+
+  StaticJsonDocument<512> doc;
+  DeserializationError error = deserializeJson(doc, response);
+
+carrier.display.setTextColor(0xFFFF);
+  carrier.display.setTextSize(3);
+  carrier.display.setCursor(10, 100);
+
+   const char* userName = doc["userName"];
+  carrier.display.print("Player:");
+  carrier.display.print(userName);
+
+  carrier.display.setTextColor(0xFFFF);
+  carrier.display.setTextSize(3);
+  carrier.display.setCursor(10, 130);
+
+   String lives = doc["lives"];
+   carrier.display.print("Lives:");
+  carrier.display.print(lives);
+
+ 
+}
+
 void loop() {
   // Reconnect WiFi if dropped
 if (WiFi.status() != WL_CONNECTED) {
@@ -198,6 +229,10 @@ if (WiFi.status() != WL_CONNECTED) {
 
   int statusCode = http.responseStatusCode();
   String response = http.responseBody();
+
+  StaticJsonDocument<512> doc;
+  DeserializationError error = deserializeJson(doc, response);  
+
 
   Serial.print("Status code: ");
   Serial.println(statusCode);
@@ -217,7 +252,7 @@ if (WiFi.status() != WL_CONNECTED) {
 }
   
   carrier.Buttons.update();
-
+  Screen();
   Gyro();
   PlaceBomb();   
   UsePowerUp();
