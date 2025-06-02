@@ -54,8 +54,18 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   client.setServer(mqtt_server, mqtt_port);
+  http.get("/api/Carrier/controller?id=12");
+  
+  if(http.responseStatusCode() == 200)
+  {
+    Serial.println("Controller already exists");
+  }
+  else 
+  {
+    InitialCreationOfController();
+  }
 
-  InitialCreationOfController();
+  
 
 }
 
@@ -104,6 +114,7 @@ void InitialCreationOfController(){
 
     doc["id"] = 12;
     doc["playerColor"] = "red";
+    doc["playerId"] = "2c8452ac-4330-47a9-8cc0-23abb46a154e";
     doc["ledBrightness"] = 0.8;
     doc["gyroScopeId"] = 12;
     doc["buttonsId"] = 12;
@@ -124,7 +135,7 @@ void InitialCreationOfController(){
     http.beginRequest();
     http.post("/api/Carrier/controller");
     http.sendHeader("Content-Type", "application/json");
-    http.sendHeader("Content-Length", output.lenght());
+    http.sendHeader("Content-Length", output.length());
     http.beginBody();
     http.print(output);
     http.endRequest();
