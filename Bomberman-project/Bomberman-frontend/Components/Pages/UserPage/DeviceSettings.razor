@@ -1,0 +1,36 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using DomainModels
+@using DomainModels.DTO
+@using System.Security.Cryptography
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProv
+@inject PlayerService PlayerService
+@inject UserService UserService
+
+<MudCard>
+    <EditForm Model="updateLEDDTO" OnValidSubmit="ChangeLEDBrightness">
+        <DataAnnotationsValidator />
+        <MudCardContent>
+            <MudText>Change LED brightness:</MudText>
+            <MudTextField Label="Brightness" @bind-Value="updateLEDDTO.LEDBrightness"
+                          For="@(() => updateLEDDTO.LEDBrightness)">
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudText>Change LED brightness:</MudText>
+            <MudTextField Label="Brightness" @bind-Value="updateLEDDTO.LEDBrightness"
+                          For="@(() => updateLEDDTO.LEDBrightness)">
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" Class="mt-2" Color="Color.Primary">Save</MudButton>
+        </MudCardContent>
+    </EditForm>
+</MudCard>
+
+@code {
+    public UpdateControllerLEDBrightnessDTO updateLEDDTO = new UpdateControllerLEDBrightnessDTO();
+
+    public async Task ChangeLEDBrightness()
+    {
+        
+    }
+}
