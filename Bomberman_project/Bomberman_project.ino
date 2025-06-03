@@ -228,7 +228,7 @@ int getPlayerColorBrightness(){
     return ledBrightness;
   }
   return ledBrightness;
-
+}
 void Screen(){
 
   String path = "/api/Player?id=2c8452ac-4330-47a9-8cc0-23abb46a154e";
