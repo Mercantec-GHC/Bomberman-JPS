@@ -87,7 +87,10 @@ public class UserRepositoryTest
         mockUserDbSet.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(users.AsQueryable().ElementType);
         mockUserDbSet.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(users.AsQueryable().GetEnumerator());
         mockDbContext.Setup(db => db.users).Returns(mockUserDbSet.Object);
-        IUserRepo userRepo = new UserRepo(mockDbContext.Object);
+
+        IPasswordHasher passwordHasher = new PasswordHash();
+        var mockTokenProvider = new Mock<ITokenProvider>();
+        IUserRepo userRepo = new UserRepo(mockDbContext.Object, passwordHasher, mockTokenProvider.Object);
         var userList = userRepo.GetUsers();
         Assert.AreEqual(10, userList.Count);
         for (int i = 0; i < 10; i++)

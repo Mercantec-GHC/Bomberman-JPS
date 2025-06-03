@@ -45,7 +45,6 @@ public class UserRepositoryIntegrationTest
 
         db = _factory.Services.CreateScope().ServiceProvider.GetRequiredService<DatabaseContext>();
         db.Database.EnsureCreated();
-        db.Database.Migrate();
     }
 
     [SetUp]
