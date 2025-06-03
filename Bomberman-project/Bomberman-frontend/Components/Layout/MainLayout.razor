@@ -1,6 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@using MudBlazor
+@using DomainModels
+@using DomainModels.DTO
+@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
-@using MudBlazor
+@inject PlayerService PlayerService
+@inject AuthenticationStateProvider AuthStateProv
+@inject LayoutService LayoutService
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -20,7 +25,7 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
             <MudSpacer />
             <AuthorizeView>
                 <Authorized>
-                    <MudText Class="mr-2">@GetUsername(context)</MudText>
+                    <MudText Class="mr-2">@username</MudText>
                     <MudTooltip Text="Settings">
                         <MudMenu Icon="@Icons.Material.Filled.MiscellaneousServices" Color="Color.Inherit">
                             <MudMenuItem>
@@ -62,13 +67,28 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
 </MudLayout>
 
 @code {
-    private string GetUsername(AuthenticationState context)
+    private Player player = new Player();
+    private string username;
+    Guid usersID;
+
+    protected override async Task OnInitializedAsync()
     {
-        var usernameClaim = context.User.Claims.FirstOrDefault(c => c.Type == "name");
-        return usernameClaim.Value;
+        LayoutService.OnLayoutChanged += StateHasChanged;
+
+        var authState = await AuthStateProv.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userID = user.Claims.FirstOrDefault(c => c.Type == "sub");
+        string idString = userID.Value;
+        Guid guid = new Guid(idString);
+        usersID = guid;
+        player = await PlayerService.GetPlayer(usersID);
+        username = player.UserName;
     }
 
-
+    public void Dispose()
+    {
+        LayoutService.OnLayoutChanged -= StateHasChanged;
+    }
 
     private async Task UserSettingsNavigate()
     {

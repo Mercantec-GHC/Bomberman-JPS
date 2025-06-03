@@ -8,7 +8,7 @@ namespace Bomberman_Backend.Services.Interfaces
         public GetUserDTO GetUser(Guid id);
         public List<GetUserDTO> GetUsers();
         public UpdateUserInfoDTO UpdateUser(Guid id, UpdateUserInfoDTO user);
-        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, string password);
+        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, UpdateUserPasswordDTO password);
         public void DeleteUser(Guid id);
     }
 }

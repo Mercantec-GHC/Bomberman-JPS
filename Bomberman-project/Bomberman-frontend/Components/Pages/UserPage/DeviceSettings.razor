@@ -6,31 +6,84 @@
 @inject AuthenticationStateProvider AuthStateProv
 @inject PlayerService PlayerService
 @inject UserService UserService
+@inject ControllerService ControllerService
 
 <MudCard>
     <EditForm Model="updateLEDDTO" OnValidSubmit="ChangeLEDBrightness">
         <DataAnnotationsValidator />
         <MudCardContent>
-            <MudText>Change LED brightness:</MudText>
-            <MudTextField Label="Brightness" @bind-Value="updateLEDDTO.LEDBrightness"
-                          For="@(() => updateLEDDTO.LEDBrightness)">
+            <MudText>Device ID:</MudText>
+            <MudTextField Label="ID" @bind-Value="updateLEDDTO.Id"
+            For="@(() => updateLEDDTO.Id)">
             </MudTextField>
             <MudDivider Class="my-2" />
             <MudText>Change LED brightness:</MudText>
             <MudTextField Label="Brightness" @bind-Value="updateLEDDTO.LEDBrightness"
-                          For="@(() => updateLEDDTO.LEDBrightness)">
+            For="@(() => updateLEDDTO.LEDBrightness)">
             </MudTextField>
             <MudDivider Class="my-2" />
-            <MudButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" Class="mt-2" Color="Color.Primary">Save</MudButton>
+            <MudButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" 
+            Class="mt-2" Color="Color.Primary">Save</MudButton>
+            @if(warn1 == true)
+            {
+                <MudText Color="Color.Secondary">Please pick between 1 and 255</MudText>
+            }
+        </MudCardContent>
+    </EditForm>
+    <EditForm Model="updateColorDTO" OnValidSubmit="ChangePlayerColor">
+        <DataAnnotationsValidator />
+        <MudCardContent>
+            <MudText>Device ID:</MudText>
+            <MudTextField Label="ID" @bind-Value="updateColorDTO.Id"
+            For="@(() => updateColorDTO.Id)">
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudText>Change player color:</MudText>
+            <MudTextField Label="Pick between red, blue or green" @bind-Value="updateColorDTO.PlayerColor"
+            For="@(() => updateColorDTO.PlayerColor)">
+            </MudTextField>
+            <MudDivider Class="my-2" />
+            <MudButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit"
+            Class="mt-2" Color="Color.Primary">Save</MudButton>
+            @if (warn2 == true)
+            {
+                <MudText Color="Color.Secondary">Please only pick one of the listed colors</MudText>
+            }
         </MudCardContent>
     </EditForm>
 </MudCard>
 
 @code {
     public UpdateControllerLEDBrightnessDTO updateLEDDTO = new UpdateControllerLEDBrightnessDTO();
+    public UpdateControllerPlayerColorDTO updateColorDTO = new UpdateControllerPlayerColorDTO();
+    public bool warn1 = false;
+    public bool warn2 = false;
 
     public async Task ChangeLEDBrightness()
     {
-        
+        if(updateLEDDTO.LEDBrightness < 1 || updateLEDDTO.LEDBrightness > 255)
+        {
+            warn1 = true;
+        }
+        else
+        {
+            await ControllerService.ChangeLEDBrightness(updateLEDDTO);
+            warn1 = false;
+        }
+    }
+
+    public async Task ChangePlayerColor()
+    {
+        if (updateColorDTO.PlayerColor != "Red" && updateColorDTO.PlayerColor != "blue" &&
+            updateColorDTO.PlayerColor != "green")
+        {
+            warn2 = true;
+            Console.WriteLine(updateColorDTO.PlayerColor);
+        }
+        else
+        {
+            await ControllerService.ChangeColor(updateColorDTO);
+            warn2 = false;
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace Bomberman_Backend.Controllers
         }
 
         [HttpPut("password")]
-        public ActionResult<UpdateUserPasswordDTO> PutPassword([FromQuery] Guid id, [FromBody] string password)
+        public ActionResult<UpdateUserPasswordDTO> PutPassword([FromQuery] Guid id, [FromBody] UpdateUserPasswordDTO password)
         {
             var _user = _users.UpdateUserPassword(id, password);
             if (Object.ReferenceEquals(_user, null))

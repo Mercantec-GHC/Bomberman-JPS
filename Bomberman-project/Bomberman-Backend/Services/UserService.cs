@@ -33,7 +33,7 @@ namespace Bomberman_Backend.Services
             return _userRepo.UpdateUser(id, user);
         }
 
-        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, string password)
+        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, UpdateUserPasswordDTO password)
         {
             return _userRepo.UpdateUserPassword(id, password);
         }
