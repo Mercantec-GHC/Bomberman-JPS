@@ -16,7 +16,7 @@ public class PlayerService
         _localStorage = localStorage;
     }
 
-    public async Task<Player> GetPlayer(string id)
+    public async Task<Player> GetPlayer(Guid id)
     {
         var response = await _httpClient.GetFromJsonAsync<Player>($"/api/Player?id={id}");
         if (response is Player player)

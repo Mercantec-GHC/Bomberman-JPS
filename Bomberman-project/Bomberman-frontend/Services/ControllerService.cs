@@ -20,8 +20,13 @@ public class ControllerService
         _localStorage = localStorage;
     }
 
-    public async Task ChangeLEDBrightness(float value)
+    public async Task ChangeLEDBrightness(UpdateControllerLEDBrightnessDTO dto)
     {
+        var response = await _httpClient.PutAsJsonAsync<UpdateControllerLEDBrightnessDTO>("api/Carrier/controller/led", dto);
+    }
 
+    public async Task ChangeColor(UpdateControllerPlayerColorDTO dto)
+    {
+        var response = await _httpClient.PutAsJsonAsync<UpdateControllerPlayerColorDTO>("api/Carrier/controller/playercolor", dto);
     }
 }

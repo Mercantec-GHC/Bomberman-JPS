@@ -26,7 +26,12 @@ builder.Services.AddHttpClient<PlayerService>("api", options =>
 builder.Services.AddHttpClient<UserService>("api", options =>
 {
     options.BaseAddress = new Uri(baseUrl);
-}); 
+});
+builder.Services.AddHttpClient<ControllerService>("api", options =>
+{
+    options.BaseAddress = new Uri(baseUrl);
+});
+builder.Services.AddScoped<LayoutService>();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddAuthenticationCore();
 builder.Services.AddAuthorization();

@@ -87,7 +87,7 @@ namespace Bomberman_Backend.Repository
             return userDTO;
         }
 
-        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, string password)
+        public UpdateUserPasswordDTO UpdateUserPassword(Guid id, UpdateUserPasswordDTO password)
         {
             var _user = _databaseContext.users.SingleOrDefault(o => o.UserId == id);
 
@@ -96,7 +96,7 @@ namespace Bomberman_Backend.Repository
                 return null;
             }
 
-            _user.Password = _passwordHasher.Hash(password);
+            _user.Password = _passwordHasher.Hash(password.Password);
 
 
             var userDTO = new UpdateUserPasswordDTO

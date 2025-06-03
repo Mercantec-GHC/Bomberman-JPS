@@ -8,6 +8,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.Http.Json;
+using System.Reflection.Metadata.Ecma335;
 
 public class UserService
 {
@@ -25,7 +26,6 @@ public class UserService
         var response = await _httpClient.PutAsJsonAsync<UpdateUserInfoDTO>($"/api/Users/info?id={id}", dto);
         if (response.IsSuccessStatusCode)
         {
-            await CallRefreshToken();
             var result = await response.Content.ReadFromJsonAsync<UpdateUserInfoDTO>();
             return result!;
         }
@@ -40,7 +40,6 @@ public class UserService
         var response = await _httpClient.PutAsJsonAsync<UpdateUserPasswordDTO>($"/api/Users/password?id={id}", dto);
         if (response.IsSuccessStatusCode)
         {
-            await CallRefreshToken();
             var result = await response.Content.ReadFromJsonAsync<UpdateUserPasswordDTO>();
             return result!;
         }
