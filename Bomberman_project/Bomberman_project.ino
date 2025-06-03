@@ -7,6 +7,7 @@
 #include "config.h"
 #include "CommonClasses.h"
 
+
 const int playerId = 1; // Change this to 1, 2, 3, or 4 for each arduino
 
 const char ssid[] = WIFI_SSID;
@@ -111,7 +112,6 @@ void reconnect() {
 }
 
 void InitialCreationOfController(){
-    JsonDocument doc;
 
     doc["id"] = 12;
     doc["playerColor"] = "red";
@@ -194,6 +194,41 @@ void Gyro() {
   }
 }
 
+
+String getPlayerColor(){
+  String response;
+  http.get("/api/Carrier/controller?id=12");
+  if(http.responseStatusCode() == 200)
+  {
+    
+   response =  http.responseBody();
+   DeserializationError error = deserializeJson(doc, response);
+   JsonObject result = doc["result"];
+   String result_playerColor = result["playerColor"];
+   response = result_playerColor;
+
+    return response;
+  }
+  return response;
+}
+
+int getPlayerColorBrightness(){
+  String response;
+  int ledBrightness = 0;
+  http.get("/api/Carrier/controller?id=12");
+  if(http.responseStatusCode() == 200)
+  {
+    
+   response =  http.responseBody();
+   DeserializationError error = deserializeJson(doc, response);
+   JsonObject result = doc["result"];
+   String result_ledBrightness = result["ledBrightness"];
+   ledBrightness = result_ledBrightness.toInt();
+   Serial.println(ledBrightness);
+    return ledBrightness;
+  }
+  return ledBrightness;
+
 void Screen(){
 
   String path = "/api/Player?id=2c8452ac-4330-47a9-8cc0-23abb46a154e";
@@ -221,7 +256,6 @@ carrier.display.setTextColor(0xFFFF);
    carrier.display.print("Lives:");
   carrier.display.print(lives);
 
- 
 }
 
 void loop() {
@@ -253,6 +287,33 @@ if (WiFi.status() != WL_CONNECTED) {
   if (!client.connected()) {
   static unsigned long lastReconnectAttempt = 0;
   unsigned long now = millis();
+
+  Serial.println("Printing the color out: " + getPlayerColor());
+  Serial.println(getPlayerColorBrightness());
+
+
+
+   if(getPlayerColor() == "Red" || getPlayerColor() == "red")
+    {
+      carrier.leds.setBrightness(getPlayerColorBrightness());
+      uint32_t color = carrier.leds.Color(255, 0, 0);
+      carrier.leds.fill(color, 0, 5);
+      carrier.leds.show();
+    }
+    else if(getPlayerColor() == "Blue" || getPlayerColor() == "blue")
+    {
+      carrier.leds.setBrightness(getPlayerColorBrightness());
+      uint32_t color = carrier.leds.Color(0, 0, 255);
+      carrier.leds.fill(color, 0, 5);
+      carrier.leds.show();
+    }
+    else if(getPlayerColor() == "Green" || getPlayerColor() == "green")
+    {
+      carrier.leds.setBrightness(getPlayerColorBrightness());
+      uint32_t color = carrier.leds.Color(0, 255, 0);
+      carrier.leds.fill(color, 0, 5);
+      carrier.leds.show();
+    }
 
   if (now - lastReconnectAttempt > 5000) {
     lastReconnectAttempt = now;
