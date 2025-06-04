@@ -18,8 +18,10 @@ using Npgsql;
 using System.Threading.Tasks;
 using Testcontainers.PostgreSql;
 using Testcontainers;
+
 namespace Bomberman_Backend.Tests;
-public class UserRepositoryIntegrationTest 
+
+public class DatabaseTest
 {
     private readonly PostgreSqlContainer postgressContainer = new PostgreSqlBuilder().Build();
     private string _connectionString = string.Empty;
@@ -54,56 +56,72 @@ public class UserRepositoryIntegrationTest
     }
 
     [Test]
-    public async Task Add_Players_to_testcontainer_Database_And_Check_If_it_Persist_Through_Repository()
+    public async Task Add_Players_to_testcontainer_Database_And_Check_If_it_Persist()
     {
         Console.WriteLine(_connectionString);
         await using NpgsqlConnection connection = new(_connectionString);
         await connection.OpenAsync();
 
-        var players = new List<CreatePlayerDTO>();
+        var players = new List<Player>();
         for (int i = 0; i < 10; i++)
         {
-            players.Add(new CreatePlayerDTO
+            players.Add(new Player
             {
                 sessionId = new Session { },
-                userName = $"user{i}",
-                email = $"test{i}@test.dk",
-                password = $"testpassword{i}",
+                UserId = Guid.NewGuid(),
+                UserName = $"user{i}",
+                Email = $"test{i}@test.dk",
+                Password = $"testpassword{i}",
+                characterColor = "Red",
+                bomb = new Bomb
+                {
+                    xCordinate = $"{i}",
+                    yCordinate = $"{i}",
+                    explosionRadius = i,
+                    fuseTime = i
+                },
+                powerUp = new PowerUp
+                {
+                    Name = $"powerup{i}",
+                    duration = i,
+                    // With this corrected line:
+                    Effect = (Effect)(i % Enum.GetValues<Effect>().Length),
+                },
             });
+
         }
 
-        IPasswordHasher passwordHasher = new PasswordHash();
-        var mockTokenProvider = new Mock<ITokenProvider>();
-        var mockHttpContext = new Mock<IHttpContextAccessor>();
-        IPlayerRepo playerRepo = new PlayerRepo(db, passwordHasher, mockTokenProvider.Object, mockHttpContext.Object);
 
 
         foreach (var player in players)
         {
-            playerRepo.CreatePlayer(player);
+            db.players.Add(player);
+            db.SaveChanges();
         }
 
-        var playersFromDB = playerRepo.GetPlayers();
+        var playersFromDB = await db.players.ToListAsync();
 
         for (int i = 0; i < playersFromDB.Count; i++)
         {
             Assert.Multiple(() =>
             {
-                Assert.That(playersFromDB[i].UserName, Is.EqualTo(players[i].userName), $"Player {i} UserName does not match");
-                Assert.That(playersFromDB[i].Email, Is.EqualTo(players[i].email), $"Player {i} Email does not match");
+                Assert.That(playersFromDB[i].UserName, Is.EqualTo(players[i].UserName), $"Player {i} UserName does not match");
+                Assert.That(playersFromDB[i].Email, Is.EqualTo(players[i].Email), $"Player {i} Email does not match");
             });
         }
     }
 
+
     [OneTimeTearDown]
-     public async Task DisposeAsync()
+    public async Task DisposeAsync()
     {
         await postgressContainer.DisposeAsync();
         await _factory.DisposeAsync();
-        if(db != null)
+        if (db != null)
         {
             await db.DisposeAsync();
         }
-        
+
     }
+
 }
