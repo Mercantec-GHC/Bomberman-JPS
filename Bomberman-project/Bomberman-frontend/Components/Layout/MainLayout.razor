@@ -70,19 +70,36 @@ Password icon (in case of whatever) @Icons.Material.Filled.Password
     private Player player = new Player();
     private string username;
     Guid usersID;
+    public bool isAuthorized = false;
 
     protected override async Task OnInitializedAsync()
     {
-        LayoutService.OnLayoutChanged += StateHasChanged;
-
         var authState = await AuthStateProv.GetAuthenticationStateAsync();
         var user = authState.User;
-        var userID = user.Claims.FirstOrDefault(c => c.Type == "sub");
-        string idString = userID.Value;
-        Guid guid = new Guid(idString);
-        usersID = guid;
-        player = await PlayerService.GetPlayer(usersID);
-        username = player.UserName;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            var userID = user.Claims.FirstOrDefault(c => c.Type == "sub");
+
+            if(userID != null)
+            {
+                Console.WriteLine(userID);
+                string idString = userID.Value;
+                Guid guid = new Guid(idString);
+                usersID = guid;
+                player = await PlayerService.GetPlayer(usersID);
+                username = player.UserName;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine("No 'sub' claim found for authenticated user.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("User is not authenticated — skipping user info setup.");
+        }
     }
 
     public void Dispose()
