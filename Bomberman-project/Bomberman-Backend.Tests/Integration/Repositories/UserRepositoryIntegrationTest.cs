@@ -60,6 +60,45 @@ public class UserRepositoryIntegrationTest
         await using NpgsqlConnection connection = new(_connectionString);
         await connection.OpenAsync();
 
+        var players = new List<Player>();
+        for (int i = 0; i < 10; i++)
+        {
+            players.Add(new Player
+            {
+                sessionId = new Session { },
+                UserId = Guid.NewGuid(),
+                UserName = $"user{i}",
+                Email = $"test{i}@test.dk",
+                Password = $"testpassword{i}",
+            });
+        }
+            
+
+
+        foreach (var player in players)
+        {
+            db.players.Add(player);
+        }
+
+        var playersFromDB = await db.players.ToListAsync();
+
+        for (int i = 0; i < playersFromDB.Count; i++)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(playersFromDB[i].UserName, Is.EqualTo(players[i].UserName), $"Player {i} UserName does not match");
+                Assert.That(playersFromDB[i].Email, Is.EqualTo(players[i].Email), $"Player {i} Email does not match");
+            });
+        }
+    }
+
+    [Test]
+    public async Task Add_Players_to_testcontainer_Database_And_Check_If_it_Persist_Through_Repository()
+    {
+        Console.WriteLine(_connectionString);
+        await using NpgsqlConnection connection = new(_connectionString);
+        await connection.OpenAsync();
+
         var players = new List<CreatePlayerDTO>();
         for (int i = 0; i < 10; i++)
         {
